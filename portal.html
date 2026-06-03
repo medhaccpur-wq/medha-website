@@ -6,124 +6,108 @@
 <title>MEDHA Student Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --indigo: #3730a3; --indigo-dark: #1e1b6e; --indigo-light: #6366f1;
-  --yellow: #fbbf24; --yellow-dark: #d97706;
-  --white: #ffffff; --gray: #f8f7ff; --text: #1e1b4b; --text-muted: #6b7280;
-  --border: rgba(55,48,163,0.12); --success: #10b981; --danger: #ef4444;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'DM Sans',sans-serif; background:var(--gray); color:var(--text); min-height:100vh; }
-
-/* AUTH */
-.auth-page { min-height:100vh; background:linear-gradient(135deg,var(--indigo-dark) 0%,var(--indigo) 60%,#4338ca 100%); display:flex; align-items:center; justify-content:center; padding:2rem; position:relative; overflow:hidden; }
-.auth-page::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 70% 30%,rgba(251,191,36,0.15) 0%,transparent 60%); }
-.auth-card { background:white; border-radius:20px; width:100%; max-width:460px; padding:2.5rem; position:relative; z-index:1; box-shadow:0 24px 60px rgba(0,0,0,0.3); }
-.auth-logo { text-align:center; margin-bottom:2rem; }
-.auth-logo-icon { width:64px; height:64px; border-radius:50%; background:var(--indigo-dark); color:var(--yellow); font-family:'Playfair Display',serif; font-size:26px; font-weight:900; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
-.auth-logo h1 { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--indigo-dark); font-weight:700; }
-.auth-logo p { font-size:12px; color:var(--text-muted); margin-top:3px; }
-.auth-tabs { display:flex; background:var(--gray); border-radius:10px; padding:4px; margin-bottom:2rem; }
-.auth-tab { flex:1; text-align:center; padding:10px; border-radius:8px; font-size:14px; font-weight:500; cursor:pointer; transition:all 0.2s; color:var(--text-muted); border:none; background:transparent; font-family:'DM Sans',sans-serif; }
-.auth-tab.active { background:white; color:var(--indigo-dark); box-shadow:0 2px 8px rgba(55,48,163,0.15); }
-.auth-form { display:none; }
-.auth-form.active { display:block; }
-.form-group { margin-bottom:1.2rem; }
-.form-group label { font-size:13px; font-weight:500; color:var(--indigo-dark); display:block; margin-bottom:6px; }
-.form-group input { width:100%; padding:12px 16px; border:1.5px solid var(--border); border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--text); background:var(--gray); outline:none; transition:all 0.2s; }
-.form-group input:focus { border-color:var(--indigo-light); background:white; box-shadow:0 0 0 3px rgba(99,102,241,0.1); }
-.form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-.btn-auth { width:100%; padding:13px; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; background:var(--indigo-dark); color:white; transition:all 0.2s; margin-top:0.5rem; }
-.btn-auth:hover { background:var(--indigo); transform:translateY(-1px); }
-.btn-auth:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
-.auth-error { background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:8px; padding:10px 14px; font-size:13px; margin-bottom:1rem; display:none; }
-.auth-success { background:#f0fdf4; border:1px solid #86efac; color:#16a34a; border-radius:8px; padding:10px 14px; font-size:13px; margin-bottom:1rem; display:none; }
-.verify-badge { background:rgba(16,185,129,0.1); border:1px solid #86efac; color:#065f46; border-radius:8px; padding:10px 14px; font-size:13px; margin-bottom:1rem; display:none; }
-.password-wrap { position:relative; }
-.password-wrap input { padding-right:44px; }
-.toggle-pass { position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:16px; }
-.step-indicator { display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem; }
-.step-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
-.step-dot.active { background:var(--indigo-dark); color:white; }
-.step-dot.done { background:var(--success); color:white; }
-.step-dot.inactive { background:var(--border); color:var(--text-muted); }
-.step-line { flex:1; height:2px; background:var(--border); }
-.step-line.done { background:var(--success); }
-.back-home { display:block; text-align:center; margin-top:1.5rem; color:rgba(255,255,255,0.7); font-size:13px; text-decoration:none; position:relative; z-index:1; }
-.back-home:hover { color:var(--yellow); }
-
-/* DASHBOARD */
-.dashboard { display:none; min-height:100vh; }
-.dash-nav { background:var(--indigo-dark); padding:0 2rem; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,0.2); }
-.dash-brand { display:flex; align-items:center; gap:12px; text-decoration:none; }
-.dash-logo { width:40px; height:40px; border-radius:50%; background:var(--yellow); color:var(--indigo-dark); font-family:'Playfair Display',serif; font-weight:900; font-size:16px; display:flex; align-items:center; justify-content:center; }
-.dash-brand-text { color:white; font-weight:600; font-size:15px; }
-.dash-brand-text span { color:var(--yellow); font-size:11px; font-weight:300; display:block; letter-spacing:1px; }
-.dash-nav-right { display:flex; align-items:center; gap:1rem; }
-.dash-user { display:flex; align-items:center; gap:10px; color:white; font-size:14px; }
-.dash-avatar { width:36px; height:36px; border-radius:50%; background:var(--yellow); color:var(--indigo-dark); font-weight:700; font-size:14px; display:flex; align-items:center; justify-content:center; }
-.btn-logout { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white; padding:7px 16px; border-radius:8px; font-size:13px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
-.btn-logout:hover { background:rgba(239,68,68,0.3); border-color:rgba(239,68,68,0.5); }
-.dash-layout { display:flex; min-height:calc(100vh - 64px); }
-.dash-sidebar { width:240px; background:white; border-right:1px solid var(--border); padding:1.5rem 0; flex-shrink:0; }
-.sidebar-label { font-size:10px; font-weight:600; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; padding:0 1.5rem; margin-bottom:0.5rem; display:block; }
-.sidebar-link { display:flex; align-items:center; gap:10px; padding:10px 1.5rem; color:var(--text-muted); font-size:14px; font-weight:500; cursor:pointer; transition:all 0.2s; text-decoration:none; border:none; background:none; font-family:'DM Sans',sans-serif; width:100%; text-align:left; }
-.sidebar-link:hover { background:var(--gray); color:var(--indigo-dark); }
-.sidebar-link.active { background:rgba(55,48,163,0.08); color:var(--indigo-dark); border-right:3px solid var(--indigo); font-weight:600; }
-.sidebar-icon { font-size:16px; width:20px; text-align:center; }
-.dash-content { flex:1; padding:2rem; overflow-y:auto; }
-.dash-page { display:none; }
-.dash-page.active { display:block; }
-.page-title { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--indigo-dark); font-weight:700; margin-bottom:0.3rem; }
-.page-sub { color:var(--text-muted); font-size:14px; margin-bottom:2rem; }
-.welcome-card { background:linear-gradient(135deg,var(--indigo-dark) 0%,var(--indigo) 100%); border-radius:16px; padding:2rem; margin-bottom:2rem; color:white; position:relative; overflow:hidden; }
-.welcome-card::after { content:'🎓'; position:absolute; right:2rem; top:50%; transform:translateY(-50%); font-size:5rem; opacity:0.15; }
-.welcome-card h2 { font-family:'Playfair Display',serif; font-size:1.5rem; margin-bottom:0.3rem; }
-.welcome-card p { color:rgba(255,255,255,0.7); font-size:14px; }
-.welcome-badge { display:inline-block; background:rgba(251,191,36,0.2); border:1px solid var(--yellow); color:var(--yellow); font-size:11px; padding:3px 12px; border-radius:20px; margin-bottom:0.8rem; }
-.stat-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1rem; margin-bottom:2rem; }
-.stat-card { background:white; border-radius:12px; padding:1.3rem; border:1px solid var(--border); }
-.stat-card .stat-icon { font-size:1.8rem; margin-bottom:0.7rem; }
-.stat-card .stat-val { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--indigo-dark); font-weight:700; }
-.stat-card .stat-lbl { font-size:12px; color:var(--text-muted); margin-top:2px; }
-.card { background:white; border-radius:12px; padding:1.5rem; border:1px solid var(--border); margin-bottom:1.5rem; }
-.card-title { font-size:16px; font-weight:600; color:var(--indigo-dark); margin-bottom:1rem; display:flex; align-items:center; gap:8px; }
-.notices-list { display:flex; flex-direction:column; gap:1rem; }
-.notice-item { background:white; border-radius:12px; padding:1.2rem 1.5rem; border:1px solid var(--border); border-left:4px solid var(--yellow); }
-.notice-item h4 { font-size:14px; font-weight:600; color:var(--indigo-dark); margin-bottom:4px; }
-.notice-item p { font-size:13px; color:var(--text-muted); line-height:1.5; }
-.notice-date { font-size:11px; color:var(--text-muted); margin-top:6px; }
-.notice-tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:600; margin-bottom:6px; }
-.notice-tag.urgent { background:#fef2f2; color:#dc2626; }
-.notice-tag.info { background:rgba(55,48,163,0.08); color:var(--indigo); }
-.notice-tag.general { background:rgba(251,191,36,0.15); color:var(--yellow-dark); }
-table { width:100%; border-collapse:collapse; }
-thead { background:var(--indigo-dark); color:white; }
-th { padding:10px 14px; text-align:left; font-weight:600; font-size:12px; }
-td { padding:10px 14px; border-bottom:1px solid var(--border); font-size:13px; }
-tr:last-child td { border-bottom:none; }
-tr:hover td { background:var(--gray); }
-.period-badge { display:inline-block; background:rgba(55,48,163,0.08); color:var(--indigo); font-size:11px; padding:2px 8px; border-radius:4px; font-weight:500; }
-.profile-card { background:white; border-radius:16px; padding:2rem; border:1px solid var(--border); max-width:600px; }
-.profile-avatar { width:80px; height:80px; border-radius:50%; background:var(--indigo-dark); color:var(--yellow); font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; display:flex; align-items:center; justify-content:center; margin-bottom:1.2rem; border:3px solid var(--yellow); }
-.profile-fields { margin-top:1.5rem; display:flex; flex-direction:column; gap:1rem; }
-.profile-field { display:flex; gap:1rem; align-items:center; padding:1rem; background:var(--gray); border-radius:10px; }
-.profile-field-icon { font-size:1.2rem; width:30px; text-align:center; }
-.profile-field strong { font-size:12px; color:var(--text-muted); display:block; margin-bottom:2px; }
-.profile-field span { font-size:14px; color:var(--indigo-dark); font-weight:500; }
-.mobile-menu-btn { display:none; background:none; border:none; color:white; font-size:1.5rem; cursor:pointer; }
-@media(max-width:768px) {
-  .dash-sidebar { display:none; position:fixed; top:64px; left:0; bottom:0; z-index:200; width:240px; background:white; }
-  .dash-sidebar.open { display:block; }
-  .mobile-menu-btn { display:block; }
-  .dash-content { padding:1rem; }
-  .form-row { grid-template-columns:1fr; }
-}
+:root{--indigo:#3730a3;--indigo-dark:#1e1b6e;--indigo-light:#6366f1;--yellow:#fbbf24;--yellow-dark:#d97706;--white:#fff;--gray:#f8f7ff;--text:#1e1b4b;--text-muted:#6b7280;--border:rgba(55,48,163,0.12);--success:#10b981;--danger:#ef4444;--warning:#f59e0b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"DM Sans",sans-serif;background:var(--gray);color:var(--text);min-height:100vh}
+.auth-page{min-height:100vh;background:linear-gradient(135deg,var(--indigo-dark) 0%,var(--indigo) 60%,#4338ca 100%);display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden}
+.auth-page::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,rgba(251,191,36,0.15) 0%,transparent 60%)}
+.auth-card{background:white;border-radius:20px;width:100%;max-width:460px;padding:2.5rem;position:relative;z-index:1;box-shadow:0 24px 60px rgba(0,0,0,0.3)}
+.auth-logo{text-align:center;margin-bottom:2rem}
+.auth-logo-icon{width:64px;height:64px;border-radius:50%;background:var(--indigo-dark);color:var(--yellow);font-family:"Playfair Display",serif;font-size:26px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+.auth-logo h1{font-family:"Playfair Display",serif;font-size:1.6rem;color:var(--indigo-dark);font-weight:700}
+.auth-logo p{font-size:12px;color:var(--text-muted);margin-top:3px}
+.auth-tabs{display:flex;background:var(--gray);border-radius:10px;padding:4px;margin-bottom:2rem}
+.auth-tab{flex:1;text-align:center;padding:10px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;color:var(--text-muted);border:none;background:transparent;font-family:"DM Sans",sans-serif}
+.auth-tab.active{background:white;color:var(--indigo-dark);box-shadow:0 2px 8px rgba(55,48,163,0.15)}
+.auth-form{display:none}
+.auth-form.active{display:block}
+.form-group{margin-bottom:1.2rem}
+.form-group label{font-size:13px;font-weight:500;color:var(--indigo-dark);display:block;margin-bottom:6px}
+.form-group input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:"DM Sans",sans-serif;font-size:14px;color:var(--text);background:var(--gray);outline:none;transition:all .2s}
+.form-group input:focus{border-color:var(--indigo-light);background:white;box-shadow:0 0 0 3px rgba(99,102,241,0.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.btn-auth{width:100%;padding:13px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;background:var(--indigo-dark);color:white;transition:all .2s;margin-top:.5rem}
+.btn-auth:hover{background:var(--indigo);transform:translateY(-1px)}
+.btn-auth:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.auth-error{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:1rem;display:none}
+.auth-success{background:#f0fdf4;border:1px solid #86efac;color:#16a34a;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:1rem;display:none}
+.password-wrap{position:relative}
+.password-wrap input{padding-right:44px}
+.toggle-pass{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px}
+.step-indicator{display:flex;align-items:center;gap:.5rem;margin-bottom:1.5rem}
+.step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.step-dot.active{background:var(--indigo-dark);color:white}
+.step-dot.done{background:var(--success);color:white}
+.step-dot.inactive{background:var(--border);color:var(--text-muted)}
+.step-line{flex:1;height:2px;background:var(--border)}
+.step-line.done{background:var(--success)}
+.back-home{display:block;text-align:center;margin-top:1.5rem;color:rgba(255,255,255,0.7);font-size:13px;text-decoration:none;position:relative;z-index:1}
+.back-home:hover{color:var(--yellow)}
+.dashboard{display:none;min-height:100vh}
+.dash-nav{background:var(--indigo-dark);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.2)}
+.dash-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.dash-logo{width:40px;height:40px;border-radius:50%;background:var(--yellow);color:var(--indigo-dark);font-family:"Playfair Display",serif;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center}
+.dash-brand-text{color:white;font-weight:600;font-size:15px}
+.dash-brand-text span{color:var(--yellow);font-size:11px;font-weight:300;display:block;letter-spacing:1px}
+.dash-nav-right{display:flex;align-items:center;gap:1rem}
+.dash-avatar{width:36px;height:36px;border-radius:50%;background:var(--yellow);color:var(--indigo-dark);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+.btn-logout{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s}
+.btn-logout:hover{background:rgba(239,68,68,0.3);border-color:rgba(239,68,68,0.5)}
+.dash-layout{display:flex;min-height:calc(100vh - 64px)}
+.dash-sidebar{width:230px;background:white;border-right:1px solid var(--border);padding:1rem 0;flex-shrink:0}
+.sidebar-label{font-size:10px;font-weight:600;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;padding:0.8rem 1.2rem 0.3rem;display:block}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:9px 1.2rem;color:var(--text-muted);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;border:none;background:none;font-family:"DM Sans",sans-serif;width:100%;text-align:left}
+.sidebar-link:hover{background:var(--gray);color:var(--indigo-dark)}
+.sidebar-link.active{background:rgba(55,48,163,0.08);color:var(--indigo-dark);border-right:3px solid var(--indigo);font-weight:600}
+.dash-content{flex:1;padding:2rem;overflow-y:auto}
+.dash-page{display:none}
+.dash-page.active{display:block}
+.page-title{font-family:"Playfair Display",serif;font-size:1.6rem;color:var(--indigo-dark);font-weight:700;margin-bottom:.3rem}
+.page-sub{color:var(--text-muted);font-size:14px;margin-bottom:2rem}
+.welcome-card{background:linear-gradient(135deg,var(--indigo-dark) 0%,var(--indigo) 100%);border-radius:16px;padding:2rem;margin-bottom:2rem;color:white;position:relative;overflow:hidden}
+.welcome-card::after{content:"🎓";position:absolute;right:2rem;top:50%;transform:translateY(-50%);font-size:5rem;opacity:.15}
+.welcome-card h2{font-family:"Playfair Display",serif;font-size:1.5rem;margin-bottom:.3rem}
+.welcome-card p{color:rgba(255,255,255,0.7);font-size:14px}
+.welcome-badge{display:inline-block;background:rgba(251,191,36,0.2);border:1px solid var(--yellow);color:var(--yellow);font-size:11px;padding:3px 12px;border-radius:20px;margin-bottom:.8rem}
+.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:2rem}
+.stat-card{background:white;border-radius:12px;padding:1.2rem;border:1px solid var(--border)}
+.stat-icon{font-size:1.8rem;margin-bottom:.7rem}
+.stat-val{font-family:"Playfair Display",serif;font-size:1.6rem;color:var(--indigo-dark);font-weight:700}
+.stat-lbl{font-size:12px;color:var(--text-muted);margin-top:2px}
+.card{background:white;border-radius:12px;padding:1.5rem;border:1px solid var(--border);margin-bottom:1.5rem}
+.card-title{font-size:16px;font-weight:600;color:var(--indigo-dark);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.notice-item{background:white;border-radius:12px;padding:1.2rem 1.5rem;border:1px solid var(--border);border-left:4px solid var(--yellow);margin-bottom:.8rem}
+.notice-item h4{font-size:14px;font-weight:600;color:var(--indigo-dark);margin-bottom:4px}
+.notice-item p{font-size:13px;color:var(--text-muted);line-height:1.5}
+.notice-date{font-size:11px;color:var(--text-muted);margin-top:6px}
+.notice-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-bottom:6px}
+.tag-urgent{background:#fef2f2;color:#dc2626}
+.tag-info{background:rgba(55,48,163,0.08);color:var(--indigo)}
+.tag-general{background:rgba(251,191,36,0.15);color:var(--yellow-dark)}
+.tag-academic{background:rgba(16,185,129,0.1);color:var(--success)}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--indigo-dark);color:white}
+th{padding:10px 14px;text-align:left;font-weight:600;font-size:12px}
+td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--gray)}
+.period-badge{display:inline-block;background:rgba(55,48,163,0.08);color:var(--indigo);font-size:11px;padding:2px 8px;border-radius:4px;font-weight:500}
+.profile-card{background:white;border-radius:16px;padding:2rem;border:1px solid var(--border);max-width:600px}
+.profile-avatar{width:80px;height:80px;border-radius:50%;background:var(--indigo-dark);color:var(--yellow);font-family:"Playfair Display",serif;font-size:2rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem;border:3px solid var(--yellow)}
+.profile-fields{margin-top:1.5rem;display:flex;flex-direction:column;gap:1rem}
+.profile-field{display:flex;gap:1rem;align-items:center;padding:1rem;background:var(--gray);border-radius:10px}
+.profile-field-icon{font-size:1.2rem;width:30px;text-align:center}
+.profile-field strong{font-size:12px;color:var(--text-muted);display:block;margin-bottom:2px}
+.profile-field span{font-size:14px;color:var(--indigo-dark);font-weight:500}
+.pdf-viewer{width:100%;height:600px;border:none;border-radius:10px;background:#f5f5f5}
+.loading-msg{text-align:center;padding:3rem;color:var(--text-muted);font-size:14px}
+.no-data-msg{text-align:center;padding:3rem;background:var(--gray);border-radius:12px;color:var(--text-muted);font-size:14px}
+.mobile-menu-btn{display:none;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer}
+@media(max-width:768px){.dash-sidebar{display:none;position:fixed;top:64px;left:0;bottom:0;z-index:200;width:230px;background:white}.dash-sidebar.open{display:block}.mobile-menu-btn{display:block}.dash-content{padding:1rem}.form-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- AUTH PAGE -->
 <div class="auth-page" id="authPage">
   <div>
     <div class="auth-card">
@@ -138,64 +122,40 @@ tr:hover td { background:var(--gray); }
       </div>
       <div class="auth-error" id="authError"></div>
       <div class="auth-success" id="authSuccess"></div>
-      <div class="verify-badge" id="verifyBadge"></div>
 
-      <!-- LOGIN -->
       <div class="auth-form active" id="loginForm">
         <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
         <div class="form-group"><label>Password</label>
-          <div class="password-wrap">
-            <input type="password" id="loginPassword" placeholder="Your password">
-            <button class="toggle-pass" onclick="togglePassword('loginPassword')">👁️</button>
-          </div>
+          <div class="password-wrap"><input type="password" id="loginPassword" placeholder="Your password"><button class="toggle-pass" onclick="togglePass('loginPassword')">👁️</button></div>
         </div>
         <button class="btn-auth" id="loginBtn" onclick="loginStudent()">Login to Portal</button>
-        <p style="text-align:center;margin-top:1rem;font-size:12px;color:var(--text-muted);">
-          <a href="#" onclick="forgotPassword()" style="color:var(--indigo-light);">Forgot password?</a>
-        </p>
+        <p style="text-align:center;margin-top:1rem;font-size:12px;color:var(--text-muted)"><a href="#" onclick="forgotPassword()" style="color:var(--indigo-light)">Forgot password?</a></p>
       </div>
 
-      <!-- REGISTER — 2 STEPS -->
       <div class="auth-form" id="registerForm">
-
-        <!-- STEP INDICATOR -->
         <div class="step-indicator">
           <div class="step-dot active" id="step1dot">1</div>
           <div class="step-line" id="stepline1"></div>
           <div class="step-dot inactive" id="step2dot">2</div>
         </div>
-
-        <!-- STEP 1: VERIFY IDENTITY -->
         <div id="registerStep1">
-          <p style="font-size:13px;color:var(--text-muted);margin-bottom:1.2rem;background:var(--gray);padding:10px 14px;border-radius:8px;border-left:3px solid var(--yellow);">
-            ⚠️ Only registered MEDHA students can create an account. Your Student ID, Name, and Phone must match our records.
-          </p>
-          <div class="form-group"><label>Student ID *</label><input type="text" id="verifyStudentId" placeholder="e.g. MEDHA2025001" style="text-transform:uppercase;"></div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:1.2rem;background:var(--gray);padding:10px 14px;border-radius:8px;border-left:3px solid var(--yellow)">⚠️ Only registered MEDHA students can create an account. Your Student ID, Name, and Phone must match our records.</p>
+          <div class="form-group"><label>Student ID *</label><input type="text" id="verifyStudentId" placeholder="e.g. MEDHA2025001" style="text-transform:uppercase"></div>
           <div class="form-group"><label>Full Name * (exactly as registered)</label><input type="text" id="verifyName" placeholder="Your full name"></div>
           <div class="form-group"><label>Phone Number * (as registered)</label><input type="tel" id="verifyPhone" placeholder="e.g. 9876543210"></div>
           <button class="btn-auth" id="verifyBtn" onclick="verifyStudent()">Verify My Identity →</button>
         </div>
-
-        <!-- STEP 2: CREATE ACCOUNT -->
-        <div id="registerStep2" style="display:none;">
-          <p style="font-size:13px;color:var(--success);margin-bottom:1.2rem;background:#f0fdf4;padding:10px 14px;border-radius:8px;border-left:3px solid var(--success);">
-            ✅ Identity verified! Now create your login credentials.
-          </p>
+        <div id="registerStep2" style="display:none">
+          <p style="font-size:13px;color:var(--success);margin-bottom:1.2rem;background:#f0fdf4;padding:10px 14px;border-radius:8px;border-left:3px solid var(--success)">✅ Identity verified! Now create your login credentials.</p>
           <div class="form-group"><label>Email Address *</label><input type="email" id="regEmail" placeholder="your@email.com"></div>
           <div class="form-group"><label>Create Password *</label>
-            <div class="password-wrap">
-              <input type="password" id="regPassword" placeholder="Minimum 6 characters">
-              <button class="toggle-pass" onclick="togglePassword('regPassword')">👁️</button>
-            </div>
+            <div class="password-wrap"><input type="password" id="regPassword" placeholder="Minimum 6 characters"><button class="toggle-pass" onclick="togglePass('regPassword')">👁️</button></div>
           </div>
           <div class="form-group"><label>Confirm Password *</label>
-            <div class="password-wrap">
-              <input type="password" id="regConfirm" placeholder="Repeat your password">
-              <button class="toggle-pass" onclick="togglePassword('regConfirm')">👁️</button>
-            </div>
+            <div class="password-wrap"><input type="password" id="regConfirm" placeholder="Repeat password"><button class="toggle-pass" onclick="togglePass('regConfirm')">👁️</button></div>
           </div>
           <button class="btn-auth" id="registerBtn" onclick="registerStudent()">Create My Account →</button>
-          <button onclick="backToStep1()" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:14px;cursor:pointer;margin-top:0.5rem;background:transparent;color:var(--text-muted);font-family:'DM Sans',sans-serif;">← Back</button>
+          <button onclick="backToStep1()" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:14px;cursor:pointer;margin-top:.5rem;background:transparent;color:var(--text-muted);font-family:'DM Sans',sans-serif">← Back</button>
         </div>
       </div>
     </div>
@@ -203,10 +163,9 @@ tr:hover td { background:var(--gray); }
   </div>
 </div>
 
-<!-- DASHBOARD -->
 <div class="dashboard" id="dashboard">
   <div class="dash-nav">
-    <div style="display:flex;align-items:center;gap:1rem;">
+    <div style="display:flex;align-items:center;gap:1rem">
       <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
       <a class="dash-brand" href="#">
         <div class="dash-logo">M</div>
@@ -214,9 +173,7 @@ tr:hover td { background:var(--gray); }
       </a>
     </div>
     <div class="dash-nav-right">
-      <div class="dash-user">
-        <div class="dash-avatar" id="userAvatar">S</div>
-      </div>
+      <div class="dash-avatar" id="userAvatar">S</div>
       <button class="btn-logout" onclick="logoutStudent()">🚪 Logout</button>
     </div>
   </div>
@@ -224,17 +181,18 @@ tr:hover td { background:var(--gray); }
   <div class="dash-layout">
     <div class="dash-sidebar" id="sidebar">
       <span class="sidebar-label">Main</span>
-      <button class="sidebar-link active" onclick="showPage('home',this)"><span class="sidebar-icon">🏠</span> Dashboard</button>
-      <button class="sidebar-link" onclick="showPage('profile',this)"><span class="sidebar-icon">👤</span> My Profile</button>
-      <button class="sidebar-link" onclick="showPage('notices',this)"><span class="sidebar-icon">📋</span> Notice Board</button>
-      <button class="sidebar-link" onclick="showPage('timetable',this)"><span class="sidebar-icon">📅</span> Timetable</button>
+      <button class="sidebar-link active" onclick="showPage('home',this)">🏠 Dashboard</button>
+      <button class="sidebar-link" onclick="showPage('profile',this)">👤 My Profile</button>
+      <span class="sidebar-label">Notices</span>
+      <button class="sidebar-link" onclick="showPage('notices',this)">📢 Notice Board</button>
       <span class="sidebar-label">Academic</span>
-      <button class="sidebar-link" onclick="showPage('results',this)"><span class="sidebar-icon">📊</span> Results</button>
-      <button class="sidebar-link" onclick="showPage('attendance',this)"><span class="sidebar-icon">✅</span> Attendance</button>
-      <button class="sidebar-link" onclick="showPage('fees',this)"><span class="sidebar-icon">💳</span> Fee Status</button>
+      <button class="sidebar-link" onclick="showPage('timetable',this)">📅 Timetable</button>
+      <button class="sidebar-link" onclick="showPage('results',this)">📊 Results</button>
+      <button class="sidebar-link" onclick="showPage('attendance',this)">✅ Attendance</button>
+      <button class="sidebar-link" onclick="showPage('fees',this)">💳 Fee Status</button>
       <span class="sidebar-label">Support</span>
-      <a href="index.html" class="sidebar-link"><span class="sidebar-icon">🌐</span> College Website</a>
-      <button class="sidebar-link" onclick="showPage('contact',this)"><span class="sidebar-icon">📞</span> Contact Admin</button>
+      <a href="index.html" class="sidebar-link">🌐 College Website</a>
+      <button class="sidebar-link" onclick="showPage('contact',this)">📞 Contact Admin</button>
     </div>
 
     <div class="dash-content">
@@ -244,29 +202,17 @@ tr:hover td { background:var(--gray); }
         <div class="welcome-card">
           <div class="welcome-badge">🎓 Student Dashboard</div>
           <h2>Welcome, <span id="welcomeName">Student</span>!</h2>
-          <p id="welcomeDept">Believing in Possibilities — MEDHA Student Portal</p>
+          <p id="welcomeInfo">Believing in Possibilities — MEDHA Student Portal</p>
         </div>
         <div class="stat-cards">
           <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-val">2025–26</div><div class="stat-lbl">Academic Year</div></div>
-          <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-val">5</div><div class="stat-lbl">New Notices</div></div>
-          <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val">85%</div><div class="stat-lbl">Attendance</div></div>
-          <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-val">B+</div><div class="stat-lbl">Current Grade</div></div>
+          <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-val" id="homeNoticeCount">—</div><div class="stat-lbl">Active Notices</div></div>
+          <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" id="homeAttendance">—</div><div class="stat-lbl">Attendance</div></div>
+          <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-val" id="homeGrade">—</div><div class="stat-lbl">Overall Grade</div></div>
         </div>
         <div class="card">
           <div class="card-title">📢 Latest Notices</div>
-          <div class="notices-list">
-            <div class="notice-item"><span class="notice-tag urgent">Urgent</span><h4>Fee Payment Deadline — June 30, 2025</h4><p>All students must pay semester fees before June 30.</p><div class="notice-date">📅 June 1, 2025</div></div>
-            <div class="notice-item"><span class="notice-tag info">Event</span><h4>Annual Fest — MEDHA UTSAV 2025 — July 15</h4><p>Register for events before July 10.</p><div class="notice-date">📅 May 28, 2025</div></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-title">📅 Today's Classes</div>
-          <table><thead><tr><th>Time</th><th>Subject</th><th>Faculty</th><th>Room</th></tr></thead>
-          <tbody>
-            <tr><td><span class="period-badge">9:00 AM</span></td><td>Mathematics</td><td>Dr. Rajesh Kumar</td><td>Room 101</td></tr>
-            <tr><td><span class="period-badge">11:00 AM</span></td><td>Physics</td><td>Prof. Meera Sharma</td><td>Lab 2</td></tr>
-            <tr><td><span class="period-badge">2:00 PM</span></td><td>Computer Science</td><td>Dr. Lalrin Thanga</td><td>Room 204</td></tr>
-          </tbody></table>
+          <div id="homeNotices"><div class="loading-msg">Loading notices...</div></div>
         </div>
       </div>
 
@@ -276,14 +222,14 @@ tr:hover td { background:var(--gray); }
         <div class="page-sub">Your verified student information</div>
         <div class="profile-card">
           <div class="profile-avatar" id="profileAvatar">S</div>
-          <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--indigo-dark);font-weight:700;" id="profileName">Student Name</div>
-          <div style="color:var(--text-muted);font-size:14px;margin-top:3px;" id="profileEmail">student@email.com</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--indigo-dark);font-weight:700" id="profileName">Student Name</div>
+          <div style="color:var(--text-muted);font-size:14px;margin-top:3px" id="profileEmail">student@email.com</div>
           <div class="profile-fields">
             <div class="profile-field"><div class="profile-field-icon">🎓</div><div><strong>Student ID</strong><span id="profileStudentId">—</span></div></div>
             <div class="profile-field"><div class="profile-field-icon">📚</div><div><strong>Department</strong><span id="profileDept">—</span></div></div>
             <div class="profile-field"><div class="profile-field-icon">📅</div><div><strong>Year</strong><span id="profileYear">—</span></div></div>
             <div class="profile-field"><div class="profile-field-icon">📞</div><div><strong>Phone</strong><span id="profilePhone">—</span></div></div>
-            <div class="profile-field"><div class="profile-field-icon">✅</div><div><strong>Verification Status</strong><span style="color:var(--success);">Verified Student ✅</span></div></div>
+            <div class="profile-field"><div class="profile-field-icon">✅</div><div><strong>Status</strong><span style="color:var(--success)">Verified Student ✅</span></div></div>
             <div class="profile-field"><div class="profile-field-icon">🏫</div><div><strong>College</strong><span>MEDHA — Melodious Education Housing Academy</span></div></div>
           </div>
         </div>
@@ -293,83 +239,35 @@ tr:hover td { background:var(--gray); }
       <div class="dash-page" id="page-notices">
         <div class="page-title">Notice Board</div>
         <div class="page-sub">Important announcements from MEDHA</div>
-        <div class="notices-list">
-          <div class="notice-item"><span class="notice-tag urgent">Urgent</span><h4>Fee Payment Deadline — June 30, 2025</h4><p>All students must pay semester fees before June 30, 2025. Late payments incur ₹500/week fine.</p><div class="notice-date">📅 June 1, 2025</div></div>
-          <div class="notice-item"><span class="notice-tag info">Event</span><h4>Annual College Fest — MEDHA UTSAV 2025</h4><p>Register for cultural, academic, and sports events before July 10. Fest on July 15, 2025.</p><div class="notice-date">📅 May 28, 2025</div></div>
-          <div class="notice-item"><span class="notice-tag general">Academic</span><h4>New Semester Timetable Released</h4><p>Timetable for upcoming semester published. Collect from admin office or check notice board.</p><div class="notice-date">📅 May 20, 2025</div></div>
-          <div class="notice-item"><span class="notice-tag info">Achievement</span><h4>MEDHA Ranked Among Top Colleges in Region</h4><p>MEDHA ranked among top colleges for academic excellence and student outcomes.</p><div class="notice-date">📅 May 15, 2025</div></div>
-          <div class="notice-item"><span class="notice-tag general">Sports</span><h4>Sports Day 2025 — August 5</h4><p>Inter-department competition. Register team with sports dept by July 25.</p><div class="notice-date">📅 May 10, 2025</div></div>
-        </div>
+        <div id="noticesList"><div class="loading-msg">⏳ Loading notices...</div></div>
       </div>
 
       <!-- TIMETABLE -->
       <div class="dash-page" id="page-timetable">
-        <div class="page-title">Weekly Timetable</div>
-        <div class="page-sub">Your class schedule for this semester</div>
-        <div class="card"><div class="card-title">📅 Monday</div><table><thead><tr><th>Time</th><th>Subject</th><th>Faculty</th><th>Room</th></tr></thead><tbody><tr><td><span class="period-badge">9:00 AM</span></td><td>Mathematics</td><td>Dr. Rajesh Kumar</td><td>Room 101</td></tr><tr><td><span class="period-badge">11:00 AM</span></td><td>Physics</td><td>Prof. Meera Sharma</td><td>Lab 2</td></tr><tr><td><span class="period-badge">2:00 PM</span></td><td>Computer Science</td><td>Dr. Lalrin Thanga</td><td>Room 204</td></tr></tbody></table></div>
-        <div class="card"><div class="card-title">📅 Tuesday</div><table><thead><tr><th>Time</th><th>Subject</th><th>Faculty</th><th>Room</th></tr></thead><tbody><tr><td><span class="period-badge">9:00 AM</span></td><td>Chemistry</td><td>Prof. Zosangi</td><td>Lab 1</td></tr><tr><td><span class="period-badge">11:00 AM</span></td><td>English</td><td>Dr. Kimi Haokip</td><td>Room 102</td></tr><tr><td><span class="period-badge">2:00 PM</span></td><td>Physical Education</td><td>Prof. Singh Tonsing</td><td>Ground</td></tr></tbody></table></div>
-        <div class="card"><div class="card-title">📅 Wednesday</div><table><thead><tr><th>Time</th><th>Subject</th><th>Faculty</th><th>Room</th></tr></thead><tbody><tr><td><span class="period-badge">9:00 AM</span></td><td>Mathematics</td><td>Dr. Rajesh Kumar</td><td>Room 101</td></tr><tr><td><span class="period-badge">11:00 AM</span></td><td>Computer Science</td><td>Dr. Lalrin Thanga</td><td>Lab 3</td></tr><tr><td><span class="period-badge">2:00 PM</span></td><td>Library</td><td>—</td><td>Library</td></tr></tbody></table></div>
+        <div class="page-title">My Timetable</div>
+        <div class="page-sub" id="ttSubtitle">Loading your timetable...</div>
+        <div id="ttContent"><div class="loading-msg">⏳ Loading timetable...</div></div>
       </div>
 
       <!-- RESULTS -->
       <div class="dash-page" id="page-results">
         <div class="page-title">Examination Results</div>
-        <div class="page-sub">Your academic performance this semester</div>
-        <div class="card"><div class="card-title">📊 Semester Results — 2024–25</div>
-          <table><thead><tr><th>Subject</th><th>Internal</th><th>External</th><th>Total</th><th>Grade</th></tr></thead>
-          <tbody>
-            <tr><td>Mathematics</td><td>28/30</td><td>68/70</td><td>96/100</td><td style="color:var(--success);font-weight:700;">A+</td></tr>
-            <tr><td>Physics</td><td>24/30</td><td>58/70</td><td>82/100</td><td style="color:var(--indigo);font-weight:700;">B+</td></tr>
-            <tr><td>Computer Science</td><td>27/30</td><td>65/70</td><td>92/100</td><td style="color:var(--success);font-weight:700;">A</td></tr>
-            <tr><td>English</td><td>22/30</td><td>55/70</td><td>77/100</td><td style="color:var(--indigo);font-weight:700;">B</td></tr>
-            <tr><td>Chemistry</td><td>25/30</td><td>60/70</td><td>85/100</td><td style="color:var(--success);font-weight:700;">A</td></tr>
-          </tbody></table>
-          <div style="margin-top:1rem;padding:1rem;background:rgba(55,48,163,0.06);border-radius:8px;display:flex;gap:2rem;flex-wrap:wrap;">
-            <div><strong style="font-size:13px;color:var(--text-muted);">Total</strong><div style="font-size:1.2rem;font-weight:700;color:var(--indigo-dark);">432/500</div></div>
-            <div><strong style="font-size:13px;color:var(--text-muted);">Percentage</strong><div style="font-size:1.2rem;font-weight:700;color:var(--indigo-dark);">86.4%</div></div>
-            <div><strong style="font-size:13px;color:var(--text-muted);">CGPA</strong><div style="font-size:1.2rem;font-weight:700;color:var(--success);">8.6</div></div>
-            <div><strong style="font-size:13px;color:var(--text-muted);">Result</strong><div style="font-size:1.2rem;font-weight:700;color:var(--success);">PASS ✅</div></div>
-          </div>
-        </div>
+        <div class="page-sub">Your academic performance</div>
+        <div id="resultsContent"><div class="loading-msg">⏳ Loading results...</div></div>
       </div>
 
       <!-- ATTENDANCE -->
       <div class="dash-page" id="page-attendance">
         <div class="page-title">Attendance Record</div>
         <div class="page-sub">Your attendance this semester</div>
-        <div class="stat-cards">
-          <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:var(--success);">85%</div><div class="stat-lbl">Overall</div></div>
-          <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-val">68</div><div class="stat-lbl">Attended</div></div>
-          <div class="stat-card"><div class="stat-icon">❌</div><div class="stat-val">12</div><div class="stat-lbl">Missed</div></div>
-          <div class="stat-card"><div class="stat-icon">⚠️</div><div class="stat-val">75%</div><div class="stat-lbl">Minimum</div></div>
-        </div>
-        <div class="card"><div class="card-title">📊 Subject-wise</div>
-          <table><thead><tr><th>Subject</th><th>Total</th><th>Attended</th><th>%</th></tr></thead>
-          <tbody>
-            <tr><td>Mathematics</td><td>20</td><td>18</td><td style="color:var(--success);font-weight:600;">90%</td></tr>
-            <tr><td>Physics</td><td>18</td><td>14</td><td style="color:var(--yellow-dark);font-weight:600;">78%</td></tr>
-            <tr><td>Computer Science</td><td>22</td><td>20</td><td style="color:var(--success);font-weight:600;">91%</td></tr>
-            <tr><td>English</td><td>16</td><td>12</td><td style="color:var(--yellow-dark);font-weight:600;">75%</td></tr>
-            <tr><td>Chemistry</td><td>4</td><td>4</td><td style="color:var(--success);font-weight:600;">100%</td></tr>
-          </tbody></table>
-        </div>
+        <div id="attendanceContent"><div class="loading-msg">⏳ Loading attendance...</div></div>
       </div>
 
       <!-- FEES -->
       <div class="dash-page" id="page-fees">
         <div class="page-title">Fee Status</div>
-        <div class="page-sub">Your fee payment details for 2025–26</div>
-        <div class="card"><div class="card-title">💳 Fee Summary</div>
-          <table><thead><tr><th>Fee Type</th><th>Amount</th><th>Due Date</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr><td>Tuition Fee</td><td>₹25,000</td><td>June 30</td><td style="color:var(--success);font-weight:600;">✅ Paid</td></tr>
-            <tr><td>Hostel Fee</td><td>₹18,000</td><td>June 30</td><td style="color:var(--danger);font-weight:600;">❌ Pending</td></tr>
-            <tr><td>Library Fee</td><td>₹500</td><td>June 30</td><td style="color:var(--success);font-weight:600;">✅ Paid</td></tr>
-            <tr><td>Sports Fee</td><td>₹1,000</td><td>June 30</td><td style="color:var(--success);font-weight:600;">✅ Paid</td></tr>
-            <tr><td>Exam Fee</td><td>₹2,500</td><td>July 15</td><td style="color:var(--yellow-dark);font-weight:600;">⏳ Upcoming</td></tr>
-          </tbody></table>
-          <div style="margin-top:1rem;padding:1rem;background:#fef2f2;border-radius:8px;border-left:4px solid var(--danger);">⚠️ <strong style="color:var(--danger);">Hostel fee of ₹18,000 is pending. Pay before June 30 to avoid late fine.</strong></div>
-        </div>
+        <div class="page-sub">Your fee payment details</div>
+        <div id="feesContent"><div class="loading-msg">⏳ Loading fee details...</div></div>
       </div>
 
       <!-- CONTACT -->
@@ -390,11 +288,10 @@ tr:hover td { background:var(--gray); }
   </div>
 </div>
 
-<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCg-tP51HEY4d-1t7IYFu38ha_NP-uhAjc",
@@ -409,176 +306,335 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 let verifiedStudentData = null;
+let currentStudentData = null;
 
 // AUTH STATE
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    document.getElementById('authPage').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
+onAuthStateChanged(auth, async user => {
+  if(user){
+    document.getElementById("authPage").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
     const init = user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase();
-    document.getElementById('userAvatar').textContent = init;
-    document.getElementById('profileAvatar').textContent = init;
-    document.getElementById('welcomeName').textContent = user.displayName || user.email.split('@')[0];
-    document.getElementById('profileName').textContent = user.displayName || 'Student';
-    document.getElementById('profileEmail').textContent = user.email;
+    document.getElementById("userAvatar").textContent = init;
+    document.getElementById("profileAvatar").textContent = init;
+    document.getElementById("welcomeName").textContent = user.displayName || user.email.split("@")[0];
+    document.getElementById("profileName").textContent = user.displayName || "Student";
+    document.getElementById("profileEmail").textContent = user.email;
     try {
-      const snap = await getDoc(doc(db, 'students', user.uid));
-      if (snap.exists()) {
+      const snap = await getDoc(doc(db, "students", user.uid));
+      if(snap.exists()){
         const d = snap.data();
-        document.getElementById('profileStudentId').textContent = d.studentId || '—';
-        document.getElementById('profileDept').textContent = d.department || '—';
-        document.getElementById('profileYear').textContent = d.year || '—';
-        document.getElementById('profilePhone').textContent = d.phone || '—';
-        document.getElementById('welcomeDept').textContent = (d.department || '') + ' — ' + (d.year || '') + ' | Believing in Possibilities';
+        currentStudentData = d;
+        document.getElementById("profileStudentId").textContent = d.studentId || "—";
+        document.getElementById("profileDept").textContent = d.department || "—";
+        document.getElementById("profileYear").textContent = d.year || "—";
+        document.getElementById("profilePhone").textContent = d.phone || "—";
+        document.getElementById("welcomeInfo").textContent = (d.department||"") + " — " + (d.year||"") + " | Believing in Possibilities";
+        loadAllData(d);
       }
-    } catch(e) {}
+    } catch(e){}
   } else {
-    document.getElementById('authPage').style.display = 'flex';
-    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById("authPage").style.display = "flex";
+    document.getElementById("dashboard").style.display = "none";
   }
 });
 
-// VERIFY STUDENT — checks ID + Name + Phone against approved_students
-window.verifyStudent = async function() {
-  const studentId = document.getElementById('verifyStudentId').value.trim().toUpperCase();
-  const name = document.getElementById('verifyName').value.trim();
-  const phone = document.getElementById('verifyPhone').value.trim();
-  if (!studentId || !name || !phone) { showError('Please fill in all fields to verify your identity.'); return; }
-  const btn = document.getElementById('verifyBtn');
-  btn.textContent = 'Verifying...'; btn.disabled = true;
+// LOAD ALL DATA
+async function loadAllData(student) {
+  await Promise.all([
+    loadNoticesData(student),
+    loadAttendanceData(student.studentId),
+    loadResultsData(student.studentId),
+    loadFeesData(student.studentId),
+    loadTimetableData(student.department, student.year)
+  ]);
+}
+
+// NOTICES
+async function loadNoticesData(student) {
+  try {
+    const snap = await getDocs(collection(db, "notices"));
+    const notices = [];
+    snap.forEach(d => {
+      const n = d.data();
+      if(!n.isActive) return;
+      if(n.visibility === "all") notices.push(n);
+      else if(n.visibility === "department" && n.targetDepartment === student.department) notices.push(n);
+      else if(n.visibility === "student" && n.targetStudentId === student.studentId) notices.push(n);
+    });
+    notices.sort((a,b) => b.createdAt.localeCompare(a.createdAt));
+    document.getElementById("homeNoticeCount").textContent = notices.length;
+    const tagClass = {urgent:"tag-urgent",info:"tag-info",general:"tag-general",academic:"tag-academic"};
+    const renderNotice = n => `
+      <div class="notice-item">
+        <span class="notice-tag ${tagClass[n.tag]||"tag-general"}">${n.tag||"general"}</span>
+        <h4>${n.title}</h4>
+        ${n.description ? `<p>${n.description}</p>` : ""}
+        ${n.hasPdf ? `<div style="margin-top:.8rem"><a href="${n.pdfUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:rgba(55,48,163,0.08);color:var(--indigo);padding:6px 14px;border-radius:6px;font-size:13px;text-decoration:none;font-weight:500">📄 View PDF Notice</a></div>` : ""}
+        <div class="notice-date">📅 ${n.createdAt ? n.createdAt.split("T")[0] : ""}</div>
+      </div>`;
+    const full = notices.length ? notices.map(renderNotice).join("") : `<div class="no-data-msg">📋 No notices at the moment. Check back later!</div>`;
+    const home = notices.length ? notices.slice(0,2).map(renderNotice).join("") : `<div class="no-data-msg">No notices yet.</div>`;
+    document.getElementById("noticesList").innerHTML = full;
+    document.getElementById("homeNotices").innerHTML = home;
+  } catch(e) {
+    document.getElementById("noticesList").innerHTML = `<div class="no-data-msg">Unable to load notices.</div>`;
+    document.getElementById("homeNotices").innerHTML = `<div class="no-data-msg">Unable to load notices.</div>`;
+  }
+}
+
+// TIMETABLE
+async function loadTimetableData(dept, year) {
+  const container = document.getElementById("ttContent");
+  const subtitle = document.getElementById("ttSubtitle");
+  if(!dept || !year) { container.innerHTML = `<div class="no-data-msg">Department or year not set in your profile.</div>`; return; }
+  const key = (dept + "_" + year).replace(/[^a-zA-Z0-9]/g, "_");
+  subtitle.textContent = dept + " — " + year;
+  try {
+    const snap = await getDoc(doc(db, "timetables", key));
+    if(snap.exists()) {
+      const { pdfUrl, pdfName } = snap.data();
+      container.innerHTML = `
+        <div class="card">
+          <div class="card-title">📅 ${dept} — ${year} Timetable</div>
+          <div style="margin-bottom:1rem;display:flex;gap:.8rem;flex-wrap:wrap">
+            <a href="${pdfUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--indigo-dark);color:white;padding:8px 18px;border-radius:8px;font-size:13px;text-decoration:none;font-weight:600">📄 Open Full PDF</a>
+            <a href="${pdfUrl}" download="${pdfName}" style="display:inline-flex;align-items:center;gap:6px;background:var(--gray);color:var(--indigo-dark);padding:8px 18px;border-radius:8px;font-size:13px;text-decoration:none;font-weight:600;border:1px solid var(--border)">⬇️ Download</a>
+          </div>
+          <iframe src="${pdfUrl}" class="pdf-viewer" title="Timetable PDF"></iframe>
+        </div>`;
+    } else {
+      container.innerHTML = `<div class="no-data-msg">📅 No timetable uploaded yet for ${dept} — ${year}.<br><br>Please check back later or contact admin.</div>`;
+    }
+  } catch(e) {
+    container.innerHTML = `<div class="no-data-msg">Unable to load timetable. Please try again.</div>`;
+  }
+}
+
+// ATTENDANCE
+async function loadAttendanceData(studentId) {
+  const container = document.getElementById("attendanceContent");
+  if(!studentId) { container.innerHTML = `<div class="no-data-msg">Student ID not found.</div>`; return; }
+  try {
+    const snap = await getDoc(doc(db, "attendance", studentId));
+    if(snap.exists()) {
+      const data = snap.data();
+      document.getElementById("homeAttendance").textContent = data.overall + "%";
+      const color = data.overall >= 75 ? "var(--success)" : data.overall >= 60 ? "var(--warning)" : "var(--danger)";
+      container.innerHTML = `
+        <div class="stat-cards">
+          <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:${color}">${data.overall}%</div><div class="stat-lbl">Overall</div></div>
+          <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-val">${data.subjects ? data.subjects.reduce((s,x)=>s+x.attended,0) : 0}</div><div class="stat-lbl">Classes Attended</div></div>
+          <div class="stat-card"><div class="stat-icon">❌</div><div class="stat-val">${data.subjects ? data.subjects.reduce((s,x)=>s+(x.totalClasses-x.attended),0) : 0}</div><div class="stat-lbl">Classes Missed</div></div>
+          <div class="stat-card"><div class="stat-icon">⚠️</div><div class="stat-val">75%</div><div class="stat-lbl">Min. Required</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📊 Subject-wise Attendance</div>
+          <table>
+            <thead><tr><th>Subject</th><th>Total Classes</th><th>Attended</th><th>Percentage</th></tr></thead>
+            <tbody>${data.subjects ? data.subjects.map(s => {
+              const pct = s.percentage || Math.round((s.attended/s.totalClasses)*100);
+              const col = pct >= 75 ? "var(--success)" : "var(--danger)";
+              return `<tr><td>${s.subject}</td><td>${s.totalClasses}</td><td>${s.attended}</td><td style="color:${col};font-weight:700">${pct}%</td></tr>`;
+            }).join("") : ""}</tbody>
+          </table>
+          ${data.updatedAt ? `<p style="font-size:11px;color:var(--text-muted);margin-top:1rem">Last updated: ${data.updatedAt.split("T")[0]}</p>` : ""}
+        </div>
+        ${data.overall < 75 ? `<div style="padding:1rem;background:#fef2f2;border-radius:8px;border-left:4px solid var(--danger);font-size:14px;color:#dc2626">⚠️ Your attendance is below 75%. Please improve attendance to avoid exam restrictions.</div>` : ""}`;
+    } else {
+      container.innerHTML = `<div class="no-data-msg">📊 Attendance data not uploaded yet.<br><br>Please check back after your teacher uploads attendance.</div>`;
+      document.getElementById("homeAttendance").textContent = "N/A";
+    }
+  } catch(e) {
+    container.innerHTML = `<div class="no-data-msg">Unable to load attendance data.</div>`;
+  }
+}
+
+// RESULTS
+async function loadResultsData(studentId) {
+  const container = document.getElementById("resultsContent");
+  if(!studentId) { container.innerHTML = `<div class="no-data-msg">Student ID not found.</div>`; return; }
+  try {
+    const snap = await getDoc(doc(db, "results", studentId));
+    if(snap.exists()) {
+      const data = snap.data();
+      const gradeFromPct = pct => pct >= 90 ? "A+" : pct >= 80 ? "A" : pct >= 70 ? "B+" : pct >= 60 ? "B" : pct >= 50 ? "C" : "F";
+      document.getElementById("homeGrade").textContent = gradeFromPct(data.percentage || 0);
+      const resColor = data.result === "PASS" ? "var(--success)" : "var(--danger)";
+      container.innerHTML = `
+        <div class="card">
+          <div class="card-title">📊 Examination Results</div>
+          <table>
+            <thead><tr><th>Subject</th><th>Internal</th><th>External</th><th>Total</th><th>Grade</th></tr></thead>
+            <tbody>${data.subjects ? data.subjects.map(s => {
+              const gColor = s.grade && s.grade.startsWith("A") ? "var(--success)" : s.grade === "F" ? "var(--danger)" : "var(--indigo)";
+              return `<tr><td>${s.subject}</td><td>${s.internal}/${s.internalMax||30}</td><td>${s.external}/${s.externalMax||70}</td><td>${s.total}/${s.totalMax||100}</td><td style="color:${gColor};font-weight:700">${s.grade}</td></tr>`;
+            }).join("") : ""}</tbody>
+          </table>
+          <div style="margin-top:1rem;padding:1rem;background:rgba(55,48,163,0.06);border-radius:8px;display:flex;gap:2rem;flex-wrap:wrap">
+            <div><strong style="font-size:12px;color:var(--text-muted)">Total Marks</strong><div style="font-size:1.2rem;font-weight:700;color:var(--indigo-dark)">${data.totalMarks||0}/${data.maxMarks||0}</div></div>
+            <div><strong style="font-size:12px;color:var(--text-muted)">Percentage</strong><div style="font-size:1.2rem;font-weight:700;color:var(--indigo-dark)">${data.percentage||0}%</div></div>
+            <div><strong style="font-size:12px;color:var(--text-muted)">Grade</strong><div style="font-size:1.2rem;font-weight:700;color:var(--indigo-dark)">${gradeFromPct(data.percentage||0)}</div></div>
+            <div><strong style="font-size:12px;color:var(--text-muted)">Result</strong><div style="font-size:1.2rem;font-weight:700;color:${resColor}">${data.result||"—"} ${data.result==="PASS"?"✅":"❌"}</div></div>
+          </div>
+          ${data.updatedAt ? `<p style="font-size:11px;color:var(--text-muted);margin-top:1rem">Last updated: ${data.updatedAt.split("T")[0]}</p>` : ""}
+        </div>`;
+    } else {
+      container.innerHTML = `<div class="no-data-msg">📝 Results not published yet.<br><br>Results will appear here once uploaded by the admin.</div>`;
+      document.getElementById("homeGrade").textContent = "N/A";
+    }
+  } catch(e) {
+    container.innerHTML = `<div class="no-data-msg">Unable to load results.</div>`;
+  }
+}
+
+// FEES
+async function loadFeesData(studentId) {
+  const container = document.getElementById("feesContent");
+  if(!studentId) { container.innerHTML = `<div class="no-data-msg">Student ID not found.</div>`; return; }
+  try {
+    const snap = await getDoc(doc(db, "fees", studentId));
+    if(snap.exists()) {
+      const data = snap.data();
+      const pending = data.items ? data.items.filter(x => x.status.toLowerCase() === "pending") : [];
+      const statusColor = { paid: "var(--success)", pending: "var(--danger)", upcoming: "var(--warning)" };
+      const statusIcon = { paid: "✅", pending: "❌", upcoming: "⏳" };
+      container.innerHTML = `
+        ${pending.length > 0 ? `<div style="padding:1rem;background:#fef2f2;border-radius:8px;border-left:4px solid var(--danger);font-size:14px;color:#dc2626;margin-bottom:1rem">⚠️ You have ${pending.length} pending fee payment${pending.length > 1 ? "s" : ""}. Please pay at the accounts office.</div>` : `<div style="padding:1rem;background:#f0fdf4;border-radius:8px;border-left:4px solid var(--success);font-size:14px;color:#065f46;margin-bottom:1rem">✅ All fees are paid! Great job.</div>`}
+        <div class="card">
+          <div class="card-title">💳 Fee Details</div>
+          <table>
+            <thead><tr><th>Fee Type</th><th>Amount</th><th>Due Date</th><th>Status</th></tr></thead>
+            <tbody>${data.items ? data.items.map(f => {
+              const s = f.status.toLowerCase();
+              return `<tr><td>${f.feeType}</td><td>₹${Number(f.amount).toLocaleString()}</td><td>${f.dueDate}</td><td style="color:${statusColor[s]||"var(--text)"};font-weight:600">${statusIcon[s]||""} ${f.status}</td></tr>`;
+            }).join("") : ""}</tbody>
+          </table>
+          ${data.updatedAt ? `<p style="font-size:11px;color:var(--text-muted);margin-top:1rem">Last updated: ${data.updatedAt.split("T")[0]}</p>` : ""}
+        </div>`;
+    } else {
+      container.innerHTML = `<div class="no-data-msg">💳 Fee details not uploaded yet.<br><br>Please check back later or contact the accounts office.</div>`;
+    }
+  } catch(e) {
+    container.innerHTML = `<div class="no-data-msg">Unable to load fee details.</div>`;
+  }
+}
+
+// VERIFY STUDENT
+window.verifyStudent = async() => {
+  const studentId = document.getElementById("verifyStudentId").value.trim().toUpperCase();
+  const name = document.getElementById("verifyName").value.trim();
+  const phone = document.getElementById("verifyPhone").value.trim();
+  if(!studentId || !name || !phone) { showError("Please fill in all fields."); return; }
+  const btn = document.getElementById("verifyBtn");
+  btn.textContent = "Verifying..."; btn.disabled = true;
   hideMessages();
   try {
-    const snap = await getDoc(doc(db, 'approved_students', studentId));
-    if (!snap.exists()) {
-      showError('❌ Student ID not found. Please contact admin if you think this is a mistake.');
-      btn.textContent = 'Verify My Identity →'; btn.disabled = false; return;
-    }
+    const snap = await getDoc(doc(db, "approved_students", studentId));
+    if(!snap.exists()) { showError("❌ Student ID not found. Contact admin if this is a mistake."); btn.textContent = "Verify My Identity →"; btn.disabled = false; return; }
     const data = snap.data();
-    const nameMatch = data.name.toLowerCase().trim() === name.toLowerCase().trim();
-    const phoneMatch = data.phone.toString().trim() === phone.toString().trim();
-    if (!nameMatch) {
-      showError('❌ Name does not match our records. Please enter your name exactly as registered.');
-      btn.textContent = 'Verify My Identity →'; btn.disabled = false; return;
-    }
-    if (!phoneMatch) {
-      showError('❌ Phone number does not match our records. Please use the number registered with the college.');
-      btn.textContent = 'Verify My Identity →'; btn.disabled = false; return;
-    }
-    // ALL 3 MATCH — go to step 2
+    if(data.name.toLowerCase().trim() !== name.toLowerCase().trim()) { showError("❌ Name does not match our records. Enter your name exactly as registered."); btn.textContent = "Verify My Identity →"; btn.disabled = false; return; }
+    if(data.phone.toString().trim() !== phone.toString().trim()) { showError("❌ Phone number does not match our records."); btn.textContent = "Verify My Identity →"; btn.disabled = false; return; }
     verifiedStudentData = { studentId, name, phone, department: data.department, year: data.year };
-    document.getElementById('registerStep1').style.display = 'none';
-    document.getElementById('registerStep2').style.display = 'block';
-    document.getElementById('step1dot').className = 'step-dot done';
-    document.getElementById('step1dot').textContent = '✓';
-    document.getElementById('stepline1').className = 'step-line done';
-    document.getElementById('step2dot').className = 'step-dot active';
+    document.getElementById("registerStep1").style.display = "none";
+    document.getElementById("registerStep2").style.display = "block";
+    document.getElementById("step1dot").className = "step-dot done";
+    document.getElementById("step1dot").textContent = "✓";
+    document.getElementById("stepline1").className = "step-line done";
+    document.getElementById("step2dot").className = "step-dot active";
     hideMessages();
-  } catch(e) {
-    showError('Error verifying. Please check your internet connection and try again.');
-    btn.textContent = 'Verify My Identity →'; btn.disabled = false;
-  }
+  } catch(e) { showError("Error verifying. Check your internet connection."); btn.textContent = "Verify My Identity →"; btn.disabled = false; }
 };
 
-// REGISTER — only runs if verification passed
-window.registerStudent = async function() {
-  if (!verifiedStudentData) { showError('Please complete verification first.'); return; }
-  const email = document.getElementById('regEmail').value.trim();
-  const password = document.getElementById('regPassword').value;
-  const confirm = document.getElementById('regConfirm').value;
-  if (!email || !password || !confirm) { showError('Please fill in all fields.'); return; }
-  if (password.length < 6) { showError('Password must be at least 6 characters.'); return; }
-  if (password !== confirm) { showError('Passwords do not match.'); return; }
-  const btn = document.getElementById('registerBtn');
-  btn.textContent = 'Creating account...'; btn.disabled = true;
+window.registerStudent = async() => {
+  if(!verifiedStudentData) { showError("Please complete verification first."); return; }
+  const email = document.getElementById("regEmail").value.trim();
+  const password = document.getElementById("regPassword").value;
+  const confirm = document.getElementById("regConfirm").value;
+  if(!email || !password || !confirm) { showError("Please fill in all fields."); return; }
+  if(password.length < 6) { showError("Password must be at least 6 characters."); return; }
+  if(password !== confirm) { showError("Passwords do not match."); return; }
+  const btn = document.getElementById("registerBtn");
+  btn.textContent = "Creating account..."; btn.disabled = true;
   hideMessages();
   try {
     const userCred = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(userCred.user, { displayName: verifiedStudentData.name });
-    await setDoc(doc(db, 'students', userCred.user.uid), {
-      studentId: verifiedStudentData.studentId,
-      name: verifiedStudentData.name,
-      phone: verifiedStudentData.phone,
-      department: verifiedStudentData.department,
-      year: verifiedStudentData.year,
-      email,
-      registeredAt: new Date().toISOString()
+    await setDoc(doc(db, "students", userCred.user.uid), {
+      studentId: verifiedStudentData.studentId, name: verifiedStudentData.name,
+      phone: verifiedStudentData.phone, department: verifiedStudentData.department,
+      year: verifiedStudentData.year, email, registeredAt: new Date().toISOString()
     });
   } catch(e) {
-    btn.textContent = 'Create My Account →'; btn.disabled = false;
-    if(e.code==='auth/email-already-in-use') showError('This email is already registered. Please login instead.');
-    else if(e.code==='auth/invalid-email') showError('Please enter a valid email address.');
-    else showError('Registration failed. Please try again.');
+    btn.textContent = "Create My Account →"; btn.disabled = false;
+    if(e.code === "auth/email-already-in-use") showError("This email is already registered. Please login.");
+    else if(e.code === "auth/invalid-email") showError("Please enter a valid email address.");
+    else showError("Registration failed. Please try again.");
   }
 };
 
-// LOGIN
-window.loginStudent = async function() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  if (!email || !password) { showError('Please enter your email and password.'); return; }
-  const btn = document.getElementById('loginBtn');
-  btn.textContent = 'Logging in...'; btn.disabled = true;
+window.loginStudent = async() => {
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  if(!email || !password) { showError("Please enter your email and password."); return; }
+  const btn = document.getElementById("loginBtn");
+  btn.textContent = "Logging in..."; btn.disabled = true;
   hideMessages();
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch(e) {
-    btn.textContent = 'Login to Portal'; btn.disabled = false;
-    if(e.code==='auth/user-not-found'||e.code==='auth/wrong-password'||e.code==='auth/invalid-credential') showError('Invalid email or password.');
-    else if(e.code==='auth/too-many-requests') showError('Too many attempts. Please wait a few minutes.');
-    else showError('Login failed. Please try again.');
+  try { await signInWithEmailAndPassword(auth, email, password); }
+  catch(e) {
+    btn.textContent = "Login to Portal"; btn.disabled = false;
+    if(e.code === "auth/invalid-credential" || e.code === "auth/wrong-password" || e.code === "auth/user-not-found") showError("Invalid email or password.");
+    else if(e.code === "auth/too-many-requests") showError("Too many attempts. Please wait a few minutes.");
+    else showError("Login failed. Please try again.");
   }
 };
 
-// LOGOUT
-window.logoutStudent = async function() {
-  if(confirm('Are you sure you want to logout?')) await signOut(auth);
+window.logoutStudent = async() => {
+  if(confirm("Are you sure you want to logout?")) await signOut(auth);
 };
 
-// FORGOT PASSWORD
-window.forgotPassword = async function() {
-  const email = document.getElementById('loginEmail').value.trim();
-  if (!email) { showError('Please enter your email address first.'); return; }
+window.forgotPassword = async() => {
+  const email = document.getElementById("loginEmail").value.trim();
+  if(!email) { showError("Please enter your email address first."); return; }
   try {
     await sendPasswordResetEmail(auth, email);
-    document.getElementById('authSuccess').textContent = '✅ Password reset email sent! Check your inbox.';
-    document.getElementById('authSuccess').style.display = 'block';
-  } catch(e) { showError('Could not send reset email. Check your email address.'); }
+    document.getElementById("authSuccess").textContent = "✅ Password reset email sent! Check your inbox.";
+    document.getElementById("authSuccess").style.display = "block";
+  } catch(e) { showError("Could not send reset email. Check your email address."); }
 };
 
-// BACK TO STEP 1
-window.backToStep1 = function() {
+window.backToStep1 = () => {
   verifiedStudentData = null;
-  document.getElementById('registerStep1').style.display = 'block';
-  document.getElementById('registerStep2').style.display = 'none';
-  document.getElementById('step1dot').className = 'step-dot active';
-  document.getElementById('step1dot').textContent = '1';
-  document.getElementById('stepline1').className = 'step-line';
-  document.getElementById('step2dot').className = 'step-dot inactive';
+  document.getElementById("registerStep1").style.display = "block";
+  document.getElementById("registerStep2").style.display = "none";
+  document.getElementById("step1dot").className = "step-dot active";
+  document.getElementById("step1dot").textContent = "1";
+  document.getElementById("stepline1").className = "step-line";
+  document.getElementById("step2dot").className = "step-dot inactive";
   hideMessages();
 };
 
-function showError(msg) { const el=document.getElementById('authError'); el.textContent=msg; el.style.display='block'; }
-function hideMessages() { document.getElementById('authError').style.display='none'; document.getElementById('authSuccess').style.display='none'; document.getElementById('verifyBadge').style.display='none'; }
+function showError(msg) { const el = document.getElementById("authError"); el.textContent = msg; el.style.display = "block"; }
+function hideMessages() { document.getElementById("authError").style.display = "none"; document.getElementById("authSuccess").style.display = "none"; }
 </script>
 
 <script>
-function switchTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));
-  document.getElementById(tab+'Form').classList.add('active');
-  document.querySelectorAll('.auth-tab')[tab==='login'?0:1].classList.add('active');
-  document.getElementById('authError').style.display='none';
-  document.getElementById('authSuccess').style.display='none';
+function switchTab(tab){
+  document.querySelectorAll(".auth-tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".auth-form").forEach(f=>f.classList.remove("active"));
+  document.getElementById(tab+"Form").classList.add("active");
+  document.querySelectorAll(".auth-tab")[tab==="login"?0:1].classList.add("active");
+  document.getElementById("authError").style.display="none";
+  document.getElementById("authSuccess").style.display="none";
 }
-function showPage(page, el) {
-  document.querySelectorAll('.dash-page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.sidebar-link').forEach(l=>l.classList.remove('active'));
-  document.getElementById('page-'+page).classList.add('active');
-  if(el) el.classList.add('active');
-  document.getElementById('sidebar').classList.remove('open');
+function showPage(page,el){
+  document.querySelectorAll(".dash-page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".sidebar-link").forEach(l=>l.classList.remove("active"));
+  document.getElementById("page-"+page).classList.add("active");
+  if(el) el.classList.add("active");
+  document.getElementById("sidebar").classList.remove("open");
 }
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
-function togglePassword(id) { const i=document.getElementById(id); i.type=i.type==='password'?'text':'password'; }
+function toggleSidebar(){document.getElementById("sidebar").classList.toggle("open");}
+function togglePass(id){const i=document.getElementById(id);i.type=i.type==="password"?"text":"password";}
 </script>
 </body>
 </html>
