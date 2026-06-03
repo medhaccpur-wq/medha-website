@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEDHA — Melodious Education Housing Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --indigo: #3730a3;
+    --indigo-dark: #1e1b6e;
+    --indigo-light: #6366f1;
+    --yellow: #fbbf24;
+    --yellow-light: #fde68a;
+    --yellow-dark: #d97706;
+    --white: #ffffff;
+    --gray: #f8f7ff;
+    --text: #1e1b4b;
+    --text-muted: #6b7280;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; color: var(--text); background: var(--white); }
+
+  /* IMAGE UPLOAD ZONES */
+  .img-upload-zone {
+    position: relative; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .img-upload-zone input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 10; width: 100%; height: 100%;
+  }
+  .img-upload-zone:hover .upload-overlay { opacity: 1; }
+  .upload-overlay {
+    position: absolute; inset: 0; background: rgba(30,27,110,0.75);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.2s; border-radius: inherit; z-index: 5;
+    color: white; font-size: 13px; gap: 6px; pointer-events: none;
+  }
+  .upload-overlay .upload-icon { font-size: 1.8rem; }
+  .upload-overlay span { font-size: 12px; opacity: 0.8; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    background: var(--indigo-dark);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .nav-logo {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--yellow);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 18px; color: var(--indigo-dark);
+    overflow: hidden; position: relative;
+  }
+  .nav-logo img { width: 100%; height: 100%; object-fit: cover; display: none; }
+  .nav-logo .logo-letter { position: absolute; }
+  .nav-logo input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 10; }
+  .nav-logo:hover::after { content: '📷'; position: absolute; font-size: 16px; z-index: 6; background: rgba(0,0,0,0.5); inset: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+  .nav-name { color: var(--white); font-weight: 600; font-size: 15px; line-height: 1.2; }
+  .nav-name span { color: var(--yellow); font-size: 11px; font-weight: 300; display: block; letter-spacing: 2px; }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 13px; padding: 6px 10px; border-radius: 6px; transition: all 0.2s; }
+  .nav-links a:hover { background: rgba(255,255,255,0.1); color: var(--yellow); }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .hamburger span { width: 24px; height: 2px; background: white; border-radius: 2px; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--indigo-dark) 0%, var(--indigo) 60%, #4338ca 100%);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 100px 2rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; opacity: 0.25; }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 70% 30%, rgba(251,191,36,0.15) 0%, transparent 60%),
+                radial-gradient(circle at 20% 80%, rgba(99,102,241,0.3) 0%, transparent 50%);
+    z-index: 1;
+  }
+  .hero-upload-btn {
+    position: absolute; top: 80px; right: 1.5rem; z-index: 20;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    color: white; font-size: 12px; padding: 6px 14px; border-radius: 20px;
+    cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.2s;
+  }
+  .hero-upload-btn:hover { background: rgba(255,255,255,0.25); }
+  .hero-upload-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+  .hero-badge { display: inline-block; background: rgba(251,191,36,0.2); border: 1px solid var(--yellow); color: var(--yellow); font-size: 12px; letter-spacing: 3px; text-transform: uppercase; padding: 6px 20px; border-radius: 50px; margin-bottom: 2rem; animation: fadeUp 0.6s ease both; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 5rem); color: var(--white); font-weight: 900; line-height: 1.1; margin-bottom: 1rem; animation: fadeUp 0.6s 0.2s ease both; }
+  .hero h1 span { color: var(--yellow); }
+  .hero-motto { font-size: clamp(1rem, 2vw, 1.3rem); color: rgba(255,255,255,0.75); font-style: italic; margin-bottom: 2.5rem; letter-spacing: 1px; animation: fadeUp 0.6s 0.4s ease both; }
+
+  /* TWO MAIN BUTTONS */
+  .hero-main-btns { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.2rem; animation: fadeUp 0.6s 0.5s ease both; }
+  .btn-new-student {
+    background: var(--yellow); color: var(--indigo-dark);
+    padding: 16px 36px; border-radius: 8px; font-weight: 700; font-size: 16px;
+    text-decoration: none; border: none; cursor: pointer;
+    box-shadow: 0 4px 24px rgba(251,191,36,0.5); transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-new-student:hover { background: var(--yellow-dark); transform: translateY(-3px); }
+  .btn-old-student {
+    background: transparent; color: var(--white);
+    padding: 16px 36px; border-radius: 8px; font-weight: 700; font-size: 16px;
+    text-decoration: none; border: 2px solid var(--white); cursor: pointer;
+    transition: all 0.2s; display: flex; align-items: center; gap: 8px;
+  }
+  .btn-old-student:hover { border-color: var(--yellow); color: var(--yellow); transform: translateY(-3px); }
+
+  .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.6s 0.6s ease both; }
+  .btn-outline { border: 1.5px solid rgba(255,255,255,0.4); color: rgba(255,255,255,0.8); padding: 10px 24px; border-radius: 8px; font-weight: 500; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+  .btn-outline:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  .hero-stats { display: flex; gap: 3rem; justify-content: center; margin-top: 3.5rem; animation: fadeUp 0.6s 0.8s ease both; }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--yellow); font-weight: 700; }
+  .stat-label { color: rgba(255,255,255,0.6); font-size: 12px; letter-spacing: 1px; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: white; border-radius: 16px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; animation: modalIn 0.3s ease; }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  .modal-header { background: var(--indigo-dark); padding: 1.5rem 2rem; border-radius: 16px 16px 0 0; display: flex; align-items: center; justify-content: space-between; }
+  .modal-header h2 { color: white; font-family: 'Playfair Display', serif; font-size: 1.3rem; }
+  .modal-header .modal-tag { color: var(--yellow); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
+  .modal-close { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 1.5rem; cursor: pointer; line-height: 1; }
+  .modal-close:hover { color: white; }
+  .modal-body { padding: 2rem; }
+  .modal-body .form-group { margin-bottom: 1rem; }
+  .modal-body .form-group label { font-size: 13px; font-weight: 500; color: var(--indigo-dark); display: block; margin-bottom: 5px; }
+  .modal-body .form-group input,
+  .modal-body .form-group select,
+  .modal-body .form-group textarea {
+    width: 100%; padding: 10px 14px; border: 1.5px solid rgba(55,48,163,0.15);
+    border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px;
+    color: var(--text); background: var(--gray); outline: none; transition: border 0.2s;
+  }
+  .modal-body .form-group input:focus,
+  .modal-body .form-group select:focus,
+  .modal-body .form-group textarea:focus { border-color: var(--indigo-light); background: white; }
+  .modal-body .form-group textarea { height: 80px; resize: vertical; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .modal-submit {
+    width: 100%; padding: 13px; border: none; border-radius: 8px;
+    font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s; margin-top: 0.5rem;
+  }
+  .modal-submit.yellow { background: var(--yellow); color: var(--indigo-dark); }
+  .modal-submit.yellow:hover { background: var(--yellow-dark); }
+  .modal-submit.indigo { background: var(--indigo-dark); color: white; }
+  .modal-submit.indigo:hover { background: var(--indigo); }
+  .modal-note { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 1rem; }
+
+  /* LEAD INQUIRY SECTION */
+  #inquiry { background: var(--indigo-dark); }
+  .inquiry-inner { max-width: 700px; margin: 0 auto; text-align: center; }
+  .inquiry-inner .section-tag { color: var(--yellow); }
+  .inquiry-inner .section-title { color: white; }
+  .inquiry-inner .divider { margin: 1rem auto 2rem; }
+  .inquiry-form { background: white; border-radius: 16px; padding: 2rem; text-align: left; }
+  .inquiry-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .inquiry-form .form-group { margin-bottom: 1rem; }
+  .inquiry-form label { font-size: 13px; font-weight: 500; color: var(--indigo-dark); display: block; margin-bottom: 5px; }
+  .inquiry-form input, .inquiry-form select, .inquiry-form textarea {
+    width: 100%; padding: 10px 14px; border: 1.5px solid rgba(55,48,163,0.15);
+    border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px;
+    color: var(--text); background: var(--gray); outline: none; transition: border 0.2s;
+  }
+  .inquiry-form input:focus, .inquiry-form select:focus, .inquiry-form textarea:focus { border-color: var(--indigo-light); background: white; }
+  .inquiry-form textarea { height: 90px; resize: vertical; }
+  .inquiry-submit { width: 100%; background: var(--yellow); color: var(--indigo-dark); padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; margin-top: 0.5rem; }
+  .inquiry-submit:hover { background: var(--yellow-dark); transform: translateY(-2px); }
+
+  /* SECTIONS */
+  section { padding: 5rem 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-tag { color: var(--indigo-light); font-size: 12px; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 700; color: var(--indigo-dark); margin-bottom: 1rem; }
+  .section-sub { color: var(--text-muted); font-size: 1rem; max-width: 600px; line-height: 1.7; margin-bottom: 3rem; }
+  .divider { width: 60px; height: 4px; background: var(--yellow); border-radius: 2px; margin: 1rem 0 2rem; }
+
+  /* ABOUT */
+  #about { background: var(--gray); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .about-img {
+    aspect-ratio: 4/3; border-radius: 16px;
+    background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-dark) 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem; position: relative; overflow: hidden;
+  }
+  .about-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; border-radius: 16px; }
+  .about-img .img-placeholder { position: relative; z-index: 1; }
+  .value-list { list-style: none; margin-top: 1.5rem; }
+  .value-list li { padding: 8px 0; border-bottom: 1px solid rgba(55,48,163,0.1); display: flex; align-items: center; gap: 10px; font-size: 15px; }
+  .value-list li::before { content: '✦'; color: var(--yellow-dark); font-size: 12px; }
+
+  /* DEPARTMENTS */
+  .dept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+  .dept-card { background: var(--white); border-radius: 12px; padding: 2rem; border: 1px solid rgba(55,48,163,0.1); transition: all 0.3s; position: relative; overflow: hidden; }
+  .dept-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--yellow); }
+  .dept-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(55,48,163,0.15); }
+  .dept-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .dept-card h3 { font-size: 16px; font-weight: 600; color: var(--indigo-dark); margin-bottom: 0.5rem; }
+  .dept-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* ADMISSIONS */
+  #admissions { background: var(--gray); }
+  .admission-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+  .adm-step { text-align: center; }
+  .adm-num { width: 56px; height: 56px; border-radius: 50%; background: var(--indigo-dark); color: var(--yellow); font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+  .adm-step h3 { color: var(--indigo-dark); font-size: 15px; font-weight: 600; margin-bottom: 0.5rem; }
+  .adm-step p { color: var(--text-muted); font-size: 13px; line-height: 1.6; }
+  .adm-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; }
+  .btn-adm-new { background: var(--yellow); color: var(--indigo-dark); padding: 14px 32px; border-radius: 8px; font-weight: 700; font-size: 15px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+  .btn-adm-new:hover { background: var(--yellow-dark); transform: translateY(-2px); }
+  .btn-adm-old { background: var(--indigo-dark); color: white; padding: 14px 32px; border-radius: 8px; font-weight: 700; font-size: 15px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+  .btn-adm-old:hover { background: var(--indigo); transform: translateY(-2px); }
+
+  /* GALLERY */
+  #gallery { background: var(--white); }
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .gallery-item {
+    aspect-ratio: 4/3; border-radius: 10px; overflow: hidden;
+    background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-dark) 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem; color: rgba(255,255,255,0.3);
+    transition: transform 0.3s; position: relative; cursor: pointer;
+  }
+  .gallery-item img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+  .gallery-item .gallery-placeholder { position: relative; z-index: 1; }
+  .gallery-item:nth-child(2) { background: linear-gradient(135deg, #4338ca, #6366f1); }
+  .gallery-item:nth-child(3) { background: linear-gradient(135deg, var(--indigo-dark), #312e81); }
+  .gallery-item:nth-child(4) { background: linear-gradient(135deg, #1e1b6e, #3730a3); }
+  .gallery-item:nth-child(5) { background: linear-gradient(135deg, #4c1d95, #6d28d9); }
+  .gallery-item:nth-child(6) { background: linear-gradient(135deg, #312e81, #4338ca); }
+  .gallery-item:hover { transform: scale(1.03); }
+
+  /* FACULTY */
+  .faculty-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+  .faculty-card { text-align: center; }
+  .faculty-avatar {
+    width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 1rem;
+    background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--yellow);
+    border: 3px solid var(--yellow); overflow: hidden; position: relative; cursor: pointer;
+  }
+  .faculty-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+  .faculty-avatar .fa-initials { position: relative; z-index: 1; }
+  .faculty-card h3 { font-size: 15px; font-weight: 600; color: var(--indigo-dark); }
+  .faculty-card p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  .faculty-dept { display: inline-block; margin-top: 8px; background: rgba(55,48,163,0.08); color: var(--indigo); font-size: 11px; padding: 3px 10px; border-radius: 50px; font-weight: 500; }
+
+  /* EVENTS */
+  #events { background: var(--gray); }
+  .events-list { display: flex; flex-direction: column; gap: 1rem; }
+  .event-card { background: var(--white); border-radius: 12px; padding: 1.5rem; border: 1px solid rgba(55,48,163,0.1); display: flex; gap: 1.5rem; align-items: flex-start; transition: box-shadow 0.2s; }
+  .event-card:hover { box-shadow: 0 8px 30px rgba(55,48,163,0.12); }
+  .event-date { min-width: 60px; text-align: center; background: var(--indigo-dark); border-radius: 8px; padding: 10px; color: white; }
+  .event-date .day { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--yellow); line-height: 1; }
+  .event-date .month { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.7; }
+  .event-info h3 { font-size: 16px; font-weight: 600; color: var(--indigo-dark); margin-bottom: 4px; }
+  .event-info p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .event-tag { display: inline-block; margin-top: 8px; background: rgba(251,191,36,0.15); color: var(--yellow-dark); font-size: 11px; padding: 3px 10px; border-radius: 50px; font-weight: 500; }
+
+  /* NEWS */
+  .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .news-card { background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid rgba(55,48,163,0.1); transition: transform 0.3s; }
+  .news-card:hover { transform: translateY(-4px); }
+  .news-thumb { height: 160px; background: linear-gradient(135deg, var(--indigo), var(--indigo-light)); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: rgba(255,255,255,0.3); position: relative; overflow: hidden; cursor: pointer; }
+  .news-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+  .news-thumb .news-placeholder { position: relative; z-index: 1; }
+  .news-body { padding: 1.25rem; }
+  .news-date { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+  .news-body h3 { font-size: 15px; font-weight: 600; color: var(--indigo-dark); margin: 6px 0 8px; line-height: 1.4; }
+  .news-body p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* STUDENT LIFE */
+  #student-life { background: var(--indigo-dark); }
+  #student-life .section-title { color: var(--white); }
+  #student-life .section-tag { color: var(--yellow); }
+  #student-life .section-sub { color: rgba(255,255,255,0.6); }
+  #student-life .divider { background: var(--yellow); }
+  .life-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+  .life-card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 2rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; transition: background 0.3s; }
+  .life-card:hover { background: rgba(251,191,36,0.1); }
+  .life-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .life-card h3 { color: var(--white); font-size: 15px; font-weight: 600; margin-bottom: 0.5rem; }
+  .life-card p { color: rgba(255,255,255,0.5); font-size: 13px; line-height: 1.6; }
+
+  /* CONTACT */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .contact-info h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--indigo-dark); margin-bottom: 1.5rem; }
+  .contact-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: flex-start; }
+  .contact-icon { width: 40px; height: 40px; border-radius: 8px; background: rgba(55,48,163,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .contact-item strong { font-size: 13px; color: var(--indigo-dark); display: block; margin-bottom: 2px; }
+  .contact-item span { font-size: 14px; color: var(--text-muted); }
+  .contact-form-box { background: var(--gray); border-radius: 16px; padding: 2rem; }
+  .contact-form-box h3 { font-size: 18px; font-weight: 600; color: var(--indigo-dark); margin-bottom: 1.5rem; }
+  .contact-form-box .form-group { margin-bottom: 1rem; }
+  .contact-form-box label { font-size: 13px; font-weight: 500; color: var(--indigo-dark); display: block; margin-bottom: 6px; }
+  .contact-form-box input, .contact-form-box textarea, .contact-form-box select { width: 100%; padding: 10px 14px; border: 1.5px solid rgba(55,48,163,0.15); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--white); outline: none; transition: border 0.2s; }
+  .contact-form-box input:focus, .contact-form-box textarea:focus, .contact-form-box select:focus { border-color: var(--indigo-light); }
+  .contact-form-box textarea { height: 100px; resize: vertical; }
+  .btn-submit { width: 100%; background: var(--indigo-dark); color: var(--white); padding: 12px; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; }
+  .btn-submit:hover { background: var(--indigo); }
+
+  /* SUCCESS MSG */
+  .success-msg { display: none; background: #d1fae5; border: 1px solid #6ee7b7; color: #065f46; border-radius: 8px; padding: 12px 16px; margin-top: 1rem; font-size: 14px; font-weight: 500; text-align: center; }
+
+  footer { background: #0f0d3d; color: rgba(255,255,255,0.6); text-align: center; padding: 2rem; font-size: 13px; }
+  footer strong { color: var(--yellow); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; right: 0; background: var(--indigo-dark); padding: 1rem; }
+    .nav-links.open { display: flex; }
+    .hamburger { display: flex; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-stats { gap: 1.5rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .inquiry-form .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#home">
+    <div class="nav-logo img-upload-zone" title="Click to upload logo">
+      <input type="file" accept="image/*" onchange="uploadLogo(this)">
+      <img id="logo-img" alt="MEDHA Logo">
+      <span class="logo-letter">M</span>
+      <div class="upload-overlay"><span class="upload-icon">📷</span></div>
+    </div>
+    <div class="nav-name">MEDHA <span>Melodious Education Housing Academy</span></div>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#about">About</a>
+    <a href="#departments">Departments</a>
+    <a href="#admissions">Admissions</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#faculty">Faculty</a>
+    <a href="#events">Events</a>
+    <a href="#news">News</a>
+    <a href="#student-life">Student Life</a>
+    <a href="#inquiry">Inquiry</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="hamburger" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <img id="hero-bg" class="hero-bg-img" alt="Hero Background">
+  <label class="hero-upload-btn" title="Upload hero background image">
+    📷 Change Background
+    <input type="file" accept="image/*" onchange="uploadHeroBg(this)">
+  </label>
+  <div class="hero-content">
+    <div class="hero-badge">Est. Excellence in Education</div>
+    <h1>Melodious Education<br><span>Housing Academy</span></h1>
+    <p class="hero-motto">"Believing in Possibilities"</p>
+
+    <!-- TWO MAIN BUTTONS -->
+    <div class="hero-main-btns">
+      <button class="btn-new-student" onclick="openModal('new-student')">🎓 New Student Admission</button>
+      <button class="btn-old-student" onclick="openModal('old-student')">🔄 Old Student Registration</button>
+    </div>
+
+    <div class="hero-btns">
+      <a href="#about" class="btn-outline">Learn More</a>
+      <a href="#inquiry" class="btn-outline">Make an Inquiry</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">10+</div><div class="stat-label">Departments</div></div>
+      <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Students</div></div>
+      <div class="stat"><div class="stat-num">50+</div><div class="stat-label">Faculty</div></div>
+      <div class="stat"><div class="stat-num">15+</div><div class="stat-label">Years</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- NEW STUDENT MODAL -->
+<div class="modal-overlay" id="modal-new-student">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-tag">🎓 Fresh Admission</div>
+        <h2>New Student Application</h2>
+      </div>
+      <button class="modal-close" onclick="closeModal('new-student')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>First Name *</label><input type="text" placeholder="First name"></div>
+        <div class="form-group"><label>Last Name *</label><input type="text" placeholder="Last name"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Date of Birth *</label><input type="date"></div>
+        <div class="form-group"><label>Gender *</label>
+          <select><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Email Address *</label><input type="email" placeholder="your@email.com"></div>
+      <div class="form-group"><label>Phone Number *</label><input type="tel" placeholder="+91 XXXXX XXXXX"></div>
+      <div class="form-group"><label>Desired Department *</label>
+        <select>
+          <option value="">Select Department</option>
+          <option>Science & Technology</option>
+          <option>Engineering</option>
+          <option>Arts & Humanities</option>
+          <option>Commerce & Business</option>
+          <option>Law & Social Sciences</option>
+          <option>Information Technology</option>
+          <option>Environmental Studies</option>
+          <option>Music & Performing Arts</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Previous School/College *</label><input type="text" placeholder="School name"></div>
+        <div class="form-group"><label>Passing Year *</label><input type="number" placeholder="2024" min="2000" max="2025"></div>
+      </div>
+      <div class="form-group"><label>Percentage / CGPA *</label><input type="text" placeholder="e.g. 85% or 8.5 CGPA"></div>
+      <div class="form-group"><label>Upload Photo (optional)</label>
+        <div class="img-upload-zone" style="border:1.5px dashed rgba(55,48,163,0.3); border-radius:8px; padding:1.5rem; text-align:center; background:var(--gray);">
+          <input type="file" accept="image/*" onchange="previewUpload(this,'new-photo-preview')" style="position:static; opacity:1; width:auto; height:auto; display:block; margin:0 auto; cursor:pointer;">
+          <img id="new-photo-preview" style="width:80px;height:80px;object-fit:cover;border-radius:50%;margin:8px auto 0;display:none;border:2px solid var(--indigo);">
+          <p style="font-size:12px;color:var(--text-muted);margin-top:6px;">Passport size photo (JPG/PNG)</p>
+        </div>
+      </div>
+      <div class="form-group"><label>Address</label><textarea placeholder="Your full address..."></textarea></div>
+      <button class="modal-submit yellow" onclick="submitForm('new-student-success')">Submit Application →</button>
+      <div class="success-msg" id="new-student-success">✅ Application submitted! We will contact you within 2 working days.</div>
+      <p class="modal-note">By submitting you agree to MEDHA's admission terms and privacy policy.</p>
+    </div>
+  </div>
+</div>
+
+<!-- OLD STUDENT MODAL -->
+<div class="modal-overlay" id="modal-old-student">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-tag">🔄 Re-Registration</div>
+        <h2>Old Student Registration</h2>
+      </div>
+      <button class="modal-close" onclick="closeModal('old-student')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Full Name *</label><input type="text" placeholder="Your full name"></div>
+        <div class="form-group"><label>Student ID / Roll No. *</label><input type="text" placeholder="e.g. MEDHA2023001"></div>
+      </div>
+      <div class="form-group"><label>Email Address *</label><input type="email" placeholder="registered@email.com"></div>
+      <div class="form-group"><label>Phone Number *</label><input type="tel" placeholder="+91 XXXXX XXXXX"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Department *</label>
+          <select>
+            <option value="">Select</option>
+            <option>Science & Technology</option>
+            <option>Engineering</option>
+            <option>Arts & Humanities</option>
+            <option>Commerce & Business</option>
+            <option>Law & Social Sciences</option>
+            <option>Information Technology</option>
+            <option>Environmental Studies</option>
+            <option>Music & Performing Arts</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Current Year / Semester *</label>
+          <select>
+            <option value="">Select</option>
+            <option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Academic Year *</label>
+        <select>
+          <option>2025–2026</option><option>2024–2025</option><option>2023–2024</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Upload Updated Photo (optional)</label>
+        <div class="img-upload-zone" style="border:1.5px dashed rgba(55,48,163,0.3); border-radius:8px; padding:1.5rem; text-align:center; background:var(--gray);">
+          <input type="file" accept="image/*" onchange="previewUpload(this,'old-photo-preview')" style="position:static; opacity:1; width:auto; height:auto; display:block; margin:0 auto; cursor:pointer;">
+          <img id="old-photo-preview" style="width:80px;height:80px;object-fit:cover;border-radius:50%;margin:8px auto 0;display:none;border:2px solid var(--indigo);">
+          <p style="font-size:12px;color:var(--text-muted);margin-top:6px;">Passport size photo (JPG/PNG)</p>
+        </div>
+      </div>
+      <div class="form-group"><label>Any Updates / Notes</label><textarea placeholder="Changed address, phone, or other updates..."></textarea></div>
+      <button class="modal-submit indigo" onclick="submitForm('old-student-success')">Complete Registration →</button>
+      <div class="success-msg" id="old-student-success">✅ Registration complete! Your details have been updated successfully.</div>
+      <p class="modal-note">Please ensure your student ID is correct before submitting.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img img-upload-zone" title="Click to upload campus image">
+        <input type="file" accept="image/*" onchange="uploadSectionImg(this,'about-img-el')">
+        <img id="about-img-el" alt="Campus">
+        <span class="img-placeholder">🏛️</span>
+        <div class="upload-overlay"><span class="upload-icon">📷</span>Upload Campus Photo</div>
+      </div>
+      <div>
+        <p class="section-tag">Who We Are</p>
+        <h2 class="section-title">A Place Where Possibilities Come to Life</h2>
+        <div class="divider"></div>
+        <p style="color:var(--text-muted); line-height:1.8; margin-bottom:1rem;">MEDHA — Melodious Education Housing Academy — is a premier multidisciplinary institution located on Tedim Road, dedicated to nurturing well-rounded individuals ready to make a difference in the world.</p>
+        <p style="color:var(--text-muted); line-height:1.8;">We offer diverse programs across arts, science, commerce, and technology — all under one roof — fostering intellectual curiosity, creativity, and growth.</p>
+        <ul class="value-list">
+          <li>Academic Excellence & Innovation</li>
+          <li>Inclusive & Diverse Community</li>
+          <li>State-of-the-Art Facilities</li>
+          <li>Industry-Connected Curriculum</li>
+          <li>Holistic Student Development</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPARTMENTS -->
+<section id="departments">
+  <div class="container">
+    <p class="section-tag">Academics</p>
+    <h2 class="section-title">Our Departments</h2>
+    <div class="divider"></div>
+    <p class="section-sub">Explore a wide range of disciplines designed to prepare you for the careers of tomorrow.</p>
+    <div class="dept-grid">
+      <div class="dept-card"><div class="dept-icon">🔬</div><h3>Science & Technology</h3><p>Physics, Chemistry, Biology, and Computer Science with modern laboratories.</p></div>
+      <div class="dept-card"><div class="dept-icon">📐</div><h3>Engineering</h3><p>Civil, Mechanical, and Electrical engineering with hands-on industry projects.</p></div>
+      <div class="dept-card"><div class="dept-icon">🎨</div><h3>Arts & Humanities</h3><p>Literature, History, Fine Arts, and Cultural Studies fostering creative thinking.</p></div>
+      <div class="dept-card"><div class="dept-icon">📊</div><h3>Commerce & Business</h3><p>Accounting, Finance, Marketing, and Entrepreneurship for future business leaders.</p></div>
+      <div class="dept-card"><div class="dept-icon">⚖️</div><h3>Law & Social Sciences</h3><p>Political Science, Sociology, Psychology, and Legal Studies.</p></div>
+      <div class="dept-card"><div class="dept-icon">💻</div><h3>Information Technology</h3><p>Software development, AI, Data Science, and Cybersecurity courses.</p></div>
+      <div class="dept-card"><div class="dept-icon">🌱</div><h3>Environmental Studies</h3><p>Sustainability, ecology, and environmental policy for a greener future.</p></div>
+      <div class="dept-card"><div class="dept-icon">🎵</div><h3>Music & Performing Arts</h3><p>Classical and contemporary music, theatre, and dance programs.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ADMISSIONS -->
+<section id="admissions">
+  <div class="container">
+    <p class="section-tag">Join MEDHA</p>
+    <h2 class="section-title">Admissions Process</h2>
+    <div class="divider"></div>
+    <p class="section-sub">Getting into MEDHA is straightforward. Follow these steps to begin your journey.</p>
+    <div class="admission-steps">
+      <div class="adm-step"><div class="adm-num">1</div><h3>Choose Your Program</h3><p>Browse departments and select the course that aligns with your passion.</p></div>
+      <div class="adm-step"><div class="adm-num">2</div><h3>Fill Application</h3><p>Complete the application form with your academic records.</p></div>
+      <div class="adm-step"><div class="adm-num">3</div><h3>Entrance Assessment</h3><p>Appear for the entrance test or interview for your chosen department.</p></div>
+      <div class="adm-step"><div class="adm-num">4</div><h3>Get Your Offer</h3><p>Receive your admission letter and complete enrollment.</p></div>
+    </div>
+    <div class="adm-cta">
+      <button class="btn-adm-new" onclick="openModal('new-student')">🎓 New Student Admission</button>
+      <button class="btn-adm-old" onclick="openModal('old-student')">🔄 Old Student Registration</button>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="container">
+    <p class="section-tag">Campus Life</p>
+    <h2 class="section-title">Gallery</h2>
+    <div class="divider"></div>
+    <p class="section-sub">A glimpse into life at MEDHA — vibrant, diverse, and full of possibilities. Click any box to upload a photo.</p>
+    <div class="gallery-grid">
+      <div class="gallery-item img-upload-zone" title="Click to upload"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'gal-1')"><img id="gal-1" alt="Gallery 1"><span class="gallery-placeholder">🏛️</span><div class="upload-overlay"><span class="upload-icon">📷</span>Upload Photo</div></div>
+      <div class="gallery-item img-upload-zone" title="Click to upload"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'gal-2')"><img id="gal-2" alt="Gallery 2"><span class="gallery-placeholder">📚</span><div class="upload-overlay"><span class="upload-icon">📷</span>Upload Photo</div></div>
+      <div class="gallery-item img-upload-zone" title="Click to upload"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'gal-3')"><img id="gal-3" alt="Gallery 3"><span class="gallery-placeholder">🔬</span><div class="upload-overlay"><span class="upload-icon">📷</span>Upload Photo</div></div>
+      <div class="gallery-item img-upload-zone" title="Click to upload"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'gal-4')"><img id="gal-4" alt="Gallery 4"><span class="gallery-placeholder">🎭</span><div class="upload-overlay"><span class="upload-icon">📷</span>Upload Photo</div></div>
+      <div class="gallery-item img-upload-zone" title="Click to upload"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'gal-5')"><img id="gal-5" alt="Gallery 5"><span class="gallery-placeholder">⚽</span><div class="upload-overlay"><span class="upload-icon">📷</span>Upload Photo</div></div>
+      <div class="gallery-item img-upload-zone" title="Click to upload"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'gal-6')"><img id="gal-6" alt="Gallery 6"><span class="gallery-placeholder">🎓</span><div class="upload-overlay"><span class="upload-icon">📷</span>Upload Photo</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FACULTY -->
+<section id="faculty">
+  <div class="container">
+    <p class="section-tag">Our People</p>
+    <h2 class="section-title">Meet the Faculty</h2>
+    <div class="divider"></div>
+    <p class="section-sub">Learn from experienced educators dedicated to your success. Click a photo to update it.</p>
+    <div class="faculty-grid">
+      <div class="faculty-card"><div class="faculty-avatar img-upload-zone" title="Click to upload photo"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'fac-1')"><img id="fac-1" alt="Faculty"><span class="fa-initials">DR</span><div class="upload-overlay" style="border-radius:50%;"><span class="upload-icon" style="font-size:1.2rem;">📷</span></div></div><h3>Dr. Rajesh Kumar</h3><p>Ph.D in Physics</p><span class="faculty-dept">Science & Technology</span></div>
+      <div class="faculty-card"><div class="faculty-avatar img-upload-zone" title="Click to upload photo"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'fac-2')"><img id="fac-2" alt="Faculty"><span class="fa-initials">PM</span><div class="upload-overlay" style="border-radius:50%;"><span class="upload-icon" style="font-size:1.2rem;">📷</span></div></div><h3>Prof. Meera Sharma</h3><p>MBA, 20 yrs exp.</p><span class="faculty-dept">Commerce & Business</span></div>
+      <div class="faculty-card"><div class="faculty-avatar img-upload-zone" title="Click to upload photo"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'fac-3')"><img id="fac-3" alt="Faculty"><span class="fa-initials">DL</span><div class="upload-overlay" style="border-radius:50%;"><span class="upload-icon" style="font-size:1.2rem;">📷</span></div></div><h3>Dr. Lalrin Thanga</h3><p>Ph.D in Computer Science</p><span class="faculty-dept">Information Technology</span></div>
+      <div class="faculty-card"><div class="faculty-avatar img-upload-zone" title="Click to upload photo"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'fac-4')"><img id="fac-4" alt="Faculty"><span class="fa-initials">PZ</span><div class="upload-overlay" style="border-radius:50%;"><span class="upload-icon" style="font-size:1.2rem;">📷</span></div></div><h3>Prof. Zosangi</h3><p>M.A. Literature</p><span class="faculty-dept">Arts & Humanities</span></div>
+      <div class="faculty-card"><div class="faculty-avatar img-upload-zone" title="Click to upload photo"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'fac-5')"><img id="fac-5" alt="Faculty"><span class="fa-initials">DK</span><div class="upload-overlay" style="border-radius:50%;"><span class="upload-icon" style="font-size:1.2rem;">📷</span></div></div><h3>Dr. Kimi Haokip</h3><p>Ph.D in Law</p><span class="faculty-dept">Law & Social Sciences</span></div>
+      <div class="faculty-card"><div class="faculty-avatar img-upload-zone" title="Click to upload photo"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'fac-6')"><img id="fac-6" alt="Faculty"><span class="fa-initials">PS</span><div class="upload-overlay" style="border-radius:50%;"><span class="upload-icon" style="font-size:1.2rem;">📷</span></div></div><h3>Prof. Singh Tonsing</h3><p>M.Tech Engineering</p><span class="faculty-dept">Engineering</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section id="events">
+  <div class="container">
+    <p class="section-tag">What's On</p>
+    <h2 class="section-title">Upcoming Events</h2>
+    <div class="divider"></div>
+    <div class="events-list">
+      <div class="event-card"><div class="event-date"><div class="day">15</div><div class="month">Jul</div></div><div class="event-info"><h3>Annual College Fest — MEDHA UTSAV 2025</h3><p>A grand celebration of talent, culture, and creativity. Music, dance, drama, and competitions.</p><span class="event-tag">Cultural</span></div></div>
+      <div class="event-card"><div class="event-date"><div class="day">22</div><div class="month">Jul</div></div><div class="event-info"><h3>Science & Innovation Expo</h3><p>Students showcase research projects and innovations. Guest judges from leading industries.</p><span class="event-tag">Academic</span></div></div>
+      <div class="event-card"><div class="event-date"><div class="day">05</div><div class="month">Aug</div></div><div class="event-info"><h3>Sports Day 2025</h3><p>Inter-department sports competition featuring athletics, football, basketball, and traditional games.</p><span class="event-tag">Sports</span></div></div>
+      <div class="event-card"><div class="event-date"><div class="day">18</div><div class="month">Aug</div></div><div class="event-info"><h3>Admissions Open Day</h3><p>Prospective students and parents invited to tour campus and meet faculty.</p><span class="event-tag">Admissions</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section id="news">
+  <div class="container">
+    <p class="section-tag">Latest</p>
+    <h2 class="section-title">News & Announcements</h2>
+    <div class="divider"></div>
+    <div class="news-grid">
+      <div class="news-card"><div class="news-thumb img-upload-zone" title="Click to upload"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'news-1')"><img id="news-1" alt="News"><span class="news-placeholder">📰</span><div class="upload-overlay"><span class="upload-icon">📷</span></div></div><div class="news-body"><div class="news-date">June 1, 2025</div><h3>MEDHA Ranked Among Top Colleges in the Region</h3><p>Recognized for academic excellence and student outcomes by the regional education board.</p></div></div>
+      <div class="news-card"><div class="news-thumb img-upload-zone" title="Click to upload"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'news-2')"><img id="news-2" alt="News"><span class="news-placeholder">🏆</span><div class="upload-overlay"><span class="upload-icon">📷</span></div></div><div class="news-body"><div class="news-date">May 20, 2025</div><h3>Students Win National Tech Competition</h3><p>Team MEDHA brought home gold at the National Student Innovation Challenge in New Delhi.</p></div></div>
+      <div class="news-card"><div class="news-thumb img-upload-zone" title="Click to upload"><input type="file" accept="image/*" onchange="uploadSectionImg(this,'news-3')"><img id="news-3" alt="News"><span class="news-placeholder">📋</span><div class="upload-overlay"><span class="upload-icon">📷</span></div></div><div class="news-body"><div class="news-date">May 10, 2025</div><h3>New Semester Timetable Released</h3><p>The academic office has published the timetable for the upcoming semester.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDENT LIFE -->
+<section id="student-life">
+  <div class="container">
+    <p class="section-tag">Beyond the Classroom</p>
+    <h2 class="section-title">Student Life at MEDHA</h2>
+    <div class="divider"></div>
+    <p class="section-sub">Life at MEDHA is rich, vibrant, and full of opportunities to grow.</p>
+    <div class="life-grid">
+      <div class="life-card"><div class="life-icon">🎭</div><h3>Cultural Clubs</h3><p>Drama, music, art, and debate clubs celebrating diverse talents.</p></div>
+      <div class="life-card"><div class="life-icon">⚽</div><h3>Sports</h3><p>State-of-the-art sports facilities with teams at district and state levels.</p></div>
+      <div class="life-card"><div class="life-icon">💡</div><h3>Innovation Hub</h3><p>A space for students to experiment, build projects, and launch startups.</p></div>
+      <div class="life-card"><div class="life-icon">📚</div><h3>Library & Research</h3><p>Vast collection of books, journals, and digital resources open 7 days a week.</p></div>
+      <div class="life-card"><div class="life-icon">🤝</div><h3>Community Service</h3><p>NSS and volunteer programs connecting students with the community.</p></div>
+      <div class="life-card"><div class="life-icon">🏠</div><h3>Hostel Life</h3><p>Safe, comfortable, affordable housing for outstation students.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- LEAD INQUIRY FORM -->
+<section id="inquiry">
+  <div class="container">
+    <div class="inquiry-inner">
+      <p class="section-tag">We're Here to Help</p>
+      <h2 class="section-title">Make an Inquiry</h2>
+      <div class="divider"></div>
+      <p style="color:rgba(255,255,255,0.65); margin-bottom:2rem; line-height:1.7;">Have questions about admissions, courses, fees, or anything else? Fill the form below and our team will reach out to you within 24 hours.</p>
+      <div class="inquiry-form">
+        <div class="form-row">
+          <div class="form-group"><label>Full Name *</label><input type="text" placeholder="Your full name" id="inq-name"></div>
+          <div class="form-group"><label>Phone Number *</label><input type="tel" placeholder="+91 XXXXX XXXXX" id="inq-phone"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Email Address *</label><input type="email" placeholder="your@email.com" id="inq-email"></div>
+          <div class="form-group"><label>Inquiry Type *</label>
+            <select id="inq-type">
+              <option value="">Select topic</option>
+              <option>New Admission</option>
+              <option>Re-Registration</option>
+              <option>Fee Structure</option>
+              <option>Scholarship</option>
+              <option>Hostel / Housing</option>
+              <option>Course Details</option>
+              <option>Exam / Results</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Preferred Department (if applicable)</label>
+          <select>
+            <option value="">Not applicable / Not sure</option>
+            <option>Science & Technology</option>
+            <option>Engineering</option>
+            <option>Arts & Humanities</option>
+            <option>Commerce & Business</option>
+            <option>Law & Social Sciences</option>
+            <option>Information Technology</option>
+            <option>Environmental Studies</option>
+            <option>Music & Performing Arts</option>
+          </select>
+        </div>
+        <div class="form-group"><label>How did you hear about MEDHA?</label>
+          <select>
+            <option value="">Select</option>
+            <option>Social Media</option>
+            <option>Friend / Family</option>
+            <option>Newspaper / Magazine</option>
+            <option>Google Search</option>
+            <option>School / Teacher</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Your Message / Question *</label>
+          <textarea placeholder="Tell us what you'd like to know. The more detail you give, the better we can help you." id="inq-msg" style="height:110px;"></textarea>
+        </div>
+        <button class="inquiry-submit" onclick="submitInquiry()">Send My Inquiry →</button>
+        <div class="success-msg" id="inquiry-success" style="margin-top:1rem;">✅ Thank you! Your inquiry has been received. Our admissions team will contact you within 24 hours.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <p class="section-tag">Get In Touch</p>
+    <h2 class="section-title">Contact Us</h2>
+    <div class="divider"></div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>We'd love to hear from you</h3>
+        <div class="contact-item"><div class="contact-icon">📍</div><div><strong>Address</strong><span>Tedim Road, Opposite Police Station</span></div></div>
+        <div class="contact-item"><div class="contact-icon">📞</div><div><strong>Phone</strong><span>+91 XXXXX XXXXX</span></div></div>
+        <div class="contact-item"><div class="contact-icon">✉️</div><div><strong>Email</strong><span>info@medha.edu.in</span></div></div>
+        <div class="contact-item"><div class="contact-icon">🕐</div><div><strong>Office Hours</strong><span>Monday – Saturday: 9:00 AM – 5:00 PM</span></div></div>
+      </div>
+      <div class="contact-form-box">
+        <h3>Send us a message</h3>
+        <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your name"></div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+        <div class="form-group"><label>Subject</label><select><option>General Inquiry</option><option>Admissions</option><option>Academics</option><option>Other</option></select></div>
+        <div class="form-group"><label>Message</label><textarea placeholder="Your message here..."></textarea></div>
+        <button class="btn-submit" onclick="alert('Message sent! We will get back to you shortly.')">Send Message</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p style="margin-bottom:6px;"><strong>MEDHA — Melodious Education Housing Academy</strong></p>
+  <p>Tedim Road, Opposite Police Station &nbsp;|&nbsp; "Believing in Possibilities"</p>
+  <p style="margin-top:8px; font-size:11px; opacity:0.5;">© 2025 MEDHA. All rights reserved.</p>
+</footer>
+
+<script>
+  // NAV
+  function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+  document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
+
+  // MODAL
+  function openModal(id) { document.getElementById('modal-' + id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeModal(id) { document.getElementById('modal-' + id).classList.remove('open'); document.body.style.overflow = ''; }
+  document.querySelectorAll('.modal-overlay').forEach(el => el.addEventListener('click', function(e) { if (e.target === this) { this.classList.remove('open'); document.body.style.overflow = ''; } }));
+
+  // IMAGE UPLOADS
+  function uploadLogo(input) {
+    if (!input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById('logo-img');
+      img.src = e.target.result;
+      img.style.display = 'block';
+      document.querySelector('.logo-letter').style.display = 'none';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  function uploadHeroBg(input) {
+    if (!input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById('hero-bg');
+      img.src = e.target.result;
+      img.style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  function uploadSectionImg(input, imgId) {
+    if (!input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById(imgId);
+      img.src = e.target.result;
+      img.style.display = 'block';
+      // Hide placeholder sibling
+      const placeholder = img.parentElement.querySelector('.img-placeholder, .gallery-placeholder, .fa-initials, .news-placeholder');
+      if (placeholder) placeholder.style.display = 'none';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  function previewUpload(input, previewId) {
+    if (!input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById(previewId);
+      img.src = e.target.result;
+      img.style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  // FORM SUBMISSIONS
+  function submitForm(successId) {
+    const el = document.getElementById(successId);
+    el.style.display = 'block';
+    setTimeout(() => {
+      const modal = el.closest('.modal-overlay');
+      if (modal) { modal.classList.remove('open'); document.body.style.overflow = ''; }
+      el.style.display = 'none';
+    }, 3000);
+  }
+
+  function submitInquiry() {
+    const name = document.getElementById('inq-name').value;
+    const phone = document.getElementById('inq-phone').value;
+    const email = document.getElementById('inq-email').value;
+    const msg = document.getElementById('inq-msg').value;
+    if (!name || !phone || !email || !msg) { alert('Please fill in all required fields marked with *'); return; }
+    document.getElementById('inquiry-success').style.display = 'block';
+    document.getElementById('inq-name').value = '';
+    document.getElementById('inq-phone').value = '';
+    document.getElementById('inq-email').value = '';
+    document.getElementById('inq-msg').value = '';
+  }
+</script>
+</body>
+</html>
