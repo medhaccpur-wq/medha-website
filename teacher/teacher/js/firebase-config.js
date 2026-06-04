@@ -4,7 +4,7 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyCg-tP51HEY4d-1t7IYFu38ha_NP-uhAjc",
   authDomain: "medha-portal.firebaseapp.com",
   projectId: "medha-portal",
   storageBucket: "medha-portal.firebasestorage.app",
