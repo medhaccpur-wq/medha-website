@@ -1,5 +1,6 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,28 +66,51 @@ font-weight:700;
 margin-bottom:25px;
 }
 
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-}
-
 .card{
 background:white;
 padding:20px;
 border-radius:16px;
 box-shadow:0 2px 10px rgba(0,0,0,.08);
+margin-bottom:20px;
 }
 
 .card-title{
-font-size:14px;
-color:#666;
+font-size:16px;
+font-weight:600;
+margin-bottom:15px;
+}
+
+input, select{
+width:100%;
+padding:12px;
+border:1px solid #ddd;
+border-radius:8px;
 margin-bottom:10px;
 }
 
-.card-value{
-font-size:30px;
-font-weight:700;
+button{
+padding:12px 18px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+button:hover{
+opacity:.9;
+}
+
+.structure-item{
+padding:10px;
+margin-top:5px;
+background:#f3f4f6;
+border-radius:8px;
+}
+
+.year-item{
+margin-left:25px;
+margin-top:5px;
 }
 
 </style>
@@ -100,165 +124,226 @@ font-weight:700;
 MEDHA ERP
 </div>
 
-<div class="menu-title">Dashboard</div>
-<div class="menu-item">Dashboard</div>
-
 <div class="menu-title">Academic</div>
+
 <div class="menu-item">Courses</div>
 <div class="menu-item">Years</div>
 <div class="menu-item">Batches</div>
 <div class="menu-item">Subjects</div>
 
 <div class="menu-title">Students</div>
+
 <div class="menu-item">All Students</div>
 <div class="menu-item">Add Student</div>
 
 <div class="menu-title">Teachers</div>
+
 <div class="menu-item">Pending Approval</div>
 <div class="menu-item">Active Teachers</div>
 
 <div class="menu-title">Timetable</div>
+
 <div class="menu-item">Subject Assignment</div>
 <div class="menu-item">Timetable</div>
 
 <div class="menu-title">Attendance</div>
+
 <div class="menu-item">Teacher Attendance</div>
 <div class="menu-item">Student Attendance</div>
 
 <div class="menu-title">Fees</div>
+
 <div class="menu-item">Fee Management</div>
 
 <div class="menu-title">Notices</div>
+
 <div class="menu-item">Notices</div>
 
 <div class="menu-title">Reports</div>
-<div class="menu-item">Reports</div>
 
-<div class="menu-title">Settings</div>
-<div class="menu-item">Settings</div>
+<div class="menu-item">Reports</div>
 
 </div>
 
 <div class="main">
-<h1 class="page-title">Courses</h1>
+
+<h1 class="page-title">
+Academic Structure
+</h1>
 
 <div class="card">
 
 <div class="card-title">
-Add New Course
+Add Course
 </div>
 
 <input
 id="courseName"
-placeholder="Enter Course Name"
-style="
-width:100%;
-padding:12px;
-margin-top:10px;
-margin-bottom:10px;
-border:1px solid #ddd;
-border-radius:8px;
-">
+placeholder="Course Name (DMLT, BMLT, Class 11...)">
 
-<button
-onclick="addCourse()"
-style="
-padding:12px 20px;
-background:#2563eb;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-">
+<button onclick="addCourse()">
 Save Course
 </button>
 
 </div>
 
-<br>
+<div class="card">
+
+<div class="card-title">
+Add Year
+</div>
+
+<select id="courseSelect">
+</select>
+
+<input
+id="yearName"
+placeholder="Year Name (1st Year, 2nd Year...)">
+
+<button onclick="addYear()">
+Save Year
+</button>
+
+</div>
 
 <div class="card">
 
 <div class="card-title">
-Available Courses
+Current Academic Structure
 </div>
 
-<div id="courseList"></div>
+<div id="structureView">
+</div>
 
 </div>
+
+</div>
+
 <script>
 
 let courses =
 JSON.parse(localStorage.getItem("courses")) || [];
 
-function saveCourses(){
+let years =
+JSON.parse(localStorage.getItem("years")) || [];
+
+function saveData(){
+
 localStorage.setItem(
 "courses",
 JSON.stringify(courses)
 );
-}
 
-function renderCourses(){
-
-const list =
-document.getElementById("courseList");
-
-list.innerHTML="";
-
-courses.forEach((course,index)=>{
-
-list.innerHTML += `
-<div style="
-display:flex;
-justify-content:space-between;
-padding:10px;
-border-bottom:1px solid #eee;
-">
-<span>${course}</span>
-
-<button onclick="deleteCourse(${index})">
-Delete
-</button>
-
-</div>
-`;
-
-});
+localStorage.setItem(
+"years",
+JSON.stringify(years)
+);
 
 }
 
 function addCourse(){
 
-const input =
-document.getElementById("courseName");
-
 const name =
-input.value.trim();
+document.getElementById("courseName")
+.value.trim();
 
-if(!name) return;
+if(!name){
+alert("Enter Course Name");
+return;
+}
 
-courses.push(name);
+courses.push({
+id:Date.now(),
+name:name
+});
 
-saveCourses();
+document.getElementById("courseName").value="";
 
-renderCourses();
+saveData();
 
-input.value="";
+render();
 
 }
 
-function deleteCourse(index){
+function addYear(){
 
-courses.splice(index,1);
+const courseId =
+document.getElementById("courseSelect")
+.value;
 
-saveCourses();
+const yearName =
+document.getElementById("yearName")
+.value.trim();
 
-renderCourses();
+if(!yearName){
+alert("Enter Year Name");
+return;
+}
+
+years.push({
+id:Date.now(),
+courseId:courseId,
+name:yearName
+});
+
+document.getElementById("yearName").value="";
+
+saveData();
+
+render();
 
 }
 
-renderCourses();
+function render(){
+
+const select =
+document.getElementById("courseSelect");
+
+select.innerHTML="";
+
+courses.forEach(course=>{
+
+select.innerHTML += `
+<option value="${course.id}">
+${course.name}
+</option>
+`;
+
+});
+
+const structure =
+document.getElementById("structureView");
+
+structure.innerHTML="";
+
+courses.forEach(course=>{
+
+structure.innerHTML += `
+<div class="structure-item">
+<b>${course.name}</b>
+</div>
+`;
+
+years
+.filter(year=>year.courseId==course.id)
+.forEach(year=>{
+
+structure.innerHTML += `
+<div class="year-item">
+• ${year.name}
+</div>
+`;
+
+});
+
+});
+
+}
+
+render();
 
 </script>
+
 </body>
 </html>
+```
