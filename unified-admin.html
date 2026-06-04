@@ -1,191 +1,1037 @@
-```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEDHA Admin Portal</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --indigo:#3730a3;--indigo-dark:#1e1b6e;--indigo-light:#6366f1;
+  --yellow:#fbbf24;--yellow-dark:#d97706;
+  --gray:#f8f7ff;--text:#1e1b4b;--text-muted:#6b7280;
+  --border:rgba(55,48,163,0.12);
+  --success:#10b981;--danger:#ef4444;--warning:#f59e0b;
+  --green:#2D5016;--green-light:#EBF2E3;--green-mid:#4A8024;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"DM Sans",sans-serif;background:var(--gray);color:var(--text);min-height:100vh}
+
+/* Auth */
+.auth-page{min-height:100vh;background:linear-gradient(135deg,var(--indigo-dark),var(--indigo));display:flex;align-items:center;justify-content:center;padding:2rem}
+.auth-card{background:white;border-radius:20px;width:100%;max-width:420px;padding:2.5rem;box-shadow:0 24px 60px rgba(0,0,0,0.3)}
+.auth-logo{text-align:center;margin-bottom:2rem}
+.logo-icon{width:64px;height:64px;border-radius:50%;background:var(--indigo-dark);color:var(--yellow);font-family:"Playfair Display",serif;font-size:26px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+.auth-logo h1{font-family:"Playfair Display",serif;font-size:1.5rem;color:var(--indigo-dark)}
+.auth-logo p{font-size:12px;color:var(--text-muted);margin-top:3px}
+.fg{margin-bottom:1.2rem}
+.fg label{font-size:13px;font-weight:500;color:var(--indigo-dark);display:block;margin-bottom:6px}
+.fg input,.fg select,.fg textarea{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:"DM Sans",sans-serif;font-size:14px;color:var(--text);background:var(--gray);outline:none;transition:all .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--indigo-light);background:white}
+.fg textarea{height:80px;resize:vertical}
+.btn{padding:10px 20px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-p{background:var(--indigo-dark);color:white;width:100%;padding:13px;font-size:15px;border-radius:10px;justify-content:center}
+.btn-p:hover:not(:disabled){background:var(--indigo)}
+.btn-s{background:var(--success);color:white}
+.btn-d{background:var(--danger);color:white}
+.btn-w{background:var(--warning);color:white}
+.btn-i{background:var(--indigo-dark);color:white}
+.btn-y{background:var(--yellow);color:var(--indigo-dark)}
+.btn-g{background:var(--green);color:white}
+.btn-g:hover{background:var(--green-mid)}
+.err-box{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:1rem;display:none}
+
+/* Layout */
+.dashboard{display:none;min-height:100vh}
+.top-nav{background:var(--indigo-dark);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-logo{width:40px;height:40px;border-radius:50%;background:var(--yellow);color:var(--indigo-dark);font-family:"Playfair Display",serif;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center}
+.brand-text{color:white;font-weight:600;font-size:15px}
+.brand-text span{color:rgba(255,255,255,0.6);font-size:11px;display:block;font-weight:400}
+.lo-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;padding:7px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:"DM Sans",sans-serif}
+.lo-btn:hover{background:rgba(239,68,68,0.3)}
+.layout{display:flex;min-height:calc(100vh - 64px)}
+
+/* Sidebar */
+.sidebar{width:240px;background:white;border-right:1px solid var(--border);padding:1rem 0;flex-shrink:0;overflow-y:auto}
+.sl{display:flex;align-items:center;gap:10px;padding:9px 1.2rem;color:var(--text-muted);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;border:none;background:none;font-family:"DM Sans",sans-serif;width:100%;text-align:left;text-decoration:none;position:relative}
+.sl:hover{background:var(--gray);color:var(--indigo-dark)}
+.sl.active{background:rgba(55,48,163,0.08);color:var(--indigo-dark);border-right:3px solid var(--indigo);font-weight:600}
+.sl.active-green{background:rgba(45,80,22,0.08);color:var(--green);border-right:3px solid var(--green);font-weight:600}
+.sl-badge{background:var(--warning);color:white;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;margin-left:auto}
+.slabel{font-size:10px;font-weight:600;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;padding:.8rem 1.2rem .3rem;display:block}
+.section-divider{border-top:2px solid var(--border);margin:.5rem 0;display:flex;align-items:center;gap:.5rem;padding:.5rem 1.2rem}
+.section-divider span{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted)}
+
+/* Content */
+.content{flex:1;padding:2rem;overflow-y:auto}
+.pg{display:none}
+.pg.active{display:block}
+.pg-title{font-family:"Playfair Display",serif;font-size:1.6rem;color:var(--indigo-dark);font-weight:700;margin-bottom:.3rem}
+.pg-sub{color:var(--text-muted);font-size:14px;margin-bottom:2rem}
+.pg-title.green{color:var(--green)}
+
+/* Stats */
+.sc{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:2rem}
+.sc-item{background:white;border-radius:12px;padding:1.2rem;border:1px solid var(--border)}
+.sc-icon{font-size:1.8rem;margin-bottom:.7rem}
+.sc-val{font-family:"Playfair Display",serif;font-size:1.8rem;color:var(--indigo-dark);font-weight:700}
+.sc-val.green{color:var(--green)}
+.sc-lbl{font-size:12px;color:var(--text-muted);margin-top:2px}
+
+/* Cards */
+.card{background:white;border-radius:12px;padding:1.5rem;border:1px solid var(--border);margin-bottom:1.5rem}
+.card-title{font-size:16px;font-weight:600;color:var(--indigo-dark);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.card-title.green{color:var(--green)}
+.dz{border:2px dashed rgba(55,48,163,0.2);border-radius:12px;padding:2.5rem;text-align:center;background:var(--gray);cursor:pointer;position:relative;transition:all .2s}
+.dz:hover{border-color:var(--indigo-light);background:rgba(99,102,241,0.05)}
+.dz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.dz h3{font-size:15px;font-weight:600;color:var(--indigo-dark);margin-bottom:.4rem}
+.dz p{font-size:13px;color:var(--text-muted)}
+.code-box{background:rgba(55,48,163,0.06);border-radius:8px;padding:1rem;margin-top:1.2rem}
+.code-box h4{font-size:13px;font-weight:600;color:var(--indigo-dark);margin-bottom:.5rem}
+.code-box code{font-size:12px;color:var(--indigo);background:white;padding:8px 12px;border-radius:6px;display:block;border:1px solid var(--border);font-family:monospace;line-height:1.8;white-space:pre-wrap}
+
+/* Prev section */
+.prev-sec{display:none;margin-top:1.5rem}
+.prev-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+.tw{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:var(--indigo-dark);color:white}
+thead.green-head{background:var(--green)}
+th{padding:10px 14px;text-align:left;font-weight:600;font-size:12px}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--gray)}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.b-ok{background:rgba(16,185,129,0.1);color:var(--success)}
+.b-err{background:#fef2f2;color:var(--danger)}
+.b-warn{background:rgba(245,158,11,0.1);color:var(--warning)}
+.b-info{background:rgba(55,48,163,0.08);color:var(--indigo)}
+.b-grn{background:rgba(45,80,22,0.1);color:var(--green)}
+.b-pend{background:#FEF3E2;color:#D4820A}
+.b-app{background:#E4F4EB;color:#1D6A3A}
+.b-rej{background:#FDECEA;color:#C0392B}
+
+/* Progress */
+.pb{background:#e5e7eb;border-radius:50px;height:8px;margin:1rem 0;overflow:hidden;display:none}
+.pf{background:linear-gradient(90deg,var(--indigo),var(--indigo-light));height:100%;border-radius:50px;transition:width .3s;width:0}
+.pf.green-fill{background:linear-gradient(90deg,var(--green),var(--green-mid))}
+.pt{font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:.5rem;min-height:18px}
+.alert{border-radius:8px;padding:12px 16px;font-size:14px;font-weight:500;margin-bottom:1rem;display:none}
+.al-ok{background:#f0fdf4;border:1px solid #86efac;color:#16a34a}
+.al-err{background:#fef2f2;border:1px solid #fecaca;color:#dc2626}
+
+/* Search bar */
+.sb{display:flex;gap:.8rem;margin-bottom:1rem;flex-wrap:wrap}
+.sb input,.sb select{padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:"DM Sans",sans-serif;font-size:13px;outline:none;color:var(--text)}
+.sb input{flex:1;min-width:180px}
+.del-btn{background:#fef2f2;color:var(--danger);border:1px solid #fecaca;padding:4px 10px;border-radius:6px;font-size:12px;cursor:pointer;font-family:"DM Sans",sans-serif;font-weight:600}
+.del-btn:hover{background:var(--danger);color:white}
+
+/* Notices */
+.nc{background:white;border-radius:10px;padding:1.2rem;border:1px solid var(--border);border-left:4px solid var(--yellow);margin-bottom:.8rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.nc h4{font-size:14px;font-weight:600;color:var(--indigo-dark);margin-bottom:4px}
+.nc p{font-size:13px;color:var(--text-muted)}
+.nm{font-size:11px;color:var(--text-muted);margin-top:5px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.vo{display:flex;gap:1.5rem;margin:1rem 0;flex-wrap:wrap}
+.vo label{display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer}
+.ttg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.ttc{background:var(--gray);border-radius:10px;padding:1.2rem;border:1px solid var(--border);text-align:center}
+.ttc h4{font-size:14px;font-weight:600;color:var(--indigo-dark);margin-bottom:.3rem}
+.ttc p{font-size:12px;color:var(--text-muted);margin-bottom:.8rem}
+
+/* Teacher section */
+.tag-area{padding:1.2rem 1.5rem}
+.tag-input-row{display:flex;gap:8px;margin-bottom:14px}
+.tag-input{flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:"DM Sans",sans-serif;color:var(--text);background:var(--gray);outline:none;transition:border .15s}
+.tag-input:focus{border-color:var(--green);background:white}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green);border:1px solid #C8DFB0;padding:5px 10px 5px 12px;border-radius:20px;font-size:12.5px;font-weight:500}
+.tag-del{width:18px;height:18px;border-radius:50%;background:rgba(45,80,22,0.15);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--green);font-size:16px;line-height:1;transition:background .15s;flex-shrink:0}
+.tag-del:hover{background:rgba(45,80,22,0.35)}
+.empty-tags{font-size:12.5px;color:var(--text-muted);font-style:italic}
+.manage-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:white;border-radius:14px;padding:28px;width:500px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
+.modal-title{font-size:17px;font-weight:600;margin-bottom:3px}
+.modal-sub{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+.modal-detail{display:flex;gap:8px;margin-bottom:8px}
+.modal-detail span:first-child{font-size:12px;color:var(--text-muted);min-width:130px}
+.modal-detail span:last-child{font-size:13px;font-weight:500}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:white;padding:12px 18px;border-radius:9px;font-size:13px;font-weight:500;z-index:300;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+@media(max-width:768px){.sidebar{display:none}.fr{grid-template-columns:1fr}.sc{grid-template-columns:1fr 1fr}.manage-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- Auth Page -->
+<div class="auth-page" id="authPage">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="logo-icon">M</div>
+      <h1>MEDHA Admin</h1>
+      <p>Unified Administration Portal</p>
+    </div>
+    <div class="err-box" id="authErr"></div>
+    <div class="fg"><label>Admin Email</label><input type="email" id="aEmail" placeholder="admin@medha.edu.in"></div>
+    <div class="fg"><label>Password</label><input type="password" id="aPwd" placeholder="Admin password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="btn btn-p" id="loginBtn" onclick="doLogin()">Login to Admin Portal</button>
+    <p style="text-align:center;margin-top:1rem;font-size:12px;color:var(--text-muted)">Restricted to authorized administrators only</p>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div class="dashboard" id="dashboard">
+  <div class="top-nav">
+    <div class="brand">
+      <div class="brand-logo">M</div>
+      <div class="brand-text">MEDHA Admin <span>Unified Administration Portal</span></div>
+    </div>
+    <div style="display:flex;gap:1rem;align-items:center">
+      <a href="index.html" class="lo-btn">College Website</a>
+      <a href="portal.html" class="lo-btn">Student Portal</a>
+      <button class="lo-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+  <div class="layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <span class="slabel">Overview</span>
+      <button class="sl active" onclick="goPage('overview',this)">📊 Overview</button>
+
+      <div class="section-divider"><span>🎓 Students</span></div>
+      <button class="sl" onclick="goPage('import',this)">📥 Import Students CSV</button>
+      <button class="sl" onclick="goPage('students',this)">👥 All Students</button>
+      <button class="sl" onclick="goPage('addone',this)">➕ Add Single Student</button>
+
+      <span class="slabel">Academic Data</span>
+      <button class="sl" onclick="goPage('attendance',this)">✅ Attendance CSV</button>
+      <button class="sl" onclick="goPage('results',this)">📝 Results CSV</button>
+      <button class="sl" onclick="goPage('fees',this)">💳 Fee CSV</button>
+
+      <span class="slabel">Content</span>
+      <button class="sl" onclick="goPage('notices',this)">📢 Notices (PDF)</button>
+      <button class="sl" onclick="goPage('timetable',this)">📅 Timetables (PDF)</button>
+      <button class="sl" onclick="goPage('users',this)">🔐 Portal Users</button>
+
+      <div class="section-divider"><span>👩‍🏫 Teachers</span></div>
+      <button class="sl" onclick="goPage('structure',this)">🏛️ Academic Structure</button>
+      <button class="sl" onclick="goPage('teachers',this)">👩‍🏫 Teacher Accounts <span class="sl-badge" id="pending-badge">0</span></button>
+      <button class="sl" onclick="goPage('timetable-teacher',this)">🗓️ Timetable (Teachers)</button>
+      <button class="sl" onclick="goPage('approvals',this)">✔️ Approvals</button>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- OVERVIEW -->
+      <div class="pg active" id="pg-overview">
+        <div class="pg-title">Admin Overview</div>
+        <div class="pg-sub">MEDHA Unified Administration Dashboard</div>
+        <div class="sc">
+          <div class="sc-item"><div class="sc-icon">👥</div><div class="sc-val" id="t1">0</div><div class="sc-lbl">Approved Students</div></div>
+          <div class="sc-item"><div class="sc-icon">🔐</div><div class="sc-val" id="t2">0</div><div class="sc-lbl">Portal Users</div></div>
+          <div class="sc-item"><div class="sc-icon">📢</div><div class="sc-val" id="t3">0</div><div class="sc-lbl">Active Notices</div></div>
+          <div class="sc-item"><div class="sc-icon">📅</div><div class="sc-val" id="t4">0</div><div class="sc-lbl">Timetables</div></div>
+          <div class="sc-item"><div class="sc-icon">👩‍🏫</div><div class="sc-val green" id="t5">0</div><div class="sc-lbl">Total Teachers</div></div>
+          <div class="sc-item"><div class="sc-icon">⏳</div><div class="sc-val" id="t6" style="color:var(--warning)">0</div><div class="sc-lbl">Pending Approval</div></div>
+          <div class="sc-item"><div class="sc-icon">🏛️</div><div class="sc-val green" id="t7">0</div><div class="sc-lbl">Departments</div></div>
+          <div class="sc-item"><div class="sc-icon">📦</div><div class="sc-val green" id="t8">0</div><div class="sc-lbl">Batches</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">⚡ Quick Actions</div>
+          <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+            <button class="btn btn-i" onclick="goPage('import',null)">📥 Import Students</button>
+            <button class="btn btn-s" onclick="goPage('attendance',null)">✅ Upload Attendance</button>
+            <button class="btn btn-w" onclick="goPage('results',null)">📝 Upload Results</button>
+            <button class="btn btn-i" onclick="goPage('fees',null)">💳 Upload Fees</button>
+            <button class="btn btn-y" onclick="goPage('notices',null)">📢 Post Notice</button>
+            <button class="btn btn-g" onclick="goPage('structure',null)">🏛️ Manage Structure</button>
+            <button class="btn btn-g" onclick="goPage('teachers',null)">👩‍🏫 Review Teachers</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+          <div class="card">
+            <div class="card-title">📋 Recent Student Imports</div>
+            <div id="recent-students-list" style="color:var(--text-muted);font-size:13px">Loading...</div>
+          </div>
+          <div class="card">
+            <div class="card-title green">📋 Recent Teacher Registrations</div>
+            <div id="recent-teachers-list" style="color:var(--text-muted);font-size:13px">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IMPORT STUDENTS -->
+      <div class="pg" id="pg-import">
+        <div class="pg-title">Import Students CSV</div><div class="pg-sub">Upload student list to approve them for portal registration</div>
+        <div class="alert al-ok" id="imp-ok"></div><div class="alert al-err" id="imp-err"></div>
+        <div class="card"><div class="card-title">Required CSV Format</div>
+          <div class="code-box"><h4>Column headers (first row):</h4><code>studentId,name,phone,department,year
+MEDHA2025001,John Doe,9876543210,Science,1st Year</code></div>
+          <div style="margin-top:1rem"><button class="btn btn-s" onclick="dlCSV('students_template.csv','studentId,name,phone,department,year\nMEDHA2025001,John Doe,9876543210,Science,1st Year')">Download Template</button></div>
+        </div>
+        <div class="card"><div class="card-title">Upload CSV</div>
+          <div class="dz"><input type="file" accept=".csv" id="s-csv" onchange="handleCSV(this,'students')"><div style="font-size:2.5rem;margin-bottom:.8rem">📄</div><h3>Click or drag CSV file here</h3><p>Export from Excel as .csv</p></div>
+          <div class="prev-sec" id="s-prev">
+            <div class="pb" id="s-pb"><div class="pf" id="s-pf"></div></div><div class="pt" id="s-pt"></div>
+            <div class="prev-hdr"><h3 style="font-size:15px;font-weight:600;color:var(--indigo-dark)"><span id="s-cnt">0</span> students found</h3>
+              <div style="display:flex;gap:.5rem"><button class="btn btn-d btn-sm" onclick="clearPrev('s')">Clear</button><button class="btn btn-i" id="s-imp" onclick="doImport('students')">Import to Firebase</button></div></div>
+            <div class="tw"><table><thead><tr><th>#</th><th>Student ID</th><th>Name</th><th>Phone</th><th>Department</th><th>Year</th><th>Status</th></tr></thead><tbody id="s-body"></tbody></table></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALL STUDENTS -->
+      <div class="pg" id="pg-students">
+        <div class="pg-title">All Students</div><div class="pg-sub">All students approved for portal registration</div>
+        <div class="alert al-ok" id="stu-ok"></div>
+        <div class="card"><div class="sb">
+            <input type="text" id="s-search" placeholder="Search name or ID..." oninput="filterStudents()">
+            <select id="s-dept" onchange="filterStudents()"><option value="">All Departments</option><option>Science &amp; Technology</option><option>Engineering</option><option>Arts &amp; Humanities</option><option>Commerce &amp; Business</option><option>Law &amp; Social Sciences</option><option>Information Technology</option><option>Environmental Studies</option><option>Music &amp; Performing Arts</option></select>
+            <select id="s-year" onchange="filterStudents()"><option value="">All Years</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select>
+            <button class="btn btn-i" onclick="loadStudents()">Refresh</button></div>
+          <div class="tw"><table><thead><tr><th>#</th><th>ID</th><th>Name</th><th>Phone</th><th>Department</th><th>Year</th><th>Action</th></tr></thead><tbody id="stu-body"><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading...</td></tr></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ADD ONE -->
+      <div class="pg" id="pg-addone">
+        <div class="pg-title">Add Single Student</div><div class="pg-sub">Manually add one student to the approved list</div>
+        <div class="alert al-ok" id="add-ok"></div><div class="alert al-err" id="add-err"></div>
+        <div class="card" style="max-width:500px">
+          <div class="fg"><label>Student ID *</label><input type="text" id="a-id" placeholder="e.g. MEDHA2025001"></div>
+          <div class="fg"><label>Full Name *</label><input type="text" id="a-name" placeholder="Full name"></div>
+          <div class="fg"><label>Phone *</label><input type="tel" id="a-phone" placeholder="e.g. 9876543210"></div>
+          <div class="fg"><label>Department *</label><select id="a-dept"><option value="">Select</option><option>Science &amp; Technology</option><option>Engineering</option><option>Arts &amp; Humanities</option><option>Commerce &amp; Business</option><option>Information Technology</option></select></div>
+          <div class="fg"><label>Year *</label><select id="a-year"><option value="">Select</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select></div>
+          <button class="btn btn-s" onclick="addOne()">Add Student</button>
+        </div>
+      </div>
+
+      <!-- ATTENDANCE -->
+      <div class="pg" id="pg-attendance">
+        <div class="pg-title">Upload Attendance</div><div class="pg-sub">Upload CSV to update attendance for all students</div>
+        <div class="alert al-ok" id="att-ok"></div><div class="alert al-err" id="att-err"></div>
+        <div class="card"><div class="card-title">Required CSV Format</div>
+          <div class="code-box"><h4>Columns:</h4><code>studentId,subject,totalClasses,attended,percentage
+MEDHA2025001,Mathematics,20,18,90</code></div>
+          <div style="margin-top:1rem"><button class="btn btn-s" onclick="dlCSV('attendance_template.csv','studentId,subject,totalClasses,attended,percentage\nMEDHA2025001,Mathematics,20,18,90')">Download Template</button></div>
+        </div>
+        <div class="card"><div class="dz"><input type="file" accept=".csv" id="att-csv" onchange="handleCSV(this,'attendance')"><div style="font-size:2.5rem;margin-bottom:.8rem">📊</div><h3>Click or drag Attendance CSV here</h3><p>All students in one file</p></div>
+          <div class="prev-sec" id="att-prev">
+            <div class="pb" id="att-pb"><div class="pf" id="att-pf"></div></div><div class="pt" id="att-pt"></div>
+            <div class="prev-hdr"><h3 style="font-size:15px;font-weight:600;color:var(--indigo-dark)"><span id="att-cnt">0</span> students found</h3>
+              <div style="display:flex;gap:.5rem"><button class="btn btn-d" onclick="clearPrev('att')">Clear</button><button class="btn btn-i" id="att-imp" onclick="doImport('attendance')">Upload to Firebase</button></div></div>
+            <div class="tw"><table><thead><tr><th>Student ID</th><th>Subjects</th><th>Overall %</th></tr></thead><tbody id="att-body"></tbody></table></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="pg" id="pg-results">
+        <div class="pg-title">Upload Results</div><div class="pg-sub">Upload CSV to update exam results for all students</div>
+        <div class="alert al-ok" id="res-ok"></div><div class="alert al-err" id="res-err"></div>
+        <div class="card"><div class="card-title">Required CSV Format</div>
+          <div class="code-box"><h4>Columns:</h4><code>studentId,subject,internal,internalMax,external,externalMax,total,totalMax,grade
+MEDHA2025001,Mathematics,28,30,68,70,96,100,A+</code></div>
+          <div style="margin-top:1rem"><button class="btn btn-s" onclick="dlCSV('results_template.csv','studentId,subject,internal,internalMax,external,externalMax,total,totalMax,grade\nMEDHA2025001,Mathematics,28,30,68,70,96,100,A+')">Download Template</button></div>
+        </div>
+        <div class="card"><div class="dz"><input type="file" accept=".csv" id="res-csv" onchange="handleCSV(this,'results')"><div style="font-size:2.5rem;margin-bottom:.8rem">📝</div><h3>Click or drag Results CSV here</h3><p>All students in one file</p></div>
+          <div class="prev-sec" id="res-prev">
+            <div class="pb" id="res-pb"><div class="pf" id="res-pf"></div></div><div class="pt" id="res-pt"></div>
+            <div class="prev-hdr"><h3 style="font-size:15px;font-weight:600;color:var(--indigo-dark)"><span id="res-cnt">0</span> students found</h3>
+              <div style="display:flex;gap:.5rem"><button class="btn btn-d" onclick="clearPrev('res')">Clear</button><button class="btn btn-i" id="res-imp" onclick="doImport('results')">Upload to Firebase</button></div></div>
+            <div class="tw"><table><thead><tr><th>Student ID</th><th>Subjects</th><th>Total</th><th>%</th><th>Result</th></tr></thead><tbody id="res-body"></tbody></table></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEES -->
+      <div class="pg" id="pg-fees">
+        <div class="pg-title">Upload Fee Status</div><div class="pg-sub">Upload CSV to update fee status for all students</div>
+        <div class="alert al-ok" id="fee-ok"></div><div class="alert al-err" id="fee-err"></div>
+        <div class="card"><div class="card-title">Required CSV Format</div>
+          <div class="code-box"><h4>Columns:</h4><code>studentId,feeType,amount,dueDate,status
+MEDHA2025001,Tuition Fee,25000,30-Jun-2025,Paid</code></div>
+          <div style="margin-top:1rem"><button class="btn btn-s" onclick="dlCSV('fee_template.csv','studentId,feeType,amount,dueDate,status\nMEDHA2025001,Tuition Fee,25000,30-Jun-2025,Paid')">Download Template</button></div>
+        </div>
+        <div class="card"><div class="dz"><input type="file" accept=".csv" id="fee-csv" onchange="handleCSV(this,'fees')"><div style="font-size:2.5rem;margin-bottom:.8rem">💳</div><h3>Click or drag Fee CSV here</h3><p>All students in one file</p></div>
+          <div class="prev-sec" id="fee-prev">
+            <div class="pb" id="fee-pb"><div class="pf" id="fee-pf"></div></div><div class="pt" id="fee-pt"></div>
+            <div class="prev-hdr"><h3 style="font-size:15px;font-weight:600;color:var(--indigo-dark)"><span id="fee-cnt">0</span> students found</h3>
+              <div style="display:flex;gap:.5rem"><button class="btn btn-d" onclick="clearPrev('fee')">Clear</button><button class="btn btn-i" id="fee-imp" onclick="doImport('fees')">Upload to Firebase</button></div></div>
+            <div class="tw"><table><thead><tr><th>Student ID</th><th>Items</th><th>Pending</th></tr></thead><tbody id="fee-body"></tbody></table></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTICES -->
+      <div class="pg" id="pg-notices">
+        <div class="pg-title">Notices Management</div><div class="pg-sub">Post notices and control who sees them</div>
+        <div class="alert al-ok" id="not-ok"></div><div class="alert al-err" id="not-err"></div>
+        <div class="card"><div class="card-title">Post New Notice</div>
+          <div class="fr">
+            <div class="fg"><label>Title *</label><input type="text" id="n-title" placeholder="e.g. Fee Payment Deadline"></div>
+            <div class="fg"><label>Tag</label><select id="n-tag"><option value="general">General</option><option value="urgent">Urgent</option><option value="info">Info/Event</option><option value="academic">Academic</option></select></div>
+          </div>
+          <div class="fg"><label>Description</label><textarea id="n-desc" placeholder="Brief description..."></textarea></div>
+          <div class="fg"><label>Upload PDF Notice (optional — needs Firebase Storage)</label>
+            <div class="dz" style="padding:1.5rem"><input type="file" accept=".pdf" id="n-pdf" onchange="document.getElementById('n-pname').textContent=this.files[0]?this.files[0].name:'No file selected'"><div style="font-size:1.5rem;margin-bottom:.5rem">📄</div><h3 style="font-size:14px">Click to upload PDF</h3><p id="n-pname">No file selected</p></div></div>
+          <div class="fg"><label>Who can see this? *</label>
+            <div class="vo">
+              <label><input type="radio" name="vis" value="all" checked onchange="updateVis(this.value)"> All Students</label>
+              <label><input type="radio" name="vis" value="department" onchange="updateVis(this.value)"> Specific Department</label>
+              <label><input type="radio" name="vis" value="student" onchange="updateVis(this.value)"> Specific Student</label>
+            </div></div>
+          <div class="fg" id="vis-dept" style="display:none"><label>Department</label><select id="n-dept"><option value="">Select</option><option>Science &amp; Technology</option><option>Engineering</option><option>Arts &amp; Humanities</option><option>Commerce &amp; Business</option><option>Information Technology</option></select></div>
+          <div class="fg" id="vis-stu" style="display:none"><label>Student ID</label><input type="text" id="n-sid" placeholder="e.g. MEDHA2025001"></div>
+          <div class="pb" id="n-pb"><div class="pf" id="n-pf"></div></div><div class="pt" id="n-pt"></div>
+          <button class="btn btn-y" onclick="postNotice()" id="n-btn" style="font-size:15px;padding:12px 28px">Post Notice</button>
+        </div>
+        <div class="card"><div class="card-title">All Notices</div><div id="notices-list"><p style="color:var(--text-muted)">Loading...</p></div><button class="btn btn-i" onclick="loadNotices()" style="margin-top:1rem">Refresh</button></div>
+      </div>
+
+      <!-- TIMETABLE (STUDENTS) -->
+      <div class="pg" id="pg-timetable">
+        <div class="pg-title">Timetables</div><div class="pg-sub">Upload PDF timetable for each department and year — needs Firebase Storage</div>
+        <div class="alert al-ok" id="tt-ok"></div><div class="alert al-err" id="tt-err"></div>
+        <div class="card">
+          <div class="fr">
+            <div class="fg"><label>Department *</label><select id="tt-dept"><option value="">Select</option><option>Science &amp; Technology</option><option>Engineering</option><option>Arts &amp; Humanities</option><option>Commerce &amp; Business</option><option>Information Technology</option></select></div>
+            <div class="fg"><label>Year *</label><select id="tt-year"><option value="">Select</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select></div>
+          </div>
+          <div class="fg"><label>Upload Timetable PDF *</label>
+            <div class="dz" style="padding:1.5rem"><input type="file" accept=".pdf" id="tt-pdf" onchange="document.getElementById('tt-pname').textContent=this.files[0]?this.files[0].name:'No file selected'"><div style="font-size:1.5rem;margin-bottom:.5rem">📅</div><h3 style="font-size:14px">Click to upload timetable PDF</h3><p id="tt-pname">No file selected</p></div></div>
+          <div class="pb" id="tt-pb"><div class="pf" id="tt-pf"></div></div><div class="pt" id="tt-pt"></div>
+          <button class="btn btn-s" onclick="uploadTT()" id="tt-btn" style="font-size:15px;padding:12px 28px">Upload Timetable</button>
+        </div>
+        <div class="card"><div class="card-title">All Timetables</div><div class="ttg" id="tt-list"><p style="color:var(--text-muted)">Loading...</p></div><button class="btn btn-i" onclick="loadTTs()" style="margin-top:1rem">Refresh</button></div>
+      </div>
+
+      <!-- PORTAL USERS -->
+      <div class="pg" id="pg-users">
+        <div class="pg-title">Registered Portal Users</div><div class="pg-sub">Students who have created a portal account</div>
+        <div class="card"><div class="tw"><table><thead><tr><th>#</th><th>Student ID</th><th>Name</th><th>Email</th><th>Department</th><th>Year</th><th>Phone</th></tr></thead><tbody id="usr-body"><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading...</td></tr></tbody></table></div>
+          <button class="btn btn-i" onclick="loadUsers()" style="margin-top:1rem">Refresh</button></div>
+      </div>
+
+      <!-- ======== TEACHER SECTION ======== -->
+
+      <!-- ACADEMIC STRUCTURE -->
+      <div class="pg" id="pg-structure">
+        <div class="pg-title green">Academic Structure</div>
+        <div class="pg-sub">Manage departments, sections, years and batches — these populate dropdowns in teacher registration</div>
+        <div class="manage-grid">
+          <div class="card">
+            <div class="card-title green">🏛️ Departments</div>
+            <div class="tag-area">
+              <div class="tag-input-row">
+                <input class="tag-input" id="dept-input" placeholder="Add department name…" onkeydown="if(event.key==='Enter')addTag('dept')">
+                <button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addTag('dept')">Add</button>
+              </div>
+              <div class="tags" id="dept-tags"><span class="empty-tags">No departments yet</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title green">📂 Sections</div>
+            <div class="tag-area">
+              <div class="tag-input-row">
+                <input class="tag-input" id="section-input" placeholder="e.g. A, B, Morning, Evening…" onkeydown="if(event.key==='Enter')addTag('section')">
+                <button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addTag('section')">Add</button>
+              </div>
+              <div class="tags" id="section-tags"><span class="empty-tags">No sections yet</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title green">📅 Years / Classes</div>
+            <div class="tag-area">
+              <div class="tag-input-row">
+                <input class="tag-input" id="year-input" placeholder="e.g. Year 1, Class 11, Grade 10…" onkeydown="if(event.key==='Enter')addTag('year')">
+                <button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addTag('year')">Add</button>
+              </div>
+              <div class="tags" id="year-tags"><span class="empty-tags">No years yet</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title green">📦 Batches</div>
+            <div class="tag-area">
+              <div class="tag-input-row">
+                <input class="tag-input" id="batch-input" placeholder="e.g. 2024–25, Morning Batch…" onkeydown="if(event.key==='Enter')addTag('batch')">
+                <button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addTag('batch')">Add</button>
+              </div>
+              <div class="tags" id="batch-tags"><span class="empty-tags">No batches yet</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEACHER ACCOUNTS -->
+      <div class="pg" id="pg-teachers">
+        <div class="pg-title green">Teacher Accounts</div>
+        <div class="pg-sub">Review registrations, approve or reject teachers, and manage salary types</div>
+        <div class="card" style="margin-bottom:1rem;padding:1rem 1.5rem">
+          <div class="sb">
+            <select id="filter-status" onchange="renderTeachers()" style="min-width:140px">
+              <option value="all">All status</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+            <input type="text" id="teacher-search" placeholder="Search by name, email, dept…" oninput="renderTeachers()" style="flex:1;min-width:200px">
+            <button class="btn btn-g" onclick="loadTeachers()">Refresh</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="tw"><table>
+            <thead class="green-head"><tr><th>Name</th><th>Email</th><th>Phone</th><th>Department</th><th>Subject</th><th>Salary Type</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="teachers-tbody"><tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading...</td></tr></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- TEACHER TIMETABLE -->
+      <div class="pg" id="pg-timetable-teacher">
+        <div class="pg-title green">Teacher Timetable</div>
+        <div class="pg-sub">Assign teachers to subjects, batches and time slots</div>
+        <div class="card" style="padding:48px;text-align:center;color:var(--text-muted)">
+          <div style="font-size:3rem;margin-bottom:1rem">🗓️</div>
+          <p style="font-size:16px;font-weight:600;margin-bottom:.5rem">Timetable module — coming next</p>
+          <p style="font-size:14px">The timetable system will let you assign teachers to courses, batches and time slots. Teachers will then see their schedule automatically on their dashboard.</p>
+        </div>
+      </div>
+
+      <!-- APPROVALS -->
+      <div class="pg" id="pg-approvals">
+        <div class="pg-title green">Approvals</div>
+        <div class="pg-sub">Review attendance corrections, class logs and leave requests from teachers</div>
+        <div class="card" style="padding:48px;text-align:center;color:var(--text-muted)">
+          <div style="font-size:3rem;margin-bottom:1rem">✔️</div>
+          <p style="font-size:16px;font-weight:600;margin-bottom:.5rem">Approvals module — coming next</p>
+          <p style="font-size:14px">Once teachers start logging attendance and class records, pending approvals will appear here.</p>
+        </div>
+      </div>
+
+    </div><!-- end content -->
+  </div><!-- end layout -->
+</div><!-- end dashboard -->
+
+<!-- Teacher Detail Modal -->
+<div class="modal-overlay" id="modal-teacher" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title" id="modal-name">Teacher Name</div>
+    <div class="modal-sub" id="modal-email">email@example.com</div>
+    <div id="modal-details"></div>
+    <div class="fg" style="margin-top:16px">
+      <label style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px">Salary Type</label>
+      <select class="tag-input" id="modal-salary" style="width:100%">
+        <option value="monthly">Monthly Salary</option>
+        <option value="perclass">Per Class Payment</option>
+        <option value="hybrid">Hybrid (Base + Per Class)</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" style="background:var(--gray);color:var(--text-muted)" onclick="closeModal()">Close</button>
+      <button class="btn btn-d" onclick="updateTeacherStatus('rejected')">Reject</button>
+      <button class="btn btn-g" onclick="updateTeacherStatus('approved')">Approve</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase (from your original admin.html) -->
 <script>
-
-let courses = [];
-
-try{
-courses = JSON.parse(localStorage.getItem("courses")) || [];
-}catch(error){
-courses = [];
-}
-
-function saveCourses(){
-localStorage.setItem(
-"courses",
-JSON.stringify(courses)
-);
-}
-
-function getSuffix(num){
-if(num===1) return "st";
-if(num===2) return "nd";
-if(num===3) return "rd";
-return "th";
-}
-
-function generateYears(duration){
-
-let years=[];
-
-for(let i=1;i<=duration;i++){
-years.push(i + getSuffix(i) + " Year");
-}
-
-return years;
-
-}
-
-function createCourse(){
-
-const name =
-document.getElementById("courseName")
-.value.trim();
-
-const duration =
-parseInt(
-document.getElementById("courseDuration")
-.value
-);
-
-const admissionYear =
-document.getElementById("admissionYear")
-.value;
-
-if(!name){
-
-alert("Enter Course Name");
-
-return;
-
-}
-
-const duplicate = courses.find(course =>
-
-(course.name || "")
-.toLowerCase()
-.trim() ===
-
-name
-.toLowerCase()
-.trim()
-
-);
-
-if(duplicate){
-
-alert("Course already exists");
-
-return;
-
-}
-
-const course = {
-
-id: Date.now(),
-
-name: name,
-
-duration: duration,
-
-admissionYear: admissionYear,
-
-years: generateYears(duration)
-
-};
-
-courses.push(course);
-
-saveCourses();
-
-renderCourses();
-
-document.getElementById("courseName").value = "";
-
-}
-
-function deleteCourse(id){
-
-const confirmed =
-confirm(
-"Are you sure you want to delete this course?"
-);
-
-if(!confirmed){
-return;
-}
-
-courses = courses.filter(
-course => course.id !== id
-);
-
-saveCourses();
-
-renderCourses();
-
-}
-
-function renderCourses(){
-
-const container =
-document.getElementById("courseContainer");
-
-container.innerHTML = "";
-
-courses.forEach(course=>{
-
-let yearsHtml = "";
-
-if(Array.isArray(course.years)){
-
-course.years.forEach(year=>{
-
-yearsHtml += `
-<div class="year-box">
-• ${year}
-</div>
-`;
-
-});
-
-}
-
-container.innerHTML += `
-
-<div class="course-card">
-
-<div class="course-name">
-${course.name}
-</div>
-
-<div>
-Admission Year:
-${course.admissionYear}
-</div>
-
-<div>
-Duration:
-${course.duration} Year(s)
-</div>
-
-<br>
-
-${yearsHtml}
-
-<button
-class="delete-btn"
-onclick="deleteCourse(${course.id})">
-Delete
-</button>
-
-</div>
-
-`;
-
-});
-
-}
-
-renderCourses();
-
+// Paste your full Firebase compat SDK scripts here exactly as in your original admin.html
+// The firebase.initializeApp() call is below — just make sure the SDKs are loaded first
 </script>
-```
+
+<script>
+// ── FIREBASE CONFIG (same as your original) ──
+const firebaseConfig = {
+  apiKey: "AIzaSyCg-tP51HEY4d-1t7IYFu38ha_NP-uhAjc",
+  authDomain: "medha-portal.firebaseapp.com",
+  projectId: "medha-portal",
+  storageBucket: "medha-portal.firebasestorage.app",
+  messagingSenderId: "409872731570",
+  appId: "1:409872731570:web:95780e9725a903b0a468ab"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+let storage = null;
+try { storage = firebase.storage(); } catch(e) { storage = null; }
+
+// ── STATE ──
+let allStudents = [], teachers = [], currentTeacherId = null, parsed = {};
+const structData = { dept:[], section:[], year:[], batch:[] };
+
+// ── AUTH ──
+auth.onAuthStateChanged(function(u){
+  if(u){
+    document.getElementById("authPage").style.display="none";
+    document.getElementById("dashboard").style.display="block";
+    loadAll();
+  } else {
+    document.getElementById("authPage").style.display="flex";
+    document.getElementById("dashboard").style.display="none";
+  }
+});
+
+function loadAll(){
+  loadStats(); loadStudents(); loadUsers(); loadNotices(); loadTTs();
+  loadStructure(); loadTeachers();
+}
+
+function doLogin(){
+  const e=document.getElementById("aEmail").value.trim();
+  const p=document.getElementById("aPwd").value;
+  if(!e||!p){ showErr("authErr","Enter email and password"); return; }
+  const btn=document.getElementById("loginBtn");
+  btn.textContent="Logging in..."; btn.disabled=true;
+  document.getElementById("authErr").style.display="none";
+  auth.signInWithEmailAndPassword(e,p).catch(function(){
+    btn.textContent="Login to Admin Portal"; btn.disabled=false;
+    showErr("authErr","Invalid credentials. Admin access only.");
+  });
+}
+function doLogout(){ if(confirm("Logout?")) auth.signOut(); }
+
+// ── STATS ──
+function loadStats(){
+  Promise.all([
+    db.collection("approved_students").get(),
+    db.collection("students").get(),
+    db.collection("notices").get(),
+    db.collection("timetables").get(),
+    db.collection("teacher_registrations").get()
+  ]).then(function(r){
+    document.getElementById("t1").textContent=r[0].size;
+    document.getElementById("t2").textContent=r[1].size;
+    document.getElementById("t3").textContent=r[2].size;
+    document.getElementById("t4").textContent=r[3].size;
+    document.getElementById("t5").textContent=r[4].size;
+    document.getElementById("t6").textContent=r[4].docs.filter(function(d){return d.data().status==="pending";}).length;
+    document.getElementById("t7").textContent=structData.dept.length;
+    document.getElementById("t8").textContent=structData.batch.length;
+    // Recent students
+    const rsList=r[0].docs.slice(-5).reverse().map(function(d){return "<div style='font-size:13px;padding:5px 0;border-bottom:1px solid var(--border)'><strong>"+d.id+"</strong> — "+(d.data().name||"")+"</div>";}).join("");
+    document.getElementById("recent-students-list").innerHTML=rsList||"<span style='color:var(--text-muted)'>No students imported yet.</span>";
+    // Recent teachers
+    const rtList=r[4].docs.slice(-5).reverse().map(function(d){
+      const t=d.data(); const sc=t.status==="pending"?"b-pend":t.status==="approved"?"b-app":"b-rej";
+      return "<div style='font-size:13px;padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between'><span><strong>"+(t.name||"")+"</strong> — "+(t.department||"")+"</span><span class='badge "+sc+"'>"+t.status+"</span></div>";
+    }).join("");
+    document.getElementById("recent-teachers-list").innerHTML=rtList||"<span style='color:var(--text-muted)'>No teacher registrations yet.</span>";
+  }).catch(function(){});
+}
+
+// ── CSV ──
+function parseCSV(text){
+  const lines=text.split("\n").map(function(l){return l.trim();}).filter(Boolean);
+  if(lines.length<2) return null;
+  const hdrs=lines[0].split(",").map(function(h){return h.trim().replace(/"/g,"").toLowerCase().replace(/\s+/g,"");});
+  const rows=[];
+  for(let i=1;i<lines.length;i++){
+    const cols=lines[i].split(",").map(function(c){return c.trim().replace(/"/g,"");});
+    const row={}; hdrs.forEach(function(h,idx){row[h]=cols[idx]||"";});
+    if(Object.values(row).some(function(v){return v;})) rows.push(row);
+  }
+  return {hdrs:hdrs,rows:rows};
+}
+
+function setProg(id,pct,msg){
+  const pb=document.getElementById(id+"-pb"),pf=document.getElementById(id+"-pf"),pt=document.getElementById(id+"-pt");
+  if(pb) pb.style.display=(pct!==null)?"block":"none";
+  if(pf) pf.style.width=(pct||0)+"%";
+  if(pt) pt.textContent=msg||"";
+}
+
+function clearPrev(id){
+  document.getElementById(id+"-prev").style.display="none";
+  document.getElementById(id+"-csv").value="";
+  parsed[id]={};
+}
+
+function handleCSV(input,type){
+  if(!input.files[0]) return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const csv=parseCSV(e.target.result);
+    if(!csv){ showAlr(type,"Invalid CSV format","al-err"); return; }
+    if(type==="students"){
+      const rows=csv.rows;
+      document.getElementById("s-cnt").textContent=rows.length;
+      document.getElementById("s-body").innerHTML=rows.map(function(r,i){
+        return "<tr><td>"+(i+1)+"</td><td><strong>"+(r.studentid||"-")+"</strong></td><td>"+(r.name||"-")+"</td><td>"+(r.phone||"-")+"</td><td>"+(r.department||"-")+"</td><td>"+(r.year||"-")+"</td><td><span class='badge "+(r.studentid?"b-ok":"b-err")+"'>"+(r.studentid?"Ready":"Missing ID")+"</span></td></tr>";
+      }).join("");
+      parsed.students=rows;
+      document.getElementById("s-prev").style.display="block";
+    } else if(type==="attendance"){
+      const grp={};
+      csv.rows.forEach(function(r){
+        const id=(r.studentid||"").toUpperCase(); if(!id) return;
+        if(!grp[id]) grp[id]={subjects:[]};
+        grp[id].subjects.push({subject:r.subject,totalClasses:parseInt(r.totalclasses)||0,attended:parseInt(r.attended)||0,percentage:parseFloat(r.percentage)||0});
+      });
+      Object.keys(grp).forEach(function(id){
+        const s=grp[id].subjects;
+        const tot=s.reduce(function(a,x){return a+x.attended;},0);
+        const max=s.reduce(function(a,x){return a+x.totalClasses;},0);
+        grp[id].overall=max?Math.round(tot/max*100):0;
+      });
+      const ids=Object.keys(grp);
+      document.getElementById("att-cnt").textContent=ids.length;
+      document.getElementById("att-body").innerHTML=ids.map(function(id){
+        return "<tr><td><strong>"+id+"</strong></td><td>"+grp[id].subjects.map(function(s){return s.subject;}).join(", ")+"</td><td style='color:"+(grp[id].overall>=75?"var(--success)":"var(--danger)")+";font-weight:700'>"+grp[id].overall+"%</td></tr>";
+      }).join("");
+      parsed.attendance=grp;
+      document.getElementById("att-prev").style.display="block";
+    } else if(type==="results"){
+      const grp={};
+      csv.rows.forEach(function(r){
+        const id=(r.studentid||"").toUpperCase(); if(!id) return;
+        if(!grp[id]) grp[id]={subjects:[]};
+        grp[id].subjects.push({subject:r.subject,internal:parseInt(r.internal)||0,internalMax:parseInt(r.internalmax)||30,external:parseInt(r.external)||0,externalMax:parseInt(r.externalmax)||70,total:parseInt(r.total)||0,totalMax:parseInt(r.totalmax)||100,grade:r.grade||"-"});
+      });
+      Object.keys(grp).forEach(function(id){
+        const s=grp[id].subjects;
+        const tot=s.reduce(function(a,x){return a+x.total;},0);
+        const max=s.reduce(function(a,x){return a+x.totalMax;},0);
+        grp[id].totalMarks=tot; grp[id].maxMarks=max;
+        grp[id].percentage=max?Math.round(tot/max*1000)/10:0;
+        grp[id].result=grp[id].percentage>=40?"PASS":"FAIL";
+      });
+      const ids=Object.keys(grp);
+      document.getElementById("res-cnt").textContent=ids.length;
+      document.getElementById("res-body").innerHTML=ids.map(function(id){
+        return "<tr><td><strong>"+id+"</strong></td><td>"+grp[id].subjects.length+" subjects</td><td>"+grp[id].totalMarks+"/"+grp[id].maxMarks+"</td><td>"+grp[id].percentage+"%</td><td><span class='badge "+(grp[id].result==="PASS"?"b-ok":"b-err")+"'>"+grp[id].result+"</span></td></tr>";
+      }).join("");
+      parsed.results=grp;
+      document.getElementById("res-prev").style.display="block";
+    } else if(type==="fees"){
+      const grp={};
+      csv.rows.forEach(function(r){
+        const id=(r.studentid||"").toUpperCase(); if(!id) return;
+        if(!grp[id]) grp[id]={items:[]};
+        grp[id].items.push({feeType:r.feetype,amount:parseInt(r.amount)||0,dueDate:r.duedate,status:r.status});
+      });
+      const ids=Object.keys(grp);
+      document.getElementById("fee-cnt").textContent=ids.length;
+      document.getElementById("fee-body").innerHTML=ids.map(function(id){
+        const p=grp[id].items.filter(function(x){return (x.status||"").toLowerCase()==="pending";}).length;
+        return "<tr><td><strong>"+id+"</strong></td><td>"+grp[id].items.length+" items</td><td>"+(p?"<span class='badge b-err'>"+p+" Pending</span>":"<span class='badge b-ok'>All Paid</span>")+"</td></tr>";
+      }).join("");
+      parsed.fees=grp;
+      document.getElementById("fee-prev").style.display="block";
+    }
+  };
+  reader.readAsText(input.files[0]);
+}
+
+function doImport(type){
+  const prefix=type==="students"?"s":type==="attendance"?"att":type==="results"?"res":"fee";
+  const btn=document.getElementById(prefix+"-imp");
+  btn.disabled=true; btn.textContent="Uploading...";
+  setProg(prefix,0,"Starting...");
+  let ok=0, queue=[], collName="";
+  if(type==="students"){
+    queue=(parsed.students||[]).map(function(s){return{id:(s.studentid||"").toUpperCase(),data:{name:s.name,phone:s.phone,department:s.department,year:s.year,importedAt:new Date().toISOString()}};}).filter(function(x){return x.id;});
+    collName="approved_students";
+  } else {
+    const grp=parsed[type]||{};
+    queue=Object.keys(grp).map(function(id){return{id:id,data:Object.assign({},grp[id],{updatedAt:new Date().toISOString()})};});
+    collName=type;
+  }
+  let i=0;
+  function next(){
+    if(i>=queue.length){
+      btn.disabled=false; btn.textContent="Upload to Firebase";
+      setProg(prefix,null,"");
+      const m={students:ok+" students imported!",attendance:"Attendance updated for "+ok+" students!",results:"Results updated for "+ok+" students!",fees:"Fee status updated for "+ok+" students!"};
+      showAlr(type,m[type],"al-ok");
+      clearPrev(prefix);
+      if(type==="students"){loadStats();loadStudents();}else{loadStats();}
+      return;
+    }
+    db.collection(collName).doc(queue[i].id).set(queue[i].data).then(function(){ok++;}).catch(function(){}).finally(function(){
+      i++; setProg(prefix,Math.round(i/queue.length*100),"Uploading "+i+" of "+queue.length+"..."); next();
+    });
+  }
+  next();
+}
+
+// ── STUDENTS ──
+function loadStudents(){
+  db.collection("approved_students").get().then(function(s){
+    allStudents=[];
+    s.forEach(function(d){allStudents.push(Object.assign({id:d.id},d.data()));});
+    renderStudents(allStudents);
+  }).catch(function(){
+    document.getElementById("stu-body").innerHTML="<tr><td colspan='7' style='text-align:center;color:var(--danger)'>Error loading. Check Firestore rules.</td></tr>";
+  });
+}
+function renderStudents(list){
+  const b=document.getElementById("stu-body");
+  if(!list.length){b.innerHTML="<tr><td colspan='7' style='text-align:center;padding:2rem;color:var(--text-muted)'>No students found.</td></tr>";return;}
+  b.innerHTML=list.map(function(s,i){
+    return "<tr><td>"+(i+1)+"</td><td><strong>"+s.id+"</strong></td><td>"+(s.name||"-")+"</td><td>"+(s.phone||"-")+"</td><td>"+(s.department||"-")+"</td><td>"+(s.year||"-")+"</td><td><button class='del-btn' onclick=\"delStudent('"+s.id+"')\">Delete</button></td></tr>";
+  }).join("");
+}
+function filterStudents(){
+  const q=document.getElementById("s-search").value.toLowerCase();
+  const d=document.getElementById("s-dept").value;
+  const y=document.getElementById("s-year").value;
+  renderStudents(allStudents.filter(function(s){
+    return(!q||s.id.toLowerCase().includes(q)||(s.name||"").toLowerCase().includes(q))&&(!d||s.department===d)&&(!y||s.year===y);
+  }));
+}
+function delStudent(id){
+  if(!confirm("Delete "+id+"?")) return;
+  db.collection("approved_students").doc(id).delete().then(function(){
+    allStudents=allStudents.filter(function(s){return s.id!==id;});
+    renderStudents(allStudents); loadStats();
+  });
+}
+function addOne(){
+  const id=document.getElementById("a-id").value.trim().toUpperCase();
+  const name=document.getElementById("a-name").value.trim();
+  const phone=document.getElementById("a-phone").value.trim();
+  const dept=document.getElementById("a-dept").value;
+  const year=document.getElementById("a-year").value;
+  if(!id||!name||!phone||!dept||!year){showAlr("add","Fill all fields","al-err");return;}
+  db.collection("approved_students").doc(id).set({name,phone,department:dept,year,importedAt:new Date().toISOString()}).then(function(){
+    showAlr("add",id+" added!","al-ok");
+    ["a-id","a-name","a-phone"].forEach(function(i){document.getElementById(i).value="";});
+    ["a-dept","a-year"].forEach(function(i){document.getElementById(i).value="";});
+    loadStats(); loadStudents();
+  });
+}
+
+// ── NOTICES ──
+function updateVis(v){
+  document.getElementById("vis-dept").style.display=v==="department"?"block":"none";
+  document.getElementById("vis-stu").style.display=v==="student"?"block":"none";
+}
+function postNotice(){
+  const title=document.getElementById("n-title").value.trim();
+  const desc=document.getElementById("n-desc").value.trim();
+  const tag=document.getElementById("n-tag").value;
+  const vis=document.querySelector("input[name=vis]:checked").value;
+  const dept=document.getElementById("n-dept").value;
+  const sid=document.getElementById("n-sid").value.trim();
+  const pdfFile=document.getElementById("n-pdf").files[0];
+  if(!title){showAlr("not","Enter a title","al-err");return;}
+  if(vis==="department"&&!dept){showAlr("not","Select a department","al-err");return;}
+  if(vis==="student"&&!sid){showAlr("not","Enter a student ID","al-err");return;}
+  const btn=document.getElementById("n-btn");
+  btn.disabled=true; btn.textContent="Posting...";
+  function saveNotice(pdfUrl,pdfName){
+    db.collection("notices").add({title,description:desc,tag,visibility:vis,targetDepartment:vis==="department"?dept:"",targetStudentId:vis==="student"?sid:"",pdfUrl:pdfUrl||"",pdfName:pdfName||"",hasPdf:!!pdfUrl,createdAt:new Date().toISOString(),isActive:true}).then(function(){
+      showAlr("not","Notice posted!","al-ok");
+      document.getElementById("n-title").value=""; document.getElementById("n-desc").value="";
+      document.getElementById("n-pdf").value=""; document.getElementById("n-pname").textContent="No file selected";
+      document.querySelector("input[name=vis][value=all]").checked=true; updateVis("all");
+      btn.disabled=false; btn.textContent="Post Notice"; loadNotices(); loadStats();
+    });
+  }
+  if(pdfFile){
+    if(!storage){showAlr("not","Enable Firebase Storage to upload PDFs.","al-err");btn.disabled=false;btn.textContent="Post Notice";return;}
+    setProg("n",0,"Uploading PDF...");
+    const sRef=storage.ref("notices/"+Date.now()+"_"+pdfFile.name);
+    const task=sRef.put(pdfFile);
+    task.on("state_changed",function(snap){setProg("n",Math.round(snap.bytesTransferred/snap.totalBytes*100),"Uploading...");},function(){showAlr("not","PDF upload failed.","al-err");btn.disabled=false;btn.textContent="Post Notice";setProg("n",null,"");},function(){task.snapshot.ref.getDownloadURL().then(function(url){setProg("n",null,"");saveNotice(url,pdfFile.name);});});
+  } else { saveNotice("",""); }
+}
+function loadNotices(){
+  db.collection("notices").get().then(function(s){
+    const list=[]; s.forEach(function(d){list.push(Object.assign({id:d.id},d.data()));});
+    list.sort(function(a,b){return(b.createdAt||"").localeCompare(a.createdAt||"");});
+    const tc={urgent:"b-err",info:"b-info",general:"b-warn",academic:"b-ok"};
+    const vl={all:"All Students",department:"Dept: ",student:"Student: "};
+    document.getElementById("notices-list").innerHTML=list.length?list.map(function(n){
+      const vt=n.visibility==="all"?vl.all:(n.visibility==="department"?vl.department+n.targetDepartment:vl.student+n.targetStudentId);
+      const pb=n.hasPdf?"<span class='badge b-ok'>PDF</span>":"";
+      const pl=n.hasPdf?"<a href='"+n.pdfUrl+"' target='_blank' style='color:var(--indigo)'>View PDF</a>":"";
+      return "<div class='nc'><div style='flex:1'><div style='display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:5px'><span class='badge "+(tc[n.tag]||"b-info")+"'>"+n.tag+"</span><span class='badge b-info'>"+vt+"</span>"+pb+"</div><h4>"+n.title+"</h4>"+(n.description?"<p>"+n.description+"</p>":"")+"<div class='nm'>"+(n.createdAt?n.createdAt.split("T")[0]:"")+" "+pl+"</div></div><button class='del-btn' onclick=\"delNotice('"+n.id+"')\">Delete</button></div>";
+    }).join(""):"<p style='color:var(--text-muted)'>No notices yet.</p>";
+  });
+}
+function delNotice(id){if(!confirm("Delete?"))return;db.collection("notices").doc(id).delete().then(function(){loadNotices();loadStats();});}
+
+// ── TIMETABLES (Students) ──
+function uploadTT(){
+  const dept=document.getElementById("tt-dept").value;
+  const year=document.getElementById("tt-year").value;
+  const pdfFile=document.getElementById("tt-pdf").files[0];
+  if(!dept||!year){showAlr("tt","Select Department and Year","al-err");return;}
+  if(!pdfFile){showAlr("tt","Upload a PDF file","al-err");return;}
+  if(!storage){showAlr("tt","Enable Firebase Storage first.","al-err");return;}
+  const btn=document.getElementById("tt-btn");
+  btn.disabled=true; btn.textContent="Uploading..."; setProg("tt",0,"Starting...");
+  const key=(dept+"_"+year).replace(/[^a-zA-Z0-9]/g,"_");
+  const sRef=storage.ref("timetables/"+key+"_"+Date.now()+".pdf");
+  const task=sRef.put(pdfFile);
+  task.on("state_changed",function(snap){setProg("tt",Math.round(snap.bytesTransferred/snap.totalBytes*100),"Uploading...");},function(){showAlr("tt","Upload failed.","al-err");btn.disabled=false;btn.textContent="Upload Timetable";setProg("tt",null,"");},function(){task.snapshot.ref.getDownloadURL().then(function(url){db.collection("timetables").doc(key).set({department:dept,year,pdfUrl:url,pdfName:pdfFile.name,uploadedAt:new Date().toISOString()}).then(function(){showAlr("tt","Timetable uploaded for "+dept+" — "+year+"!","al-ok");["tt-dept","tt-year"].forEach(function(i){document.getElementById(i).value="";});document.getElementById("tt-pdf").value="";document.getElementById("tt-pname").textContent="No file selected";setProg("tt",null,"");btn.disabled=false;btn.textContent="Upload Timetable";loadTTs();loadStats();});});});
+}
+function loadTTs(){
+  db.collection("timetables").get().then(function(s){
+    const list=[]; s.forEach(function(d){list.push(Object.assign({id:d.id},d.data()));});
+    document.getElementById("tt-list").innerHTML=list.length?list.map(function(t){
+      return "<div class='ttc'><h4>"+t.department+"</h4><p>"+t.year+"</p><div style='display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap'><a href='"+t.pdfUrl+"' target='_blank' class='btn btn-s' style='font-size:12px;padding:6px 12px'>View PDF</a><button class='btn btn-d' style='font-size:12px;padding:6px 12px' onclick=\"delTT('"+t.id+"')\">Delete</button></div><p style='font-size:11px;color:var(--text-muted);margin-top:.5rem'>"+(t.uploadedAt?t.uploadedAt.split("T")[0]:"")+"</p></div>";
+    }).join(""):"<p style='color:var(--text-muted)'>No timetables yet.</p>";
+  });
+}
+function delTT(id){if(!confirm("Delete?"))return;db.collection("timetables").doc(id).delete().then(function(){loadTTs();loadStats();});}
+
+// ── PORTAL USERS ──
+function loadUsers(){
+  db.collection("students").get().then(function(s){
+    if(s.empty){document.getElementById("usr-body").innerHTML="<tr><td colspan='7' style='text-align:center;padding:2rem;color:var(--text-muted)'>No registered users yet.</td></tr>";return;}
+    let i=1,rows="";
+    s.forEach(function(d){const u=d.data();rows+="<tr><td>"+(i++)+"</td><td>"+(u.studentId||"-")+"</td><td>"+(u.name||"-")+"</td><td>"+(u.email||"-")+"</td><td>"+(u.department||"-")+"</td><td>"+(u.year||"-")+"</td><td>"+(u.phone||"-")+"</td></tr>";});
+    document.getElementById("usr-body").innerHTML=rows;
+  });
+}
+
+// ── ACADEMIC STRUCTURE (Teachers) ──
+async function loadStructure(){
+  for(const key of ["dept","section","year","batch"]){
+    try {
+      const snap=await db.collection("structure_"+key).get();
+      structData[key]=snap.docs.map(function(d){return{id:d.id,...d.data()};});
+      renderTags(key);
+    } catch(e){}
+  }
+  document.getElementById("t7").textContent=structData.dept.length;
+  document.getElementById("t8").textContent=structData.batch.length;
+}
+async function addTag(key){
+  const inp=document.getElementById(key+"-input");
+  const val=inp.value.trim();
+  if(!val) return;
+  const id=val.toLowerCase().replace(/\s+/g,"-")+"-"+Date.now();
+  await db.collection("structure_"+key).doc(id).set({name:val,createdAt:new Date().toISOString()});
+  structData[key].push({id,name:val});
+  renderTags(key); inp.value="";
+  showToast("Added: "+val);
+  document.getElementById("t7").textContent=structData.dept.length;
+  document.getElementById("t8").textContent=structData.batch.length;
+}
+async function removeTag(key,id){
+  await db.collection("structure_"+key).doc(id).delete();
+  structData[key]=structData[key].filter(function(t){return t.id!==id;});
+  renderTags(key); showToast("Removed");
+  document.getElementById("t7").textContent=structData.dept.length;
+  document.getElementById("t8").textContent=structData.batch.length;
+}
+function renderTags(key){
+  const container=document.getElementById(key+"-tags");
+  if(!structData[key].length){container.innerHTML="<span class='empty-tags'>No items yet</span>";return;}
+  container.innerHTML=structData[key].map(function(t){
+    return "<span class='tag'>"+t.name+"<button class='tag-del' onclick=\"removeTag('"+key+"','"+t.id+"')\" title='Remove'>×</button></span>";
+  }).join("");
+}
+
+// ── TEACHERS ──
+function loadTeachers(){
+  db.collection("teacher_registrations").get().then(function(snap){
+    teachers=snap.docs.map(function(d){return{id:d.id,...d.data()};});
+    const pending=teachers.filter(function(t){return t.status==="pending";}).length;
+    document.getElementById("pending-badge").textContent=pending;
+    document.getElementById("t5").textContent=teachers.length;
+    document.getElementById("t6").textContent=pending;
+    renderTeachers();
+  }).catch(function(){
+    document.getElementById("teachers-tbody").innerHTML="<tr><td colspan='8' style='text-align:center;color:var(--danger)'>Error loading. Check Firestore rules.</td></tr>";
+  });
+}
+function renderTeachers(){
+  const filter=document.getElementById("filter-status").value;
+  const q=(document.getElementById("teacher-search").value||"").toLowerCase();
+  let list=filter==="all"?teachers:teachers.filter(function(t){return t.status===filter;});
+  if(q) list=list.filter(function(t){return(t.name||"").toLowerCase().includes(q)||(t.email||"").toLowerCase().includes(q)||(t.department||"").toLowerCase().includes(q);});
+  const tbody=document.getElementById("teachers-tbody");
+  if(!list.length){tbody.innerHTML="<tr><td colspan='8' style='text-align:center;padding:2rem;color:var(--text-muted)'>No teachers found.</td></tr>";return;}
+  tbody.innerHTML=list.map(function(t){
+    const sc=t.status==="pending"?"b-pend":t.status==="approved"?"b-app":"b-rej";
+    const sl={monthly:"Monthly",perclass:"Per Class",hybrid:"Hybrid"}[t.salaryType]||t.salaryType||"—";
+    return "<tr><td style='font-weight:600'>"+(t.name||"—")+"</td><td style='font-size:12px;color:var(--text-muted)'>"+(t.email||"—")+"</td><td>"+(t.phone||"—")+"</td><td>"+(t.department||"—")+"</td><td>"+(t.subject||"—")+"</td><td><span class='badge b-info'>"+sl+"</span></td><td><span class='badge "+sc+"'>"+(t.status||"pending")+"</span></td><td><button class='btn btn-g' style='padding:5px 12px;font-size:12px' onclick=\"openTeacher('"+t.id+"')\">Review</button></td></tr>";
+  }).join("");
+}
+function openTeacher(id){
+  const t=teachers.find(function(x){return x.id===id;});
+  if(!t) return;
+  currentTeacherId=id;
+  document.getElementById("modal-name").textContent=t.name||"Unknown";
+  document.getElementById("modal-email").textContent=t.email||"";
+  document.getElementById("modal-salary").value=t.salaryType||"monthly";
+  document.getElementById("modal-details").innerHTML=
+    "<div class='modal-detail'><span>Phone</span><span>"+(t.phone||"—")+"</span></div>"+
+    "<div class='modal-detail'><span>Department</span><span>"+(t.department||"—")+"</span></div>"+
+    "<div class='modal-detail'><span>Subject</span><span>"+(t.subject||"—")+"</span></div>"+
+    "<div class='modal-detail'><span>Registered</span><span>"+(t.registeredAt?t.registeredAt.split("T")[0]:"—")+"</span></div>"+
+    "<div class='modal-detail'><span>Current Status</span><span><span class='badge "+(t.status==="pending"?"b-pend":t.status==="approved"?"b-app":"b-rej")+"'>"+t.status+"</span></span></div>";
+  document.getElementById("modal-teacher").classList.add("open");
+}
+function closeModal(){document.getElementById("modal-teacher").classList.remove("open");currentTeacherId=null;}
+async function updateTeacherStatus(status){
+  if(!currentTeacherId) return;
+  const salaryType=document.getElementById("modal-salary").value;
+  await db.collection("teacher_registrations").doc(currentTeacherId).update({status,salaryType,reviewedAt:new Date().toISOString()});
+  const t=teachers.find(function(x){return x.id===currentTeacherId;});
+  if(t){t.status=status;t.salaryType=salaryType;}
+  closeModal(); renderTeachers();
+  const pending=teachers.filter(function(t){return t.status==="pending";}).length;
+  document.getElementById("pending-badge").textContent=pending;
+  document.getElementById("t6").textContent=pending;
+  showToast(status==="approved"?"Teacher approved!":"Teacher rejected");
+}
+
+// ── UI HELPERS ──
+function goPage(pg,el){
+  document.querySelectorAll(".pg").forEach(function(p){p.classList.remove("active");});
+  document.querySelectorAll(".sl").forEach(function(n){n.classList.remove("active","active-green");});
+  document.getElementById("pg-"+pg).classList.add("active");
+  if(el) el.classList.add(pg==="structure"||pg==="teachers"||pg==="timetable-teacher"||pg==="approvals"?"active-green":"active");
+}
+function showAlr(id,msg,cls){
+  const map={students:"imp",attendance:"att",results:"res",fees:"fee",add:"add",not:"not",tt:"tt"};
+  const pid=(map[id]||id)+"-"+(cls==="al-ok"?"ok":"err");
+  const el=document.getElementById(pid);
+  if(!el) return;
+  el.className="alert "+cls; el.textContent=msg; el.style.display="block";
+  setTimeout(function(){el.style.display="none";},6000);
+}
+function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display="block";}
+function showToast(msg){
+  const el=document.getElementById("toast");
+  el.textContent=msg; el.classList.add("show");
+  setTimeout(function(){el.classList.remove("show");},2500);
+}
+function dlCSV(name,content){
+  const a=document.createElement("a");
+  a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(content);
+  a.download=name; a.click();
+}
+</script>
+
+<!-- Firebase SDKs — paste the full minified SDK scripts from your original admin.html above the closing </body> tag -->
+<!-- They are large so keep them exactly as in your original file -->
+</body>
+</html>
