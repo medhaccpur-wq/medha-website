@@ -258,6 +258,7 @@ return years;
 
 }
 
+```javascript
 function createCourse(){
 
 const name=
@@ -273,6 +274,59 @@ document.getElementById("courseDuration")
 const admissionYear=
 document.getElementById("admissionYear")
 .value;
+
+if(!name){
+
+alert("Enter Course Name");
+
+return;
+
+}
+
+const duplicate = courses.find(course =>
+
+(course.name || "")
+.toLowerCase()
+.trim() ===
+
+name
+.toLowerCase()
+.trim()
+
+);
+
+if(duplicate){
+
+alert("Course already exists");
+
+return;
+
+}
+
+const course={
+
+id:Date.now(),
+
+name:name,
+
+duration:duration,
+
+admissionYear:admissionYear,
+
+years:generateYears(duration)
+
+};
+
+courses.push(course);
+
+saveCourses();
+
+renderCourses();
+
+document.getElementById("courseName").value="";
+
+}
+```
 
 if(!name){
 
