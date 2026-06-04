@@ -280,7 +280,7 @@ MEDHA2025001,John Doe,9876543210,Science,1st Year</code></div>
             <select id="s-dept" onchange="filterStudents()"><option value="">All Departments</option><option>Science &amp; Technology</option><option>Engineering</option><option>Arts &amp; Humanities</option><option>Commerce &amp; Business</option><option>Law &amp; Social Sciences</option><option>Information Technology</option><option>Environmental Studies</option><option>Music &amp; Performing Arts</option></select>
             <select id="s-year" onchange="filterStudents()"><option value="">All Years</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select>
             <button class="btn btn-i" onclick="loadStudents()">Refresh</button></div>
-          <div class="tw"><table><thead><tr><th>#</th><th>ID</th><th>Name</th><th>Phone</th><th>Department</th><th>Year</th><th>Action</th></tr></thead><tbody id="stu-body"><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading...</td></tr></tbody></table></div>
+          <div class="tw"><table><thead><tr><th>#</th><th>ID</th><th>Name</th><th>Phone</th><th>Department</th><th>Course</th><th>Year</th><th>Action</th></tr></thead><tbody id="stu-body"><tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading...</td></tr></tbody></table></div>
         </div>
       </div>
 
@@ -293,7 +293,8 @@ MEDHA2025001,John Doe,9876543210,Science,1st Year</code></div>
           <div class="fg"><label>Full Name *</label><input type="text" id="a-name" placeholder="Full name"></div>
           <div class="fg"><label>Phone *</label><input type="tel" id="a-phone" placeholder="e.g. 9876543210"></div>
           <div class="fg"><label>Department *</label><select id="a-dept"><option value="">Select</option><option>Science &amp; Technology</option><option>Engineering</option><option>Arts &amp; Humanities</option><option>Commerce &amp; Business</option><option>Information Technology</option></select></div>
-          <div class="fg"><label>Year *</label><select id="a-year"><option value="">Select</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select></div>
+          <div class="fg"><label>Course *</label><select id="a-course" onchange="populateYearSelect('a-year',this.value)"><option value="">Select</option></select></div>
+          <div class="fg"><label>Year *</label><select id="a-year"><option value="">Select</option></select></div>
           <button class="btn btn-s" onclick="addOne()">Add Student</button>
         </div>
       </div>
@@ -408,7 +409,31 @@ MEDHA2025001,Tuition Fee,25000,30-Jun-2025,Paid</code></div>
       <!-- ACADEMIC STRUCTURE -->
       <div class="pg" id="pg-structure">
         <div class="pg-title green">Academic Structure</div>
-        <div class="pg-sub">Manage departments, sections, years and batches — these populate dropdowns in teacher registration</div>
+        <div class="pg-sub">Manage departments, sections, years, batches and courses — these populate dropdowns in student admission, teacher assignment and timetables</div>
+        <div class="alert al-ok" id="course-ok"></div><div class="alert al-err" id="course-err"></div>
+        <div class="card">
+          <div class="card-title green">📚 Course Management</div>
+          <div class="fr">
+            <div class="fg"><label>Course Name *</label><input type="text" id="course-name" placeholder="e.g. Diploma in Medical Laboratory Technology" oninput="updateCourseCode()"></div>
+            <div class="fg"><label>Course Code</label><input type="text" id="course-code" placeholder="Auto generated" readonly></div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label>Duration *</label><select id="course-duration"><option value="">Select</option><option value="1">1 Year</option><option value="2">2 Years</option><option value="3">3 Years</option><option value="4">4 Years</option><option value="5">5 Years</option></select></div>
+            <div class="fg"><label>Admission Year *</label><input type="number" id="course-admission" placeholder="e.g. 2026" min="2000" max="2100"></div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label>Status</label><select id="course-status"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+            <div class="fg"><label>&nbsp;</label><button class="btn btn-g" id="course-btn" onclick="saveCourse()">Add Course</button><button class="btn" id="course-cancel" style="background:var(--gray);color:var(--text-muted);margin-left:.5rem;display:none" onclick="resetCourseForm()">Cancel Edit</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title green">📋 All Courses</div>
+          <div class="tw"><table><thead class="green-head"><tr><th>Course Name</th><th>Course Code</th><th>Duration</th><th>Admission Year</th><th>Status</th><th>Created Date</th><th>Years</th><th>Batches</th><th>Actions</th></tr></thead><tbody id="course-body"><tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading...</td></tr></tbody></table></div>
+        </div>
+        <div class="card">
+          <div class="card-title green">🗄️ Archived Courses</div>
+          <div class="tw"><table><thead class="green-head"><tr><th>Course Name</th><th>Archive Date</th><th>Days Remaining</th></tr></thead><tbody id="archived-course-body"><tr><td colspan="3" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading...</td></tr></tbody></table></div>
+        </div>
         <div class="manage-grid">
           <div class="card">
             <div class="card-title green">🏛️ Departments</div>
@@ -434,8 +459,9 @@ MEDHA2025001,Tuition Fee,25000,30-Jun-2025,Paid</code></div>
           <div class="card">
             <div class="card-title green">📦 Batches</div>
             <div class="tag-area">
-              <div class="tag-input-row"><input class="tag-input" id="batch-input" placeholder="e.g. 2024–25, Morning Batch…" onkeydown="if(event.key==='Enter')addTag('batch')"><button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addTag('batch')">Add</button></div>
-              <div class="tags" id="batch-tags"><span class="empty-tags">No batches yet</span></div>
+              <div class="fg" style="margin-bottom:10px"><label>Course</label><select class="tag-input" id="batch-course" style="width:100%"><option value="">Select course first</option></select></div>
+              <div class="tag-input-row"><input class="tag-input" id="batch-input" placeholder="e.g. 2026 Batch, Morning Batch…" onkeydown="if(event.key==='Enter')addCourseBatch()"><button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addCourseBatch()">Add</button></div>
+              <div class="tags" id="batch-tags"><span class="empty-tags">No course batches yet</span></div>
             </div>
           </div>
         </div>
@@ -468,11 +494,23 @@ MEDHA2025001,Tuition Fee,25000,30-Jun-2025,Paid</code></div>
       <!-- TEACHER TIMETABLE -->
       <div class="pg" id="pg-timetable-teacher">
         <div class="pg-title green">Teacher Timetable</div>
-        <div class="pg-sub">Assign teachers to subjects, batches and time slots</div>
-        <div class="card" style="padding:48px;text-align:center;color:var(--text-muted)">
-          <div style="font-size:3rem;margin-bottom:1rem">🗓️</div>
-          <p style="font-size:16px;font-weight:600;margin-bottom:.5rem">Timetable module — coming next</p>
-          <p style="font-size:14px">The timetable system will let you assign teachers to courses, batches and time slots. Teachers will then see their schedule automatically on their dashboard.</p>
+        <div class="pg-sub">Assign Course → Year → Subject → Teacher → Time Slot</div>
+        <div class="alert al-ok" id="teacher-tt-ok"></div><div class="alert al-err" id="teacher-tt-err"></div>
+        <div class="card">
+          <div class="fr">
+            <div class="fg"><label>Course *</label><select id="teacher-tt-course" onchange="populateYearSelect('teacher-tt-year',this.value)"><option value="">Select</option></select></div>
+            <div class="fg"><label>Year *</label><select id="teacher-tt-year"><option value="">Select</option></select></div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label>Subject *</label><input type="text" id="teacher-tt-subject" placeholder="e.g. Hematology"></div>
+            <div class="fg"><label>Teacher *</label><select id="teacher-tt-teacher"><option value="">Select</option></select></div>
+          </div>
+          <div class="fg"><label>Time Slot *</label><input type="text" id="teacher-tt-slot" placeholder="e.g. Monday 10:00 AM - 11:00 AM"></div>
+          <button class="btn btn-g" onclick="saveTeacherTimetable()">Assign Time Slot</button>
+        </div>
+        <div class="card">
+          <div class="card-title green">🗓️ Timetable Assignments</div>
+          <div class="tw"><table><thead class="green-head"><tr><th>Course</th><th>Year</th><th>Subject</th><th>Teacher</th><th>Time Slot</th><th>Action</th></tr></thead><tbody id="teacher-tt-body"><tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading...</td></tr></tbody></table></div>
         </div>
       </div>
 
@@ -513,6 +551,20 @@ MEDHA2025001,Tuition Fee,25000,30-Jun-2025,Paid</code></div>
   </div>
 </div>
 
+<!-- Course Archive Modal -->
+<div class="modal-overlay" id="modal-course-archive" onclick="if(event.target===this)closeCourseArchiveModal()">
+  <div class="modal">
+    <div class="modal-title">Archive Course</div>
+    <div class="modal-sub">This will move the course to archive for 30 days before automatic deletion.</div>
+    <div id="archive-course-name" style="font-size:14px;font-weight:600;color:var(--green);margin-bottom:16px"></div>
+    <div class="fg"><label>Admin Password</label><input type="password" id="archive-password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')confirmArchiveCourse()"></div>
+    <div class="modal-actions">
+      <button class="btn" style="background:var(--gray);color:var(--text-muted)" onclick="closeCourseArchiveModal()">Cancel</button>
+      <button class="btn btn-d" onclick="confirmArchiveCourse()">Archive</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -532,7 +584,7 @@ let storage = null;
 try { storage = firebase.storage(); } catch(e) { storage = null; }
 
 // ── STATE ──
-let allStudents = [], teachers = [], currentTeacherId = null, parsed = {};
+let allStudents = [], teachers = [], courses = [], archivedCourses = [], teacherTimetables = [], currentTeacherId = null, currentCourseId = null, archiveCourseId = null, parsed = {};
 const structData = { dept:[], section:[], year:[], batch:[] };
 
 // ── AUTH ──
@@ -549,7 +601,7 @@ auth.onAuthStateChanged(function(u){
 
 function loadAll(){
   loadStats(); loadStudents(); loadUsers(); loadNotices(); loadTTs();
-  loadStructure(); loadTeachers();
+  loadStructure(); loadCourses(); loadTeachers(); loadTeacherTimetables();
 }
 
 function doLogin(){
@@ -738,9 +790,9 @@ function loadStudents(){
 }
 function renderStudents(list){
   const b=document.getElementById("stu-body");
-  if(!list.length){b.innerHTML="<tr><td colspan='7' style='text-align:center;padding:2rem;color:var(--text-muted)'>No students found.</td></tr>";return;}
+  if(!list.length){b.innerHTML="<tr><td colspan='8' style='text-align:center;padding:2rem;color:var(--text-muted)'>No students found.</td></tr>";return;}
   b.innerHTML=list.map(function(s,i){
-    return "<tr><td>"+(i+1)+"</td><td><strong>"+s.id+"</strong></td><td>"+(s.name||"-")+"</td><td>"+(s.phone||"-")+"</td><td>"+(s.department||"-")+"</td><td>"+(s.year||"-")+"</td><td><button class='del-btn' onclick=\"delStudent('"+s.id+"')\">Delete</button></td></tr>";
+    return "<tr><td>"+(i+1)+"</td><td><strong>"+s.id+"</strong></td><td>"+(s.name||"-")+"</td><td>"+(s.phone||"-")+"</td><td>"+(s.department||"-")+"</td><td>"+(s.courseName||s.course||"-")+"</td><td>"+(s.year||"-")+"</td><td><button class='del-btn' onclick=\"delStudent('"+s.id+"')\">Delete</button></td></tr>";
   }).join("");
 }
 function filterStudents(){
@@ -763,12 +815,14 @@ function addOne(){
   const name=document.getElementById("a-name").value.trim();
   const phone=document.getElementById("a-phone").value.trim();
   const dept=document.getElementById("a-dept").value;
+  const courseId=document.getElementById("a-course").value;
   const year=document.getElementById("a-year").value;
-  if(!id||!name||!phone||!dept||!year){showAlr("add","Fill all fields","al-err");return;}
-  db.collection("approved_students").doc(id).set({name:name,phone:phone,department:dept,year:year,importedAt:new Date().toISOString()}).then(function(){
+  const course=courses.find(function(c){return c.id===courseId;});
+  if(!id||!name||!phone||!dept||!courseId||!year){showAlr("add","Fill all fields","al-err");return;}
+  db.collection("approved_students").doc(id).set({name:name,phone:phone,department:dept,courseId:courseId,course:course?course.code:"",courseName:course?course.name:"",year:year,importedAt:new Date().toISOString()}).then(function(){
     showAlr("add",id+" added!","al-ok");
     ["a-id","a-name","a-phone"].forEach(function(i){document.getElementById(i).value="";});
-    ["a-dept","a-year"].forEach(function(i){document.getElementById(i).value="";});
+    ["a-dept","a-course","a-year"].forEach(function(i){document.getElementById(i).value="";});
     loadStats(); loadStudents();
   });
 }
@@ -897,6 +951,247 @@ function renderTags(key){
   }).join("");
 }
 
+// ── COURSE MANAGEMENT ──
+function ordinalYear(n){
+  const suffix=(n%10===1&&n%100!==11)?"st":(n%10===2&&n%100!==12)?"nd":(n%10===3&&n%100!==13)?"rd":"th";
+  return n+suffix+" Year";
+}
+function buildCourseYears(duration){
+  const total=parseInt(duration)||0, years=[];
+  for(let i=1;i<=total;i++) years.push({name:ordinalYear(i),yearNumber:i});
+  return years;
+}
+function cleanExpiredArchivedCourses(){
+  const now=Date.now();
+  return db.collection("archivedCourses").get().then(function(snap){
+    const deletes=[];
+    snap.forEach(function(d){
+      const a=d.data(), archivedAt=a.archivedAt||a.archiveDate;
+      if(archivedAt){
+        const days=Math.floor((now-new Date(archivedAt).getTime())/86400000);
+        if(days>=30) deletes.push(db.collection("archivedCourses").doc(d.id).delete());
+      }
+    });
+    return Promise.all(deletes);
+  }).catch(function(){});
+}
+function getLocalCourses(key){
+  try{return JSON.parse(localStorage.getItem(key)||"[]");}catch(e){return[];}
+}
+function setLocalCourses(key,list){
+  try{localStorage.setItem(key,JSON.stringify(list));}catch(e){}
+}
+function loadCourses(){
+  cleanExpiredArchivedCourses().then(function(){
+    Promise.all([
+      db.collection("courses").get().then(function(s){return{ok:true,snap:s};}).catch(function(e){return{ok:false,error:e};}),
+      db.collection("archivedCourses").get().then(function(s){return{ok:true,snap:s};}).catch(function(e){return{ok:false,error:e};})
+    ]).then(function(r){
+      courses=r[0].ok?r[0].snap.docs.map(function(d){return Object.assign({id:d.id},d.data());}):getLocalCourses("medha_courses");
+      archivedCourses=r[1].ok?r[1].snap.docs.map(function(d){return Object.assign({id:d.id},d.data());}):getLocalCourses("medha_archivedCourses");
+      courses.sort(function(a,b){return(a.name||"").localeCompare(b.name||"");});
+      archivedCourses.sort(function(a,b){return(b.archivedAt||"").localeCompare(a.archivedAt||"");});
+      renderCourses(); renderArchivedCourses(); populateCourseSelects(); renderCourseBatches();
+      if(!r[0].ok||!r[1].ok) showAlr("course","Firebase rules need courses and archivedCourses access. Using local saved courses for now.","al-err");
+    });
+  });
+}
+function resetCourseForm(){
+  ["course-name","course-code","course-duration","course-admission"].forEach(function(id){document.getElementById(id).value="";});
+  document.getElementById("course-status").value="active";
+  document.getElementById("course-btn").textContent="Add Course";
+  document.getElementById("course-btn").disabled=false;
+  document.getElementById("course-cancel").style.display="none";
+  currentCourseId=null;
+}
+function makeCourseCode(name){
+  const cleaned=(name||"").trim().replace(/[^a-zA-Z0-9\s]/g," ");
+  const words=cleaned.split(/\s+/).filter(Boolean);
+  const skip={in:true,of:true,and:true,the:true,for:true,to:true};
+  const useful=words.filter(function(w){return !skip[w.toLowerCase()];});
+  if(useful.length>1) return useful.map(function(w){return w.charAt(0);}).join("").toUpperCase().slice(0,8);
+  return (useful[0]||words[0]||"").toUpperCase().slice(0,8);
+}
+function updateCourseCode(){
+  document.getElementById("course-code").value=makeCourseCode(document.getElementById("course-name").value);
+}
+function populateCourseSelects(){
+  ["a-course","teacher-tt-course","batch-course"].forEach(function(id){
+    const el=document.getElementById(id);
+    if(!el) return;
+    const val=el.value;
+    el.innerHTML="<option value=''>Select</option>"+courses.filter(function(c){return(c.status||"active")==="active";}).map(function(c){
+      return "<option value='"+c.id+"'>"+(c.code||"")+" — "+(c.name||"")+"</option>";
+    }).join("");
+    el.value=val;
+  });
+}
+function populateYearSelect(selectId,courseId){
+  const el=document.getElementById(selectId);
+  const c=courses.find(function(x){return x.id===courseId;});
+  if(!el) return;
+  el.innerHTML="<option value=''>Select</option>"+(c?(c.years||buildCourseYears(c.duration)).map(function(y){
+    const name=y.name||y; return "<option value='"+name+"'>"+name+"</option>";
+  }).join(""):"");
+}
+function saveCourse(){
+  const name=document.getElementById("course-name").value.trim();
+  const code=makeCourseCode(name);
+  document.getElementById("course-code").value=code;
+  const duration=document.getElementById("course-duration").value;
+  const admissionYear=document.getElementById("course-admission").value.trim();
+  const status=document.getElementById("course-status").value;
+  if(!name){showAlr("course","Course Name is required","al-err");return;}
+  if(!code){showAlr("course","Course Code could not be generated. Use a clearer course name.","al-err");return;}
+  if(!duration||!admissionYear){showAlr("course","Duration and Admission Year are required","al-err");return;}
+  const nameKey=name.toLowerCase(), codeKey=code.toLowerCase();
+  const duplicate=courses.find(function(c){
+    return c.id!==currentCourseId&&(((c.name||"").trim().toLowerCase()===nameKey)||((c.code||"").trim().toLowerCase()===codeKey));
+  });
+  if(duplicate){
+    showAlr("course",((duplicate.name||"").trim().toLowerCase()===nameKey)?"Course name already exists":"Course code already exists","al-err");
+    return;
+  }
+  const btn=document.getElementById("course-btn");
+  btn.disabled=true; btn.textContent=currentCourseId?"Saving...":"Adding...";
+  const now=new Date().toISOString();
+  const data={
+    name:name,code:code,duration:parseInt(duration),admissionYear:admissionYear,status:status,
+    years:buildCourseYears(duration),batches:currentCourseId?(courses.find(function(c){return c.id===currentCourseId;})||{}).batches||[]:[],subjects:[],students:[],timetable:[],
+    attendancePath:{course:code,year:true,student:true,attendance:true},
+    updatedAt:now
+  };
+  const localId=currentCourseId||code.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+Date.now();
+  const ref=db.collection("courses").doc(localId);
+  data.id=localId;
+  if(!currentCourseId) data.createdAt=now;
+  ref.set(data,{merge:true}).then(function(){
+    showAlr("course",currentCourseId?"Course updated!":"Course added!","al-ok");
+    resetCourseForm(); loadCourses();
+  }).catch(function(e){
+    const local=courses.filter(function(c){return c.id!==localId;});
+    local.push(Object.assign({},data,{id:localId,createdAt:data.createdAt||now}));
+    setLocalCourses("medha_courses",local);
+    courses=local;
+    renderCourses(); populateCourseSelects(); renderCourseBatches();
+    showAlr("course","Course added locally. Firebase rules must allow courses before it appears for everyone.","al-ok");
+    resetCourseForm();
+  }).finally(function(){btn.disabled=false;btn.textContent=currentCourseId?"Save Course":"Add Course";});
+}
+function renderCourses(){
+  const b=document.getElementById("course-body");
+  if(!courses.length){b.innerHTML="<tr><td colspan='9' style='text-align:center;padding:2rem;color:var(--text-muted)'>No courses yet.</td></tr>";return;}
+  b.innerHTML=courses.map(function(c){
+    const sc=c.status==="active"?"b-app":"b-rej";
+    const years=(c.years||buildCourseYears(c.duration)).map(function(y){return y.name||y;}).join(", ");
+    const batches=(c.batches||[]).map(function(x){return x.name||x;}).join(", ")||"—";
+    return "<tr><td style='font-weight:600'>"+(c.name||"—")+"</td><td><span class='badge b-grn'>"+(c.code||"—")+"</span></td><td>"+(c.duration||"—")+" Year"+(parseInt(c.duration)>1?"s":"")+"</td><td>"+(c.admissionYear||"—")+"</td><td><span class='badge "+sc+"'>"+(c.status||"active")+"</span></td><td>"+(c.createdAt?c.createdAt.split("T")[0]:"—")+"</td><td style='font-size:12px;color:var(--text-muted)'>"+years+"</td><td style='font-size:12px;color:var(--text-muted)'>"+batches+"</td><td><div style='display:flex;gap:.4rem;flex-wrap:wrap'><button class='btn btn-g' style='padding:5px 10px;font-size:12px' onclick=\"editCourse('"+c.id+"')\">Edit</button><button class='btn btn-d' style='padding:5px 10px;font-size:12px' onclick=\"openArchiveCourse('"+c.id+"')\">Archive</button></div></td></tr>";
+  }).join("");
+}
+function editCourse(id){
+  const c=courses.find(function(x){return x.id===id;});
+  if(!c) return;
+  currentCourseId=id;
+  document.getElementById("course-name").value=c.name||"";
+  document.getElementById("course-code").value=c.code||"";
+  document.getElementById("course-duration").value=c.duration||"";
+  document.getElementById("course-admission").value=c.admissionYear||"";
+  document.getElementById("course-status").value=c.status||"active";
+  document.getElementById("course-btn").textContent="Save Course";
+  document.getElementById("course-cancel").style.display="inline-flex";
+  showToast("Editing "+(c.name||"course"));
+}
+function openArchiveCourse(id){
+  const c=courses.find(function(x){return x.id===id;});
+  if(!c) return;
+  archiveCourseId=id;
+  document.getElementById("archive-course-name").textContent=c.name+" ("+c.code+")";
+  document.getElementById("archive-password").value="";
+  document.getElementById("modal-course-archive").classList.add("open");
+}
+function closeCourseArchiveModal(){
+  document.getElementById("modal-course-archive").classList.remove("open");
+  archiveCourseId=null;
+}
+function confirmArchiveCourse(){
+  const pwd=document.getElementById("archive-password").value;
+  if(pwd!=="admin123"){showToast("Incorrect admin password");return;}
+  const c=courses.find(function(x){return x.id===archiveCourseId;});
+  if(!c) return;
+  const archivedAt=new Date().toISOString();
+  db.collection("archivedCourses").doc(c.id).set(Object.assign({},c,{archivedAt:archivedAt,archiveDate:archivedAt})).then(function(){
+    return db.collection("courses").doc(c.id).delete();
+  }).then(function(){
+    closeCourseArchiveModal(); resetCourseForm(); loadCourses(); showToast("Course archived");
+  }).catch(function(){
+    archivedCourses.push(Object.assign({},c,{archivedAt:archivedAt,archiveDate:archivedAt}));
+    courses=courses.filter(function(x){return x.id!==c.id;});
+    setLocalCourses("medha_courses",courses);
+    setLocalCourses("medha_archivedCourses",archivedCourses);
+    closeCourseArchiveModal(); resetCourseForm(); renderCourses(); renderArchivedCourses(); populateCourseSelects(); showToast("Course archived locally");
+  });
+}
+function renderArchivedCourses(){
+  const b=document.getElementById("archived-course-body");
+  if(!archivedCourses.length){b.innerHTML="<tr><td colspan='3' style='text-align:center;padding:2rem;color:var(--text-muted)'>No archived courses.</td></tr>";return;}
+  const now=Date.now();
+  b.innerHTML=archivedCourses.map(function(c){
+    const archivedAt=c.archivedAt||c.archiveDate||new Date().toISOString();
+    const daysUsed=Math.floor((now-new Date(archivedAt).getTime())/86400000);
+    const remain=Math.max(0,30-daysUsed);
+    return "<tr><td style='font-weight:600'>"+(c.name||"—")+"</td><td>"+archivedAt.split("T")[0]+"</td><td><span class='badge "+(remain<=5?"b-err":"b-warn")+"'>"+remain+" days</span></td></tr>";
+  }).join("");
+}
+function addCourseBatch(){
+  const courseId=document.getElementById("batch-course").value;
+  const inp=document.getElementById("batch-input");
+  const val=inp.value.trim();
+  const course=courses.find(function(c){return c.id===courseId;});
+  if(!courseId||!course){showAlr("course","Select a course before adding batch","al-err");return;}
+  if(!val) return;
+  const existing=(course.batches||[]).some(function(b){return((b.name||b)+"").trim().toLowerCase()===val.toLowerCase();});
+  if(existing){showAlr("course","This batch already exists in "+course.name,"al-err");return;}
+  const batch={id:"batch-"+Date.now(),name:val,createdAt:new Date().toISOString()};
+  course.batches=(course.batches||[]).concat([batch]);
+  saveCourseBatches(course,function(){
+    inp.value="";
+    renderCourses(); renderCourseBatches(); showToast("Batch added to "+course.name);
+  });
+}
+function saveCourseBatches(course,done){
+  db.collection("courses").doc(course.id).set({batches:course.batches,updatedAt:new Date().toISOString()},{merge:true}).then(function(){
+    setLocalCourses("medha_courses",courses);
+    if(done) done();
+  }).catch(function(){
+    setLocalCourses("medha_courses",courses);
+    if(done) done();
+    showAlr("course","Batch saved locally. Firebase rules must allow courses before it appears for everyone.","al-ok");
+  });
+}
+function removeCourseBatch(courseId,batchId){
+  const course=courses.find(function(c){return c.id===courseId;});
+  if(!course) return;
+  course.batches=(course.batches||[]).filter(function(b){return(b.id||b)!==batchId;});
+  saveCourseBatches(course,function(){
+    renderCourses(); renderCourseBatches(); showToast("Batch removed");
+  });
+}
+function renderCourseBatches(){
+  const container=document.getElementById("batch-tags");
+  if(!container) return;
+  const rows=[];
+  courses.forEach(function(c){
+    (c.batches||[]).forEach(function(b){rows.push({course:c,batch:b});});
+  });
+  document.getElementById("t8").textContent=rows.length;
+  if(!rows.length){container.innerHTML="<span class='empty-tags'>No course batches yet</span>";return;}
+  container.innerHTML=rows.map(function(x){
+    const id=x.batch.id||x.batch;
+    const name=x.batch.name||x.batch;
+    return "<span class='tag'><strong>"+(x.course.code||x.course.name)+":</strong> "+name+"<button class='tag-del' onclick=\"removeCourseBatch('"+x.course.id+"','"+id+"')\" title='Remove'>&#215;</button></span>";
+  }).join("");
+}
+
 // ── TEACHERS ──
 function loadTeachers(){
   db.collection("teacher_registrations").get().then(function(snap){
@@ -905,10 +1200,19 @@ function loadTeachers(){
     document.getElementById("pending-badge").textContent=pending;
     document.getElementById("t5").textContent=teachers.length;
     document.getElementById("t6").textContent=pending;
-    renderTeachers();
+    renderTeachers(); populateTeacherSelect();
   }).catch(function(){
     document.getElementById("teachers-tbody").innerHTML="<tr><td colspan='8' style='text-align:center;color:var(--danger)'>Error loading. Check Firestore rules.</td></tr>";
   });
+}
+function populateTeacherSelect(){
+  const el=document.getElementById("teacher-tt-teacher");
+  if(!el) return;
+  const val=el.value;
+  el.innerHTML="<option value=''>Select</option>"+teachers.filter(function(t){return(t.status||"pending")==="approved";}).map(function(t){
+    return "<option value='"+t.id+"'>"+(t.name||"Unnamed")+" — "+(t.subject||"Subject not set")+"</option>";
+  }).join("");
+  el.value=val;
 }
 function renderTeachers(){
   const filter=document.getElementById("filter-status").value;
@@ -952,6 +1256,49 @@ async function updateTeacherStatus(status){
   showToast(status==="approved"?"Teacher approved!":"Teacher rejected");
 }
 
+// ── TEACHER TIMETABLE ASSIGNMENTS ──
+function saveTeacherTimetable(){
+  const courseId=document.getElementById("teacher-tt-course").value;
+  const year=document.getElementById("teacher-tt-year").value;
+  const subject=document.getElementById("teacher-tt-subject").value.trim();
+  const teacherId=document.getElementById("teacher-tt-teacher").value;
+  const timeSlot=document.getElementById("teacher-tt-slot").value.trim();
+  const course=courses.find(function(c){return c.id===courseId;});
+  const teacher=teachers.find(function(t){return t.id===teacherId;});
+  if(!courseId||!year||!subject||!teacherId||!timeSlot){showAlr("teacher-tt","Fill all timetable fields","al-err");return;}
+  db.collection("teacherTimetables").add({
+    courseId:courseId,courseCode:course?course.code:"",courseName:course?course.name:"",
+    year:year,subject:subject,teacherId:teacherId,teacherName:teacher?teacher.name:"",
+    timeSlot:timeSlot,createdAt:new Date().toISOString()
+  }).then(function(){
+    showAlr("teacher-tt","Timetable assignment saved!","al-ok");
+    ["teacher-tt-course","teacher-tt-year","teacher-tt-subject","teacher-tt-teacher","teacher-tt-slot"].forEach(function(id){document.getElementById(id).value="";});
+    loadTeacherTimetables();
+  });
+}
+function loadTeacherTimetables(){
+  db.collection("teacherTimetables").get().then(function(snap){
+    teacherTimetables=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    teacherTimetables.sort(function(a,b){return(b.createdAt||"").localeCompare(a.createdAt||"");});
+    renderTeacherTimetables();
+  }).catch(function(){
+    const b=document.getElementById("teacher-tt-body");
+    if(b) b.innerHTML="<tr><td colspan='6' style='text-align:center;color:var(--danger)'>Error loading timetable assignments.</td></tr>";
+  });
+}
+function renderTeacherTimetables(){
+  const b=document.getElementById("teacher-tt-body");
+  if(!b) return;
+  if(!teacherTimetables.length){b.innerHTML="<tr><td colspan='6' style='text-align:center;padding:2rem;color:var(--text-muted)'>No timetable assignments yet.</td></tr>";return;}
+  b.innerHTML=teacherTimetables.map(function(t){
+    return "<tr><td>"+(t.courseCode||"")+" "+(t.courseName||"—")+"</td><td>"+(t.year||"—")+"</td><td>"+(t.subject||"—")+"</td><td>"+(t.teacherName||"—")+"</td><td>"+(t.timeSlot||"—")+"</td><td><button class='del-btn' onclick=\"delTeacherTimetable('"+t.id+"')\">Delete</button></td></tr>";
+  }).join("");
+}
+function delTeacherTimetable(id){
+  if(!confirm("Delete timetable assignment?")) return;
+  db.collection("teacherTimetables").doc(id).delete().then(function(){loadTeacherTimetables();});
+}
+
 // ── UI HELPERS ──
 function goPage(pg,el){
   document.querySelectorAll(".pg").forEach(function(p){p.classList.remove("active");});
@@ -964,7 +1311,7 @@ function goPage(pg,el){
   }
 }
 function showAlr(id,msg,cls){
-  const map={students:"imp",attendance:"att",results:"res",fees:"fee",add:"add",not:"not",tt:"tt"};
+  const map={students:"imp",attendance:"att",results:"res",fees:"fee",add:"add",not:"not",tt:"tt",course:"course","teacher-tt":"teacher-tt"};
   const pid=(map[id]||id)+"-"+(cls==="al-ok"?"ok":"err");
   const el=document.getElementById(pid);
   if(!el) return;
