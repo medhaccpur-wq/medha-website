@@ -1,94 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Attendance</title>
-
-<style>
-body{
-font-family:Arial,sans-serif;
-background:#f4f7fc;
-padding:20px;
-}
-
-.container{
-max-width:600px;
-margin:auto;
-background:white;
-padding:25px;
-border-radius:15px;
-box-shadow:0 4px 15px rgba(0,0,0,0.1);
-}
-
-h1{
-text-align:center;
-color:#1e3a8a;
-}
-
-.info{
-margin:15px 0;
-font-weight:bold;
-}
-
-video,canvas{
-width:100%;
-border-radius:10px;
-margin-top:10px;
-}
-
-button{
-width:100%;
-padding:15px;
-margin-top:15px;
-border:none;
-border-radius:10px;
-background:#1e3a8a;
-color:white;
-font-size:16px;
-cursor:pointer;
-}
-
-button:hover{
-opacity:0.9;
-}
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<h1>Attendance Sign In</h1>
-
-<div class="info">
-Date: <span id="date"></span>
-</div>
-
-<div class="info">
-Time: <span id="time"></span>
-</div>
-
-<div class="info">
-GPS Status:
-<span id="gpsStatus">Not Captured</span>
-</div>
-
-<video id="video" autoplay></video>
-
-<button id="captureBtn">
-Capture Selfie
-</button>
-
-<canvas id="canvas" style="display:none;"></canvas>
-
-<button id="signinBtn">
-Sign In
-</button>
-
-</div>
-
 <script>
 
 document.getElementById("date").innerText =
@@ -97,6 +6,9 @@ new Date().toLocaleDateString();
 document.getElementById("time").innerText =
 new Date().toLocaleTimeString();
 
+let latitude = "";
+let longitude = "";
+
 navigator.mediaDevices.getUserMedia({video:true})
 .then(stream=>{
 document.getElementById("video").srcObject = stream;
@@ -104,12 +16,19 @@ document.getElementById("video").srcObject = stream;
 
 navigator.geolocation.getCurrentPosition(
 (position)=>{
+
+latitude = position.coords.latitude;
+longitude = position.coords.longitude;
+
 document.getElementById("gpsStatus").innerText =
 "Captured";
+
 },
 ()=>{
+
 document.getElementById("gpsStatus").innerText =
 "GPS Failed";
+
 }
 );
 
@@ -118,24 +37,39 @@ document.getElementById("captureBtn").onclick = function(){
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 
-canvas.style.display="block";
+canvas.style.display = "block";
 
 canvas.width = video.videoWidth;
 canvas.height = video.videoHeight;
 
-canvas.getContext("2d")
-.drawImage(video,0,0);
+canvas.getContext("2d").drawImage(video,0,0);
 
 alert("Selfie Captured");
+
 };
 
-document.getElementById("signinBtn").onclick = function(){
+document.getElementById("signinBtn").onclick = async function(){
 
-alert("Attendance Ready For Firebase Save");
+const attendanceData = {
+
+date: new Date().toLocaleDateString(),
+
+time: new Date().toLocaleTimeString(),
+
+latitude: latitude,
+
+longitude: longitude,
+
+status: "Pending",
+
+createdAt: Date.now()
+
+};
+
+console.log(attendanceData);
+
+alert("Attendance Submitted");
 
 };
 
 </script>
-
-</body>
-</html>
