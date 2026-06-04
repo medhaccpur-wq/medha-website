@@ -1,10 +1,156 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Teacher Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MEDHA Teacher Portal</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f4f7fc;
+padding:20px;
+}
+
+.header{
+background:#1e3a8a;
+color:white;
+padding:25px;
+border-radius:15px;
+margin-bottom:20px;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
+
+.header h1{
+font-size:28px;
+}
+
+.header p{
+margin-top:8px;
+opacity:0.9;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:15px;
+margin-bottom:25px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 4px 15px rgba(0,0,0,0.08);
+text-align:center;
+}
+
+.card h3{
+color:#1e3a8a;
+font-size:14px;
+margin-bottom:10px;
+}
+
+.card p{
+font-size:24px;
+font-weight:bold;
+}
+
+.menu{
+display:grid;
+gap:15px;
+}
+
+.menu a{
+text-decoration:none;
+background:white;
+padding:18px;
+border-radius:15px;
+color:#222;
+font-weight:bold;
+box-shadow:0 4px 15px rgba(0,0,0,0.08);
+transition:0.3s;
+}
+
+.menu a:hover{
+transform:translateY(-3px);
+}
+
+.logout{
+background:#dc2626 !important;
+color:white !important;
+}
+
+.footer{
+margin-top:25px;
+text-align:center;
+color:gray;
+font-size:13px;
+}
+</style>
+
 </head>
+
 <body>
-    <h1>Teacher Dashboard</h1>
-    <p>Welcome Teacher</p>
+
+<div class="header">
+<h1>MEDHA Teacher Portal</h1>
+<p>Welcome Teacher</p>
+</div>
+
+<div class="stats">
+
+<div class="card">
+<h3>Attendance</h3>
+<p>0</p>
+</div>
+
+<div class="card">
+<h3>Classes</h3>
+<p>0</p>
+</div>
+
+<div class="card">
+<h3>Pending</h3>
+<p>0</p>
+</div>
+
+</div>
+
+<div class="menu">
+
+<a href="attendance.html">
+📍 Sign In Attendance
+</a>
+
+<a href="classlog.html">
+📚 Record Class
+</a>
+
+<a href="records.html">
+📋 My Records
+</a>
+
+<a href="payroll.html">
+💰 Payroll
+</a>
+
+<a href="login.html" class="logout">
+🚪 Logout
+</a>
+
+</div>
+
+<div class="footer">
+MEDHA Teacher Management System
+</div>
+
 </body>
 </html>
