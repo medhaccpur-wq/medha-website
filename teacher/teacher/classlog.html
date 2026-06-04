@@ -1,11 +1,238 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Class Log</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MEDHA - Class Log</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#eef2ff;
+padding:30px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.header{
+background:linear-gradient(135deg,#1e3a8a,#2563eb);
+color:white;
+padding:30px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.15);
+margin-bottom:25px;
+}
+
+.header h1{
+font-size:32px;
+margin-bottom:8px;
+}
+
+.header p{
+opacity:0.9;
+}
+
+.card{
+background:white;
+padding:30px;
+border-radius:20px;
+box-shadow:0 8px 25px rgba(0,0,0,0.08);
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+.form-group{
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin-bottom:8px;
+font-weight:600;
+color:#374151;
+}
+
+input,
+select,
+textarea{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:12px;
+font-size:15px;
+outline:none;
+transition:0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+border-color:#2563eb;
+box-shadow:0 0 0 4px rgba(37,99,235,0.15);
+}
+
+textarea{
+height:120px;
+resize:none;
+}
+
+.submit-btn{
+width:100%;
+padding:16px;
+border:none;
+background:linear-gradient(135deg,#1e3a8a,#2563eb);
+color:white;
+font-size:17px;
+font-weight:bold;
+border-radius:14px;
+cursor:pointer;
+margin-top:15px;
+transition:0.3s;
+}
+
+.submit-btn:hover{
+transform:translateY(-2px);
+}
+
+.footer{
+text-align:center;
+margin-top:20px;
+color:#6b7280;
+font-size:14px;
+}
+
+@media(max-width:768px){
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.header h1{
+font-size:26px;
+}
+
+}
+
+</style>
 </head>
+
 <body>
 
-<h1>Class Log</h1>
+<div class="container">
+
+<div class="header">
+<h1>📚 Class Log Entry</h1>
+<p>Record teaching activities for payroll and approval.</p>
+</div>
+
+<div class="card">
+
+<div class="grid">
+
+<div class="form-group">
+<label>Course</label>
+<select id="course">
+<option>Class 11</option>
+<option>Class 12</option>
+<option>Pharmacy</option>
+<option>DMLT</option>
+<option>BMLT</option>
+<option>MSc</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Subject</label>
+<input type="text" id="subject" placeholder="Enter Subject">
+</div>
+
+<div class="form-group">
+<label>OTT Number</label>
+<input type="text" id="ott" placeholder="Example: OTT-001">
+</div>
+
+<div class="form-group">
+<label>Number of Classes</label>
+<input type="number" id="classes" value="1">
+</div>
+
+</div>
+
+<div class="form-group">
+<label>Topic Taught</label>
+<input type="text" id="topic" placeholder="Chapter / Topic Name">
+</div>
+
+<div class="form-group">
+<label>Remarks</label>
+<textarea id="remarks" placeholder="Additional notes..."></textarea>
+</div>
+
+<button class="submit-btn" id="submitBtn">
+Submit Class Record
+</button>
+
+</div>
+
+<div class="footer">
+MEDHA Teacher Management System
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("submitBtn").onclick=function(){
+
+const data={
+
+course:
+document.getElementById("course").value,
+
+subject:
+document.getElementById("subject").value,
+
+ott:
+document.getElementById("ott").value,
+
+classes:
+document.getElementById("classes").value,
+
+topic:
+document.getElementById("topic").value,
+
+remarks:
+document.getElementById("remarks").value,
+
+date:
+new Date().toLocaleDateString(),
+
+status:"Pending"
+
+};
+
+console.log(data);
+
+alert("Class Record Submitted Successfully");
+
+};
+
+</script>
 
 </body>
 </html>
