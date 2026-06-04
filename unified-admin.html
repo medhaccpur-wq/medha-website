@@ -440,7 +440,34 @@ MEDHA2025001,Tuition Fee,25000,30-Jun-2025,Paid</code></div>
           </div>
         </div>
       </div>
+      <div class="card">
+  <div class="card-title green">🎓 Courses</div>
 
+  <div class="tag-area">
+
+    <div class="tag-input-row">
+
+      <input class="tag-input"
+             id="course-input"
+             placeholder="e.g. DMLT, BMLT, B.Pharm"
+             onkeydown="if(event.key==='Enter')addCourse()">
+
+      <button class="btn btn-g"
+              style="padding:8px 14px;font-size:13px"
+              onclick="addCourse()">
+        Add
+      </button>
+
+    </div>
+
+    <div class="tags" id="course-tags">
+      <span class="empty-tags">
+        No courses yet
+      </span>
+    </div>
+
+  </div>
+</div>
       <!-- TEACHER ACCOUNTS -->
       <div class="pg" id="pg-teachers">
         <div class="pg-title green">Teacher Accounts</div>
