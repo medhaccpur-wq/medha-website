@@ -1,14 +1,175 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MEDHA Unified Admin Portal</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,sans-serif;
+}
+
+body{
+display:flex;
+height:100vh;
+background:#f4f7fc;
+}
+
+.sidebar{
+width:260px;
+background:#111827;
+color:white;
+padding:20px;
+overflow-y:auto;
+}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+margin-bottom:30px;
+}
+
+.menu-title{
+font-size:12px;
+color:#9ca3af;
+margin-top:20px;
+margin-bottom:10px;
+text-transform:uppercase;
+}
+
+.menu-item{
+padding:12px;
+border-radius:8px;
+cursor:pointer;
+margin-bottom:5px;
+}
+
+.menu-item:hover{
+background:#1f2937;
+}
+
+.main{
+flex:1;
+padding:30px;
+overflow:auto;
+}
+
+.header{
+font-size:30px;
+font-weight:bold;
+margin-bottom:25px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 2px 10px rgba(0,0,0,0.08);
+}
+
+.card-title{
+font-size:14px;
+color:#666;
+margin-bottom:10px;
+}
+
+.card-value{
+font-size:32px;
+font-weight:bold;
+color:#111827;
+}
+
+</style>
 </head>
 
 <body>
 
-<h1>MEDHA Unified Admin Portal</h1>
+<div class="sidebar">
 
-<p>System Build Version 1</p>
+<div class="logo">
+MEDHA ERP
+</div>
+
+<div class="menu-title">Dashboard</div>
+<div class="menu-item">Dashboard</div>
+
+<div class="menu-title">Academic Structure</div>
+<div class="menu-item">Courses</div>
+<div class="menu-item">Years</div>
+<div class="menu-item">Batches</div>
+<div class="menu-item">Subjects</div>
+
+<div class="menu-title">Students</div>
+<div class="menu-item">Add Student</div>
+<div class="menu-item">All Students</div>
+
+<div class="menu-title">Teachers</div>
+<div class="menu-item">Pending Approval</div>
+<div class="menu-item">Active Teachers</div>
+
+<div class="menu-title">Timetable</div>
+<div class="menu-item">Subject Assignment</div>
+<div class="menu-item">Timetable Management</div>
+
+<div class="menu-title">Attendance</div>
+<div class="menu-item">Teacher Attendance</div>
+<div class="menu-item">Student Attendance</div>
+
+<div class="menu-title">Fees</div>
+<div class="menu-item">Fee Management</div>
+
+<div class="menu-title">Notices</div>
+<div class="menu-item">Notices</div>
+
+<div class="menu-title">Reports</div>
+<div class="menu-item">Reports</div>
+
+</div>
+
+<div class="main">
+
+<div class="header">
+Dashboard
+</div>
+
+<div class="cards">
+
+<div class="card">
+<div class="card-title">Total Students</div>
+<div class="card-value">0</div>
+</div>
+
+<div class="card">
+<div class="card-title">Total Teachers</div>
+<div class="card-value">0</div>
+</div>
+
+<div class="card">
+<div class="card-title">Pending Approvals</div>
+<div class="card-value">0</div>
+</div>
+
+<div class="card">
+<div class="card-title">Courses</div>
+<div class="card-value">0</div>
+</div>
+
+</div>
+
+</div>
 
 </body>
 </html>
+```
