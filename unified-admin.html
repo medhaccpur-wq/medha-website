@@ -1,41 +1,175 @@
-<div class="menu active">Dashboard</div>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEDHA Unified Admin Portal</title>
 
-<h4 style="margin-top:25px;margin-bottom:10px;color:#94a3b8;">ACADEMIC</h4>
+<style>
 
-<div class="menu">Courses</div>
-<div class="menu">Years</div>
-<div class="menu">Batches</div>
-<div class="menu">Subjects</div>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,sans-serif;
+}
 
-<h4 style="margin-top:25px;margin-bottom:10px;color:#94a3b8;">STUDENTS</h4>
+body{
+display:flex;
+height:100vh;
+background:#f5f7fb;
+}
 
-<div class="menu">Students</div>
-<div class="menu">Student Attendance</div>
-<div class="menu">Student Fees</div>
+.sidebar{
+width:260px;
+background:#111827;
+color:white;
+padding:20px;
+overflow-y:auto;
+}
 
-<h4 style="margin-top:25px;margin-bottom:10px;color:#94a3b8;">STAFF</h4>
+.logo{
+font-size:22px;
+font-weight:700;
+margin-bottom:30px;
+}
 
-<div class="menu">Pending Teachers</div>
-<div class="menu">Active Teachers</div>
-<div class="menu">Teacher Assignment</div>
+.menu-title{
+margin-top:20px;
+margin-bottom:10px;
+font-size:12px;
+color:#9ca3af;
+text-transform:uppercase;
+}
 
-<h4 style="margin-top:25px;margin-bottom:10px;color:#94a3b8;">TIMETABLE</h4>
+.menu-item{
+padding:12px;
+border-radius:8px;
+cursor:pointer;
+margin-bottom:6px;
+}
 
-<div class="menu">Subject Assignment</div>
-<div class="menu">Timetable</div>
+.menu-item:hover{
+background:#1f2937;
+}
 
-<h4 style="margin-top:25px;margin-bottom:10px;color:#94a3b8;">ATTENDANCE</h4>
+.main{
+flex:1;
+padding:30px;
+overflow:auto;
+}
 
-<div class="menu">Teacher Attendance</div>
+.page-title{
+font-size:28px;
+font-weight:700;
+margin-bottom:25px;
+}
 
-<h4 style="margin-top:25px;margin-bottom:10px;color:#94a3b8;">NOTICES</h4>
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
 
-<div class="menu">Notices</div>
+.card{
+background:white;
+padding:20px;
+border-radius:16px;
+box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
 
-<h4 style="margin-top:25px;margin-bottom:10px;color:#94a3b8;">REPORTS</h4>
+.card-title{
+font-size:14px;
+color:#666;
+margin-bottom:10px;
+}
 
-<div class="menu">Reports</div>
+.card-value{
+font-size:30px;
+font-weight:700;
+}
 
-<h4 style="margin-top:25px;margin-bottom:10px;color:#94a3b8;">SETTINGS</h4>
+</style>
+</head>
 
-<div class="menu">Settings</div>
+<body>
+
+<div class="sidebar">
+
+<div class="logo">
+MEDHA ERP
+</div>
+
+<div class="menu-title">Dashboard</div>
+<div class="menu-item">Dashboard</div>
+
+<div class="menu-title">Academic</div>
+<div class="menu-item">Courses</div>
+<div class="menu-item">Years</div>
+<div class="menu-item">Batches</div>
+<div class="menu-item">Subjects</div>
+
+<div class="menu-title">Students</div>
+<div class="menu-item">All Students</div>
+<div class="menu-item">Add Student</div>
+
+<div class="menu-title">Teachers</div>
+<div class="menu-item">Pending Approval</div>
+<div class="menu-item">Active Teachers</div>
+
+<div class="menu-title">Timetable</div>
+<div class="menu-item">Subject Assignment</div>
+<div class="menu-item">Timetable</div>
+
+<div class="menu-title">Attendance</div>
+<div class="menu-item">Teacher Attendance</div>
+<div class="menu-item">Student Attendance</div>
+
+<div class="menu-title">Fees</div>
+<div class="menu-item">Fee Management</div>
+
+<div class="menu-title">Notices</div>
+<div class="menu-item">Notices</div>
+
+<div class="menu-title">Reports</div>
+<div class="menu-item">Reports</div>
+
+<div class="menu-title">Settings</div>
+<div class="menu-item">Settings</div>
+
+</div>
+
+<div class="main">
+
+<h1 class="page-title">
+Dashboard
+</h1>
+
+<div class="cards">
+
+<div class="card">
+<div class="card-title">Total Students</div>
+<div class="card-value">0</div>
+</div>
+
+<div class="card">
+<div class="card-title">Total Teachers</div>
+<div class="card-value">0</div>
+</div>
+
+<div class="card">
+<div class="card-title">Pending Approvals</div>
+<div class="card-value">0</div>
+</div>
+
+<div class="card">
+<div class="card-title">Today's Attendance</div>
+<div class="card-value">0</div>
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
