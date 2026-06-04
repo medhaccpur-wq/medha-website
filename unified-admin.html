@@ -140,36 +140,125 @@ MEDHA ERP
 </div>
 
 <div class="main">
-
-<h1 class="page-title">
-Dashboard
-</h1>
-
-<div class="cards">
+<h1 class="page-title">Courses</h1>
 
 <div class="card">
-<div class="card-title">Total Students</div>
-<div class="card-value">0</div>
+
+<div class="card-title">
+Add New Course
 </div>
+
+<input
+id="courseName"
+placeholder="Enter Course Name"
+style="
+width:100%;
+padding:12px;
+margin-top:10px;
+margin-bottom:10px;
+border:1px solid #ddd;
+border-radius:8px;
+">
+
+<button
+onclick="addCourse()"
+style="
+padding:12px 20px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+">
+Save Course
+</button>
+
+</div>
+
+<br>
 
 <div class="card">
-<div class="card-title">Total Teachers</div>
-<div class="card-value">0</div>
+
+<div class="card-title">
+Available Courses
 </div>
 
-<div class="card">
-<div class="card-title">Pending Approvals</div>
-<div class="card-value">0</div>
-</div>
-
-<div class="card">
-<div class="card-title">Today's Attendance</div>
-<div class="card-value">0</div>
-</div>
+<div id="courseList"></div>
 
 </div>
+<script>
+
+let courses =
+JSON.parse(localStorage.getItem("courses")) || [];
+
+function saveCourses(){
+localStorage.setItem(
+"courses",
+JSON.stringify(courses)
+);
+}
+
+function renderCourses(){
+
+const list =
+document.getElementById("courseList");
+
+list.innerHTML="";
+
+courses.forEach((course,index)=>{
+
+list.innerHTML += `
+<div style="
+display:flex;
+justify-content:space-between;
+padding:10px;
+border-bottom:1px solid #eee;
+">
+<span>${course}</span>
+
+<button onclick="deleteCourse(${index})">
+Delete
+</button>
 
 </div>
+`;
 
+});
+
+}
+
+function addCourse(){
+
+const input =
+document.getElementById("courseName");
+
+const name =
+input.value.trim();
+
+if(!name) return;
+
+courses.push(name);
+
+saveCourses();
+
+renderCourses();
+
+input.value="";
+
+}
+
+function deleteCourse(index){
+
+courses.splice(index,1);
+
+saveCourses();
+
+renderCourses();
+
+}
+
+renderCourses();
+
+</script>
 </body>
 </html>
