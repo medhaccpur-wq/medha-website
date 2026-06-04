@@ -1,21 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Teacher Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEDHA Teacher Portal</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#f3f4f6;
+}
+
+.login-card{
+width:380px;
+background:white;
+padding:35px;
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+.logo{
+text-align:center;
+font-size:28px;
+font-weight:bold;
+color:#1E3A8A;
+margin-bottom:5px;
+}
+
+.subtitle{
+text-align:center;
+color:#666;
+margin-bottom:25px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:1px solid #ddd;
+border-radius:8px;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+background:#1E3A8A;
+color:white;
+font-size:16px;
+border-radius:8px;
+cursor:pointer;
+}
+
+button:hover{
+background:#17307a;
+}
+
+#message{
+margin-top:15px;
+text-align:center;
+color:red;
+}
+
+</style>
+
 </head>
+
 <body>
 
-<h2>Teacher Login</h2>
+<div class="login-card">
 
-<input type="email" id="email" placeholder="Email">
-<br><br>
+<div class="logo">MEDHA</div>
+
+<div class="subtitle">
+Teacher Management Portal
+</div>
+
+<input type="email" id="email" placeholder="Email Address">
 
 <input type="password" id="password" placeholder="Password">
-<br><br>
 
-<button id="loginBtn">Login</button>
+<button id="loginBtn">
+Login
+</button>
 
 <p id="message"></p>
+
+</div>
 
 <script type="module" src="./teacher/js/auth.js"></script>
 
