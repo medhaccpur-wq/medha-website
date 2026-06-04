@@ -12,15 +12,13 @@
 <style>
 :root{
   --indigo:#3730a3;--indigo-dark:#1e1b6e;--indigo-light:#6366f1;
-  --yellow:#fbbf24;--yellow-dark:#d97706;
-  --gray:#f8f7ff;--text:#1e1b4b;--text-muted:#6b7280;
+  --yellow:#fbbf24;--gray:#f8f7ff;--text:#1e1b4b;--text-muted:#6b7280;
   --border:rgba(55,48,163,0.12);
   --success:#10b981;--danger:#ef4444;--warning:#f59e0b;
   --green:#2D5016;--green-light:#EBF2E3;--green-mid:#4A8024;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:"DM Sans",sans-serif;background:var(--gray);color:var(--text);min-height:100vh}
-
 /* Auth */
 .auth-page{min-height:100vh;background:linear-gradient(135deg,var(--indigo-dark),var(--indigo));display:flex;align-items:center;justify-content:center;padding:2rem}
 .auth-card{background:white;border-radius:20px;width:100%;max-width:420px;padding:2.5rem;box-shadow:0 24px 60px rgba(0,0,0,0.3)}
@@ -45,7 +43,6 @@ body{font-family:"DM Sans",sans-serif;background:var(--gray);color:var(--text);m
 .btn-g{background:var(--green);color:white}
 .btn-g:hover{background:var(--green-mid)}
 .err-box{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:1rem;display:none}
-
 /* Layout */
 .dashboard{display:none;min-height:100vh}
 .top-nav{background:var(--indigo-dark);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
@@ -53,10 +50,9 @@ body{font-family:"DM Sans",sans-serif;background:var(--gray);color:var(--text);m
 .brand-logo{width:40px;height:40px;border-radius:50%;background:var(--yellow);color:var(--indigo-dark);font-family:"Playfair Display",serif;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center}
 .brand-text{color:white;font-weight:600;font-size:15px}
 .brand-text span{color:rgba(255,255,255,0.6);font-size:11px;display:block;font-weight:400}
-.lo-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;padding:7px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:"DM Sans",sans-serif}
+.lo-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;padding:7px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:"DM Sans",sans-serif;text-decoration:none}
 .lo-btn:hover{background:rgba(239,68,68,0.3)}
 .layout{display:flex;min-height:calc(100vh - 64px)}
-
 /* Sidebar */
 .sidebar{width:240px;background:white;border-right:1px solid var(--border);padding:1rem 0;flex-shrink:0;overflow-y:auto}
 .sl{display:flex;align-items:center;gap:10px;padding:9px 1.2rem;color:var(--text-muted);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;border:none;background:none;font-family:"DM Sans",sans-serif;width:100%;text-align:left;text-decoration:none;position:relative}
@@ -67,7 +63,6 @@ body{font-family:"DM Sans",sans-serif;background:var(--gray);color:var(--text);m
 .slabel{font-size:10px;font-weight:600;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;padding:.8rem 1.2rem .3rem;display:block}
 .section-divider{border-top:2px solid var(--border);margin:.5rem 0;display:flex;align-items:center;gap:.5rem;padding:.5rem 1.2rem}
 .section-divider span{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted)}
-
 /* Content */
 .content{flex:1;padding:2rem;overflow-y:auto}
 .pg{display:none}
@@ -75,7 +70,6 @@ body{font-family:"DM Sans",sans-serif;background:var(--gray);color:var(--text);m
 .pg-title{font-family:"Playfair Display",serif;font-size:1.6rem;color:var(--indigo-dark);font-weight:700;margin-bottom:.3rem}
 .pg-sub{color:var(--text-muted);font-size:14px;margin-bottom:2rem}
 .pg-title.green{color:var(--green)}
-
 /* Stats */
 .sc{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:2rem}
 .sc-item{background:white;border-radius:12px;padding:1.2rem;border:1px solid var(--border)}
@@ -83,7 +77,6 @@ body{font-family:"DM Sans",sans-serif;background:var(--gray);color:var(--text);m
 .sc-val{font-family:"Playfair Display",serif;font-size:1.8rem;color:var(--indigo-dark);font-weight:700}
 .sc-val.green{color:var(--green)}
 .sc-lbl{font-size:12px;color:var(--text-muted);margin-top:2px}
-
 /* Cards */
 .card{background:white;border-radius:12px;padding:1.5rem;border:1px solid var(--border);margin-bottom:1.5rem}
 .card-title{font-size:16px;font-weight:600;color:var(--indigo-dark);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
@@ -96,8 +89,6 @@ body{font-family:"DM Sans",sans-serif;background:var(--gray);color:var(--text);m
 .code-box{background:rgba(55,48,163,0.06);border-radius:8px;padding:1rem;margin-top:1.2rem}
 .code-box h4{font-size:13px;font-weight:600;color:var(--indigo-dark);margin-bottom:.5rem}
 .code-box code{font-size:12px;color:var(--indigo);background:white;padding:8px 12px;border-radius:6px;display:block;border:1px solid var(--border);font-family:monospace;line-height:1.8;white-space:pre-wrap}
-
-/* Prev section */
 .prev-sec{display:none;margin-top:1.5rem}
 .prev-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
 .tw{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
@@ -117,24 +108,17 @@ tr:hover td{background:var(--gray)}
 .b-pend{background:#FEF3E2;color:#D4820A}
 .b-app{background:#E4F4EB;color:#1D6A3A}
 .b-rej{background:#FDECEA;color:#C0392B}
-
-/* Progress */
 .pb{background:#e5e7eb;border-radius:50px;height:8px;margin:1rem 0;overflow:hidden;display:none}
 .pf{background:linear-gradient(90deg,var(--indigo),var(--indigo-light));height:100%;border-radius:50px;transition:width .3s;width:0}
-.pf.green-fill{background:linear-gradient(90deg,var(--green),var(--green-mid))}
 .pt{font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:.5rem;min-height:18px}
 .alert{border-radius:8px;padding:12px 16px;font-size:14px;font-weight:500;margin-bottom:1rem;display:none}
 .al-ok{background:#f0fdf4;border:1px solid #86efac;color:#16a34a}
 .al-err{background:#fef2f2;border:1px solid #fecaca;color:#dc2626}
-
-/* Search bar */
 .sb{display:flex;gap:.8rem;margin-bottom:1rem;flex-wrap:wrap}
 .sb input,.sb select{padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:"DM Sans",sans-serif;font-size:13px;outline:none;color:var(--text)}
 .sb input{flex:1;min-width:180px}
 .del-btn{background:#fef2f2;color:var(--danger);border:1px solid #fecaca;padding:4px 10px;border-radius:6px;font-size:12px;cursor:pointer;font-family:"DM Sans",sans-serif;font-weight:600}
 .del-btn:hover{background:var(--danger);color:white}
-
-/* Notices */
 .nc{background:white;border-radius:10px;padding:1.2rem;border:1px solid var(--border);border-left:4px solid var(--yellow);margin-bottom:.8rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
 .nc h4{font-size:14px;font-weight:600;color:var(--indigo-dark);margin-bottom:4px}
 .nc p{font-size:13px;color:var(--text-muted)}
@@ -146,8 +130,7 @@ tr:hover td{background:var(--gray)}
 .ttc{background:var(--gray);border-radius:10px;padding:1.2rem;border:1px solid var(--border);text-align:center}
 .ttc h4{font-size:14px;font-weight:600;color:var(--indigo-dark);margin-bottom:.3rem}
 .ttc p{font-size:12px;color:var(--text-muted);margin-bottom:.8rem}
-
-/* Teacher section */
+/* Teacher tags */
 .tag-area{padding:1.2rem 1.5rem}
 .tag-input-row{display:flex;gap:8px;margin-bottom:14px}
 .tag-input{flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:"DM Sans",sans-serif;color:var(--text);background:var(--gray);outline:none;transition:border .15s}
@@ -158,7 +141,6 @@ tr:hover td{background:var(--gray)}
 .tag-del:hover{background:rgba(45,80,22,0.35)}
 .empty-tags{font-size:12.5px;color:var(--text-muted);font-style:italic}
 .manage-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
-
 /* Modal */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
 .modal-overlay.open{display:flex}
@@ -169,11 +151,9 @@ tr:hover td{background:var(--gray)}
 .modal-detail span:first-child{font-size:12px;color:var(--text-muted);min-width:130px}
 .modal-detail span:last-child{font-size:13px;font-weight:500}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
-
 /* Toast */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:white;padding:12px 18px;border-radius:9px;font-size:13px;font-weight:500;z-index:300;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
-
 @media(max-width:768px){.sidebar{display:none}.fr{grid-template-columns:1fr}.sc{grid-template-columns:1fr 1fr}.manage-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -209,26 +189,21 @@ tr:hover td{background:var(--gray)}
     </div>
   </div>
   <div class="layout">
-    <!-- Sidebar -->
     <div class="sidebar">
       <span class="slabel">Overview</span>
       <button class="sl active" onclick="goPage('overview',this)">📊 Overview</button>
-
       <div class="section-divider"><span>🎓 Students</span></div>
       <button class="sl" onclick="goPage('import',this)">📥 Import Students CSV</button>
       <button class="sl" onclick="goPage('students',this)">👥 All Students</button>
       <button class="sl" onclick="goPage('addone',this)">➕ Add Single Student</button>
-
       <span class="slabel">Academic Data</span>
       <button class="sl" onclick="goPage('attendance',this)">✅ Attendance CSV</button>
       <button class="sl" onclick="goPage('results',this)">📝 Results CSV</button>
       <button class="sl" onclick="goPage('fees',this)">💳 Fee CSV</button>
-
       <span class="slabel">Content</span>
       <button class="sl" onclick="goPage('notices',this)">📢 Notices (PDF)</button>
       <button class="sl" onclick="goPage('timetable',this)">📅 Timetables (PDF)</button>
       <button class="sl" onclick="goPage('users',this)">🔐 Portal Users</button>
-
       <div class="section-divider"><span>👩‍🏫 Teachers</span></div>
       <button class="sl" onclick="goPage('structure',this)">🏛️ Academic Structure</button>
       <button class="sl" onclick="goPage('teachers',this)">👩‍🏫 Teacher Accounts <span class="sl-badge" id="pending-badge">0</span></button>
@@ -236,7 +211,6 @@ tr:hover td{background:var(--gray)}
       <button class="sl" onclick="goPage('approvals',this)">✔️ Approvals</button>
     </div>
 
-    <!-- Content -->
     <div class="content">
 
       <!-- OVERVIEW -->
@@ -291,7 +265,7 @@ MEDHA2025001,John Doe,9876543210,Science,1st Year</code></div>
           <div class="prev-sec" id="s-prev">
             <div class="pb" id="s-pb"><div class="pf" id="s-pf"></div></div><div class="pt" id="s-pt"></div>
             <div class="prev-hdr"><h3 style="font-size:15px;font-weight:600;color:var(--indigo-dark)"><span id="s-cnt">0</span> students found</h3>
-              <div style="display:flex;gap:.5rem"><button class="btn btn-d btn-sm" onclick="clearPrev('s')">Clear</button><button class="btn btn-i" id="s-imp" onclick="doImport('students')">Import to Firebase</button></div></div>
+              <div style="display:flex;gap:.5rem"><button class="btn btn-d" onclick="clearPrev('s')">Clear</button><button class="btn btn-i" id="s-imp" onclick="doImport('students')">Import to Firebase</button></div></div>
             <div class="tw"><table><thead><tr><th>#</th><th>Student ID</th><th>Name</th><th>Phone</th><th>Department</th><th>Year</th><th>Status</th></tr></thead><tbody id="s-body"></tbody></table></div>
           </div>
         </div>
@@ -324,7 +298,7 @@ MEDHA2025001,John Doe,9876543210,Science,1st Year</code></div>
         </div>
       </div>
 
-      <!-- ATTENDANCE -->
+      <!-- ATTENDANCE CSV -->
       <div class="pg" id="pg-attendance">
         <div class="pg-title">Upload Attendance</div><div class="pg-sub">Upload CSV to update attendance for all students</div>
         <div class="alert al-ok" id="att-ok"></div><div class="alert al-err" id="att-err"></div>
@@ -407,7 +381,7 @@ MEDHA2025001,Tuition Fee,25000,30-Jun-2025,Paid</code></div>
         <div class="card"><div class="card-title">All Notices</div><div id="notices-list"><p style="color:var(--text-muted)">Loading...</p></div><button class="btn btn-i" onclick="loadNotices()" style="margin-top:1rem">Refresh</button></div>
       </div>
 
-      <!-- TIMETABLE (STUDENTS) -->
+      <!-- TIMETABLES (Students PDF) -->
       <div class="pg" id="pg-timetable">
         <div class="pg-title">Timetables</div><div class="pg-sub">Upload PDF timetable for each department and year — needs Firebase Storage</div>
         <div class="alert al-ok" id="tt-ok"></div><div class="alert al-err" id="tt-err"></div>
@@ -431,8 +405,6 @@ MEDHA2025001,Tuition Fee,25000,30-Jun-2025,Paid</code></div>
           <button class="btn btn-i" onclick="loadUsers()" style="margin-top:1rem">Refresh</button></div>
       </div>
 
-      <!-- ======== TEACHER SECTION ======== -->
-
       <!-- ACADEMIC STRUCTURE -->
       <div class="pg" id="pg-structure">
         <div class="pg-title green">Academic Structure</div>
@@ -441,40 +413,28 @@ MEDHA2025001,Tuition Fee,25000,30-Jun-2025,Paid</code></div>
           <div class="card">
             <div class="card-title green">🏛️ Departments</div>
             <div class="tag-area">
-              <div class="tag-input-row">
-                <input class="tag-input" id="dept-input" placeholder="Add department name…" onkeydown="if(event.key==='Enter')addTag('dept')">
-                <button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addTag('dept')">Add</button>
-              </div>
+              <div class="tag-input-row"><input class="tag-input" id="dept-input" placeholder="Add department name…" onkeydown="if(event.key==='Enter')addTag('dept')"><button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addTag('dept')">Add</button></div>
               <div class="tags" id="dept-tags"><span class="empty-tags">No departments yet</span></div>
             </div>
           </div>
           <div class="card">
             <div class="card-title green">📂 Sections</div>
             <div class="tag-area">
-              <div class="tag-input-row">
-                <input class="tag-input" id="section-input" placeholder="e.g. A, B, Morning, Evening…" onkeydown="if(event.key==='Enter')addTag('section')">
-                <button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addTag('section')">Add</button>
-              </div>
+              <div class="tag-input-row"><input class="tag-input" id="section-input" placeholder="e.g. A, B, Morning, Evening…" onkeydown="if(event.key==='Enter')addTag('section')"><button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addTag('section')">Add</button></div>
               <div class="tags" id="section-tags"><span class="empty-tags">No sections yet</span></div>
             </div>
           </div>
           <div class="card">
             <div class="card-title green">📅 Years / Classes</div>
             <div class="tag-area">
-              <div class="tag-input-row">
-                <input class="tag-input" id="year-input" placeholder="e.g. Year 1, Class 11, Grade 10…" onkeydown="if(event.key==='Enter')addTag('year')">
-                <button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addTag('year')">Add</button>
-              </div>
+              <div class="tag-input-row"><input class="tag-input" id="year-input" placeholder="e.g. Year 1, Class 11…" onkeydown="if(event.key==='Enter')addTag('year')"><button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addTag('year')">Add</button></div>
               <div class="tags" id="year-tags"><span class="empty-tags">No years yet</span></div>
             </div>
           </div>
           <div class="card">
             <div class="card-title green">📦 Batches</div>
             <div class="tag-area">
-              <div class="tag-input-row">
-                <input class="tag-input" id="batch-input" placeholder="e.g. 2024–25, Morning Batch…" onkeydown="if(event.key==='Enter')addTag('batch')">
-                <button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addTag('batch')">Add</button>
-              </div>
+              <div class="tag-input-row"><input class="tag-input" id="batch-input" placeholder="e.g. 2024–25, Morning Batch…" onkeydown="if(event.key==='Enter')addTag('batch')"><button class="btn btn-g" style="padding:8px 14px;font-size:13px" onclick="addTag('batch')">Add</button></div>
               <div class="tags" id="batch-tags"><span class="empty-tags">No batches yet</span></div>
             </div>
           </div>
@@ -555,14 +515,8 @@ MEDHA2025001,Tuition Fee,25000,30-Jun-2025,Paid</code></div>
 
 <div class="toast" id="toast"></div>
 
-<!-- Firebase (from your original admin.html) -->
 <script>
-// Paste your full Firebase compat SDK scripts here exactly as in your original admin.html
-// The firebase.initializeApp() call is below — just make sure the SDKs are loaded first
-</script>
-
-<script>
-// ── FIREBASE CONFIG (same as your original) ──
+// ── FIREBASE CONFIG ──
 const firebaseConfig = {
   apiKey: "AIzaSyCg-tP51HEY4d-1t7IYFu38ha_NP-uhAjc",
   authDomain: "medha-portal.firebaseapp.com",
@@ -629,10 +583,10 @@ function loadStats(){
     document.getElementById("t6").textContent=r[4].docs.filter(function(d){return d.data().status==="pending";}).length;
     document.getElementById("t7").textContent=structData.dept.length;
     document.getElementById("t8").textContent=structData.batch.length;
-    // Recent students
-    const rsList=r[0].docs.slice(-5).reverse().map(function(d){return "<div style='font-size:13px;padding:5px 0;border-bottom:1px solid var(--border)'><strong>"+d.id+"</strong> — "+(d.data().name||"")+"</div>";}).join("");
+    const rsList=r[0].docs.slice(-5).reverse().map(function(d){
+      return "<div style='font-size:13px;padding:5px 0;border-bottom:1px solid var(--border)'><strong>"+d.id+"</strong> — "+(d.data().name||"")+"</div>";
+    }).join("");
     document.getElementById("recent-students-list").innerHTML=rsList||"<span style='color:var(--text-muted)'>No students imported yet.</span>";
-    // Recent teachers
     const rtList=r[4].docs.slice(-5).reverse().map(function(d){
       const t=d.data(); const sc=t.status==="pending"?"b-pend":t.status==="approved"?"b-app":"b-rej";
       return "<div style='font-size:13px;padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between'><span><strong>"+(t.name||"")+"</strong> — "+(t.department||"")+"</span><span class='badge "+sc+"'>"+t.status+"</span></div>";
@@ -641,7 +595,7 @@ function loadStats(){
   }).catch(function(){});
 }
 
-// ── CSV ──
+// ── CSV HELPERS ──
 function parseCSV(text){
   const lines=text.split("\n").map(function(l){return l.trim();}).filter(Boolean);
   if(lines.length<2) return null;
@@ -654,20 +608,17 @@ function parseCSV(text){
   }
   return {hdrs:hdrs,rows:rows};
 }
-
 function setProg(id,pct,msg){
   const pb=document.getElementById(id+"-pb"),pf=document.getElementById(id+"-pf"),pt=document.getElementById(id+"-pt");
   if(pb) pb.style.display=(pct!==null)?"block":"none";
   if(pf) pf.style.width=(pct||0)+"%";
   if(pt) pt.textContent=msg||"";
 }
-
 function clearPrev(id){
   document.getElementById(id+"-prev").style.display="none";
   document.getElementById(id+"-csv").value="";
   parsed[id]={};
 }
-
 function handleCSV(input,type){
   if(!input.files[0]) return;
   const reader=new FileReader();
@@ -743,7 +694,6 @@ function handleCSV(input,type){
   };
   reader.readAsText(input.files[0]);
 }
-
 function doImport(type){
   const prefix=type==="students"?"s":type==="attendance"?"att":type==="results"?"res":"fee";
   const btn=document.getElementById(prefix+"-imp");
@@ -815,7 +765,7 @@ function addOne(){
   const dept=document.getElementById("a-dept").value;
   const year=document.getElementById("a-year").value;
   if(!id||!name||!phone||!dept||!year){showAlr("add","Fill all fields","al-err");return;}
-  db.collection("approved_students").doc(id).set({name,phone,department:dept,year,importedAt:new Date().toISOString()}).then(function(){
+  db.collection("approved_students").doc(id).set({name:name,phone:phone,department:dept,year:year,importedAt:new Date().toISOString()}).then(function(){
     showAlr("add",id+" added!","al-ok");
     ["a-id","a-name","a-phone"].forEach(function(i){document.getElementById(i).value="";});
     ["a-dept","a-year"].forEach(function(i){document.getElementById(i).value="";});
@@ -842,7 +792,7 @@ function postNotice(){
   const btn=document.getElementById("n-btn");
   btn.disabled=true; btn.textContent="Posting...";
   function saveNotice(pdfUrl,pdfName){
-    db.collection("notices").add({title,description:desc,tag,visibility:vis,targetDepartment:vis==="department"?dept:"",targetStudentId:vis==="student"?sid:"",pdfUrl:pdfUrl||"",pdfName:pdfName||"",hasPdf:!!pdfUrl,createdAt:new Date().toISOString(),isActive:true}).then(function(){
+    db.collection("notices").add({title:title,description:desc,tag:tag,visibility:vis,targetDepartment:vis==="department"?dept:"",targetStudentId:vis==="student"?sid:"",pdfUrl:pdfUrl||"",pdfName:pdfName||"",hasPdf:!!pdfUrl,createdAt:new Date().toISOString(),isActive:true}).then(function(){
       showAlr("not","Notice posted!","al-ok");
       document.getElementById("n-title").value=""; document.getElementById("n-desc").value="";
       document.getElementById("n-pdf").value=""; document.getElementById("n-pname").textContent="No file selected";
@@ -863,9 +813,8 @@ function loadNotices(){
     const list=[]; s.forEach(function(d){list.push(Object.assign({id:d.id},d.data()));});
     list.sort(function(a,b){return(b.createdAt||"").localeCompare(a.createdAt||"");});
     const tc={urgent:"b-err",info:"b-info",general:"b-warn",academic:"b-ok"};
-    const vl={all:"All Students",department:"Dept: ",student:"Student: "};
     document.getElementById("notices-list").innerHTML=list.length?list.map(function(n){
-      const vt=n.visibility==="all"?vl.all:(n.visibility==="department"?vl.department+n.targetDepartment:vl.student+n.targetStudentId);
+      const vt=n.visibility==="all"?"All Students":(n.visibility==="department"?"Dept: "+n.targetDepartment:"Student: "+n.targetStudentId);
       const pb=n.hasPdf?"<span class='badge b-ok'>PDF</span>":"";
       const pl=n.hasPdf?"<a href='"+n.pdfUrl+"' target='_blank' style='color:var(--indigo)'>View PDF</a>":"";
       return "<div class='nc'><div style='flex:1'><div style='display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:5px'><span class='badge "+(tc[n.tag]||"b-info")+"'>"+n.tag+"</span><span class='badge b-info'>"+vt+"</span>"+pb+"</div><h4>"+n.title+"</h4>"+(n.description?"<p>"+n.description+"</p>":"")+"<div class='nm'>"+(n.createdAt?n.createdAt.split("T")[0]:"")+" "+pl+"</div></div><button class='del-btn' onclick=\"delNotice('"+n.id+"')\">Delete</button></div>";
@@ -874,7 +823,7 @@ function loadNotices(){
 }
 function delNotice(id){if(!confirm("Delete?"))return;db.collection("notices").doc(id).delete().then(function(){loadNotices();loadStats();});}
 
-// ── TIMETABLES (Students) ──
+// ── TIMETABLES ──
 function uploadTT(){
   const dept=document.getElementById("tt-dept").value;
   const year=document.getElementById("tt-year").value;
@@ -887,7 +836,7 @@ function uploadTT(){
   const key=(dept+"_"+year).replace(/[^a-zA-Z0-9]/g,"_");
   const sRef=storage.ref("timetables/"+key+"_"+Date.now()+".pdf");
   const task=sRef.put(pdfFile);
-  task.on("state_changed",function(snap){setProg("tt",Math.round(snap.bytesTransferred/snap.totalBytes*100),"Uploading...");},function(){showAlr("tt","Upload failed.","al-err");btn.disabled=false;btn.textContent="Upload Timetable";setProg("tt",null,"");},function(){task.snapshot.ref.getDownloadURL().then(function(url){db.collection("timetables").doc(key).set({department:dept,year,pdfUrl:url,pdfName:pdfFile.name,uploadedAt:new Date().toISOString()}).then(function(){showAlr("tt","Timetable uploaded for "+dept+" — "+year+"!","al-ok");["tt-dept","tt-year"].forEach(function(i){document.getElementById(i).value="";});document.getElementById("tt-pdf").value="";document.getElementById("tt-pname").textContent="No file selected";setProg("tt",null,"");btn.disabled=false;btn.textContent="Upload Timetable";loadTTs();loadStats();});});});
+  task.on("state_changed",function(snap){setProg("tt",Math.round(snap.bytesTransferred/snap.totalBytes*100),"Uploading...");},function(){showAlr("tt","Upload failed.","al-err");btn.disabled=false;btn.textContent="Upload Timetable";setProg("tt",null,"");},function(){task.snapshot.ref.getDownloadURL().then(function(url){db.collection("timetables").doc(key).set({department:dept,year:year,pdfUrl:url,pdfName:pdfFile.name,uploadedAt:new Date().toISOString()}).then(function(){showAlr("tt","Timetable uploaded!","al-ok");["tt-dept","tt-year"].forEach(function(i){document.getElementById(i).value="";});document.getElementById("tt-pdf").value="";document.getElementById("tt-pname").textContent="No file selected";setProg("tt",null,"");btn.disabled=false;btn.textContent="Upload Timetable";loadTTs();loadStats();});});});
 }
 function loadTTs(){
   db.collection("timetables").get().then(function(s){
@@ -909,14 +858,14 @@ function loadUsers(){
   });
 }
 
-// ── ACADEMIC STRUCTURE (Teachers) ──
+// ── ACADEMIC STRUCTURE ──
 async function loadStructure(){
   for(const key of ["dept","section","year","batch"]){
-    try {
+    try{
       const snap=await db.collection("structure_"+key).get();
-      structData[key]=snap.docs.map(function(d){return{id:d.id,...d.data()};});
+      structData[key]=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
       renderTags(key);
-    } catch(e){}
+    }catch(e){}
   }
   document.getElementById("t7").textContent=structData.dept.length;
   document.getElementById("t8").textContent=structData.batch.length;
@@ -927,7 +876,7 @@ async function addTag(key){
   if(!val) return;
   const id=val.toLowerCase().replace(/\s+/g,"-")+"-"+Date.now();
   await db.collection("structure_"+key).doc(id).set({name:val,createdAt:new Date().toISOString()});
-  structData[key].push({id,name:val});
+  structData[key].push({id:id,name:val});
   renderTags(key); inp.value="";
   showToast("Added: "+val);
   document.getElementById("t7").textContent=structData.dept.length;
@@ -944,14 +893,14 @@ function renderTags(key){
   const container=document.getElementById(key+"-tags");
   if(!structData[key].length){container.innerHTML="<span class='empty-tags'>No items yet</span>";return;}
   container.innerHTML=structData[key].map(function(t){
-    return "<span class='tag'>"+t.name+"<button class='tag-del' onclick=\"removeTag('"+key+"','"+t.id+"')\" title='Remove'>×</button></span>";
+    return "<span class='tag'>"+t.name+"<button class='tag-del' onclick=\"removeTag('"+key+"','"+t.id+"')\" title='Remove'>&#215;</button></span>";
   }).join("");
 }
 
 // ── TEACHERS ──
 function loadTeachers(){
   db.collection("teacher_registrations").get().then(function(snap){
-    teachers=snap.docs.map(function(d){return{id:d.id,...d.data()};});
+    teachers=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
     const pending=teachers.filter(function(t){return t.status==="pending";}).length;
     document.getElementById("pending-badge").textContent=pending;
     document.getElementById("t5").textContent=teachers.length;
@@ -993,7 +942,7 @@ function closeModal(){document.getElementById("modal-teacher").classList.remove(
 async function updateTeacherStatus(status){
   if(!currentTeacherId) return;
   const salaryType=document.getElementById("modal-salary").value;
-  await db.collection("teacher_registrations").doc(currentTeacherId).update({status,salaryType,reviewedAt:new Date().toISOString()});
+  await db.collection("teacher_registrations").doc(currentTeacherId).update({status:status,salaryType:salaryType,reviewedAt:new Date().toISOString()});
   const t=teachers.find(function(x){return x.id===currentTeacherId;});
   if(t){t.status=status;t.salaryType=salaryType;}
   closeModal(); renderTeachers();
@@ -1007,8 +956,12 @@ async function updateTeacherStatus(status){
 function goPage(pg,el){
   document.querySelectorAll(".pg").forEach(function(p){p.classList.remove("active");});
   document.querySelectorAll(".sl").forEach(function(n){n.classList.remove("active","active-green");});
-  document.getElementById("pg-"+pg).classList.add("active");
-  if(el) el.classList.add(pg==="structure"||pg==="teachers"||pg==="timetable-teacher"||pg==="approvals"?"active-green":"active");
+  const target=document.getElementById("pg-"+pg);
+  if(target) target.classList.add("active");
+  if(el){
+    const greenPages=["structure","teachers","timetable-teacher","approvals"];
+    el.classList.add(greenPages.indexOf(pg)>-1?"active-green":"active");
+  }
 }
 function showAlr(id,msg,cls){
   const map={students:"imp",attendance:"att",results:"res",fees:"fee",add:"add",not:"not",tt:"tt"};
@@ -1018,7 +971,7 @@ function showAlr(id,msg,cls){
   el.className="alert "+cls; el.textContent=msg; el.style.display="block";
   setTimeout(function(){el.style.display="none";},6000);
 }
-function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display="block";}
+function showErr(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;el.style.display="block";}}
 function showToast(msg){
   const el=document.getElementById("toast");
   el.textContent=msg; el.classList.add("show");
@@ -1030,8 +983,5 @@ function dlCSV(name,content){
   a.download=name; a.click();
 }
 </script>
-
-<!-- Firebase SDKs — paste the full minified SDK scripts from your original admin.html above the closing </body> tag -->
-<!-- They are large so keep them exactly as in your original file -->
 </body>
 </html>
