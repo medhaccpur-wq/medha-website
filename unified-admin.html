@@ -1,10 +1,10 @@
 ```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEDHA Unified Admin Portal</title>
+<title>MEDHA ERP - Course Management</title>
 
 <style>
 
@@ -12,13 +12,13 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Segoe UI,sans-serif;
+font-family:'Segoe UI',sans-serif;
 }
 
 body{
 display:flex;
 height:100vh;
-background:#f4f7fc;
+background:#f4f6fb;
 }
 
 .sidebar{
@@ -46,8 +46,8 @@ text-transform:uppercase;
 .menu-item{
 padding:12px;
 border-radius:8px;
-cursor:pointer;
 margin-bottom:5px;
+cursor:pointer;
 }
 
 .menu-item:hover{
@@ -62,33 +62,70 @@ overflow:auto;
 
 .header{
 font-size:30px;
-font-weight:bold;
+font-weight:700;
 margin-bottom:25px;
-}
-
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
 }
 
 .card{
 background:white;
 padding:20px;
 border-radius:15px;
-box-shadow:0 2px 10px rgba(0,0,0,0.08);
+box-shadow:0 2px 10px rgba(0,0,0,.08);
+margin-bottom:20px;
 }
 
 .card-title{
-font-size:14px;
-color:#666;
-margin-bottom:10px;
+font-size:18px;
+font-weight:600;
+margin-bottom:15px;
 }
 
-.card-value{
-font-size:32px;
-font-weight:bold;
-color:#111827;
+input,select{
+width:100%;
+padding:12px;
+border:1px solid #ddd;
+border-radius:8px;
+margin-bottom:12px;
+}
+
+button{
+padding:12px 18px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+.course-card{
+border:1px solid #e5e7eb;
+padding:15px;
+border-radius:12px;
+margin-bottom:15px;
+}
+
+.course-name{
+font-size:20px;
+font-weight:700;
+margin-bottom:5px;
+}
+
+.year-box{
+margin-left:20px;
+margin-top:5px;
+}
+
+.delete-btn{
+background:#dc2626;
+margin-top:10px;
+}
+
+.delete-btn:hover{
+background:#b91c1c;
 }
 
 </style>
@@ -102,73 +139,255 @@ color:#111827;
 MEDHA ERP
 </div>
 
-<div class="menu-title">Dashboard</div>
-<div class="menu-item">Dashboard</div>
-
 <div class="menu-title">Academic Structure</div>
+
 <div class="menu-item">Courses</div>
 <div class="menu-item">Years</div>
 <div class="menu-item">Batches</div>
 <div class="menu-item">Subjects</div>
 
 <div class="menu-title">Students</div>
+
 <div class="menu-item">Add Student</div>
 <div class="menu-item">All Students</div>
 
 <div class="menu-title">Teachers</div>
+
 <div class="menu-item">Pending Approval</div>
 <div class="menu-item">Active Teachers</div>
 
 <div class="menu-title">Timetable</div>
+
 <div class="menu-item">Subject Assignment</div>
 <div class="menu-item">Timetable Management</div>
 
 <div class="menu-title">Attendance</div>
+
 <div class="menu-item">Teacher Attendance</div>
 <div class="menu-item">Student Attendance</div>
 
 <div class="menu-title">Fees</div>
+
 <div class="menu-item">Fee Management</div>
 
 <div class="menu-title">Notices</div>
-<div class="menu-item">Notices</div>
 
-<div class="menu-title">Reports</div>
-<div class="menu-item">Reports</div>
+<div class="menu-item">Notices</div>
 
 </div>
 
 <div class="main">
 
 <div class="header">
-Dashboard
-</div>
-
-<div class="cards">
-
-<div class="card">
-<div class="card-title">Total Students</div>
-<div class="card-value">0</div>
+Course Management
 </div>
 
 <div class="card">
-<div class="card-title">Total Teachers</div>
-<div class="card-value">0</div>
+
+<div class="card-title">
+Create New Course
+</div>
+
+<input
+id="courseName"
+placeholder="Course Name">
+
+<select id="courseDuration">
+<option value="1">1 Year</option>
+<option value="2">2 Years</option>
+<option value="3">3 Years</option>
+<option value="4">4 Years</option>
+<option value="5">5 Years</option>
+<option value="6">6 Years</option>
+</select>
+
+<select id="admissionYear">
+<option>2025</option>
+<option selected>2026</option>
+<option>2027</option>
+<option>2028</option>
+<option>2029</option>
+<option>2030</option>
+</select>
+
+<button onclick="createCourse()">
+Create Course
+</button>
+
 </div>
 
 <div class="card">
-<div class="card-title">Pending Approvals</div>
-<div class="card-value">0</div>
+
+<div class="card-title">
+Available Courses
 </div>
 
-<div class="card">
-<div class="card-title">Courses</div>
-<div class="card-value">0</div>
-</div>
-
+<div id="courseContainer">
 </div>
 
 </div>
+
+</div>
+
+<script>
+
+let courses =
+JSON.parse(localStorage.getItem("courses")) || [];
+
+function saveCourses(){
+
+localStorage.setItem(
+"courses",
+JSON.stringify(courses)
+);
+
+}
+
+function generateYears(duration){
+
+let years=[];
+
+for(let i=1;i<=duration;i++){
+
+years.push(i + getSuffix(i) + " Year");
+
+}
+
+return years;
+
+}
+
+function getSuffix(num){
+
+if(num===1) return "st";
+if(num===2) return "nd";
+if(num===3) return "rd";
+
+return "th";
+
+}
+
+function createCourse(){
+
+const name =
+document.getElementById("courseName")
+.value.trim();
+
+const duration =
+parseInt(
+document.getElementById("courseDuration")
+.value
+);
+
+const admissionYear =
+document.getElementById("admissionYear")
+.value;
+
+if(!name){
+
+alert("Enter Course Name");
+
+return;
+
+}
+
+const course = {
+
+id:Date.now(),
+
+name:name,
+
+duration:duration,
+
+admissionYear:admissionYear,
+
+years:generateYears(duration)
+
+};
+
+courses.push(course);
+
+saveCourses();
+
+renderCourses();
+
+document.getElementById("courseName").value="";
+
+}
+
+function deleteCourse(id){
+
+courses =
+courses.filter(
+course=>course.id!==id
+);
+
+saveCourses();
+
+renderCourses();
+
+}
+
+function renderCourses(){
+
+const container =
+document.getElementById("courseContainer");
+
+container.innerHTML="";
+
+courses.forEach(course=>{
+
+let yearsHtml="";
+
+course.years.forEach(year=>{
+
+yearsHtml += `
+<div class="year-box">
+• ${year}
+</div>
+`;
+
+});
+
+container.innerHTML += `
+
+<div class="course-card">
+
+<div class="course-name">
+${course.name}
+</div>
+
+<div>
+Admission Year:
+${course.admissionYear}
+</div>
+
+<div>
+Duration:
+${course.duration} Year(s)
+</div>
+
+<br>
+
+${yearsHtml}
+
+<button
+class="delete-btn"
+onclick="deleteCourse(${course.id})">
+Delete
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+renderCourses();
+
+</script>
 
 </body>
 </html>
