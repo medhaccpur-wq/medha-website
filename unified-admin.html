@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEDHA ERP - Course Management</title>
+<title>MEDHA ERP</title>
 
 <style>
 
@@ -12,7 +12,7 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
+font-family:Segoe UI,sans-serif;
 }
 
 body{
@@ -26,7 +26,6 @@ width:260px;
 background:#111827;
 color:white;
 padding:20px;
-overflow-y:auto;
 }
 
 .logo{
@@ -47,11 +46,6 @@ text-transform:uppercase;
 padding:12px;
 border-radius:8px;
 margin-bottom:5px;
-cursor:pointer;
-}
-
-.menu-item:hover{
-background:#1f2937;
 }
 
 .main{
@@ -62,7 +56,7 @@ overflow:auto;
 
 .header{
 font-size:30px;
-font-weight:700;
+font-weight:bold;
 margin-bottom:25px;
 }
 
@@ -80,7 +74,8 @@ font-weight:600;
 margin-bottom:15px;
 }
 
-input,select{
+input,
+select{
 width:100%;
 padding:12px;
 border:1px solid #ddd;
@@ -111,7 +106,7 @@ margin-bottom:15px;
 .course-name{
 font-size:20px;
 font-weight:700;
-margin-bottom:5px;
+margin-bottom:8px;
 }
 
 .year-box{
@@ -161,19 +156,6 @@ MEDHA ERP
 <div class="menu-item">Subject Assignment</div>
 <div class="menu-item">Timetable Management</div>
 
-<div class="menu-title">Attendance</div>
-
-<div class="menu-item">Teacher Attendance</div>
-<div class="menu-item">Student Attendance</div>
-
-<div class="menu-title">Fees</div>
-
-<div class="menu-item">Fee Management</div>
-
-<div class="menu-title">Notices</div>
-
-<div class="menu-item">Notices</div>
-
 </div>
 
 <div class="main">
@@ -222,8 +204,7 @@ Create Course
 Available Courses
 </div>
 
-<div id="courseContainer">
-</div>
+<div id="courseContainer"></div>
 
 </div>
 
@@ -231,8 +212,18 @@ Available Courses
 
 <script>
 
-let courses =
+let courses=[];
+
+try{
+
+courses=
 JSON.parse(localStorage.getItem("courses")) || [];
+
+}catch(error){
+
+courses=[];
+
+}
 
 function saveCourses(){
 
@@ -240,6 +231,16 @@ localStorage.setItem(
 "courses",
 JSON.stringify(courses)
 );
+
+}
+
+function getSuffix(num){
+
+if(num===1) return "st";
+if(num===2) return "nd";
+if(num===3) return "rd";
+
+return "th";
 
 }
 
@@ -257,29 +258,19 @@ return years;
 
 }
 
-function getSuffix(num){
-
-if(num===1) return "st";
-if(num===2) return "nd";
-if(num===3) return "rd";
-
-return "th";
-
-}
-
 function createCourse(){
 
-const name =
+const name=
 document.getElementById("courseName")
 .value.trim();
 
-const duration =
+const duration=
 parseInt(
 document.getElementById("courseDuration")
 .value
 );
 
-const admissionYear =
+const admissionYear=
 document.getElementById("admissionYear")
 .value;
 
@@ -291,7 +282,7 @@ return;
 
 }
 
-const course = {
+const course={
 
 id:Date.now(),
 
@@ -317,8 +308,7 @@ document.getElementById("courseName").value="";
 
 function deleteCourse(id){
 
-courses =
-courses.filter(
+courses=courses.filter(
 course=>course.id!==id
 );
 
@@ -330,7 +320,7 @@ renderCourses();
 
 function renderCourses(){
 
-const container =
+const container=
 document.getElementById("courseContainer");
 
 container.innerHTML="";
@@ -339,9 +329,11 @@ courses.forEach(course=>{
 
 let yearsHtml="";
 
+if(Array.isArray(course.years)){
+
 course.years.forEach(year=>{
 
-yearsHtml += `
+yearsHtml+=`
 <div class="year-box">
 • ${year}
 </div>
@@ -349,22 +341,24 @@ yearsHtml += `
 
 });
 
-container.innerHTML += `
+}
+
+container.innerHTML+=`
 
 <div class="course-card">
 
 <div class="course-name">
-${course.name}
+${course.name || "Unnamed Course"}
 </div>
 
 <div>
 Admission Year:
-${course.admissionYear}
+${course.admissionYear || "-"}
 </div>
 
 <div>
 Duration:
-${course.duration} Year(s)
+${course.duration || "-"} Year(s)
 </div>
 
 <br>
