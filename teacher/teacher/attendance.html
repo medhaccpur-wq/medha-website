@@ -1,75 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance Sign In</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#eef2f7;
+    margin:0;
+    padding:20px;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
+
+h1{
+    text-align:center;
+    color:#243e90;
+}
+
+.info{
+    font-size:20px;
+    font-weight:bold;
+    margin:10px 0;
+}
+
+video{
+    width:100%;
+    border-radius:15px;
+    margin-top:20px;
+}
+
+canvas{
+    display:none;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    margin-top:15px;
+    border:none;
+    border-radius:10px;
+    background:#243e90;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1b3175;
+}
+
+#status{
+    margin-top:20px;
+    text-align:center;
+    font-weight:bold;
+    color:green;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Attendance Sign In</h1>
+
+<div class="info" id="date"></div>
+<div class="info" id="time"></div>
+<div class="info" id="gps">GPS Status: Waiting...</div>
+
+<video id="video" autoplay playsinline></video>
+
+<canvas id="canvas"></canvas>
+
+<button onclick="captureSelfie()">Capture Selfie</button>
+
+<button onclick="signIn()">Sign In</button>
+
+<div id="status"></div>
+
+</div>
+
 <script>
 
-document.getElementById("date").innerText =
-new Date().toLocaleDateString();
+const video = document.getElementById("video");
 
-document.getElementById("time").innerText =
-new Date().toLocaleTimeString();
+document.getElementById("date").innerHTML =
+"Date: " + new Date().toLocaleDateString();
 
-let latitude = "";
-let longitude = "";
+setInterval(()=>{
+document.getElementById("time").innerHTML =
+"Time: " + new Date().toLocaleTimeString();
+},1000);
 
-navigator.mediaDevices.getUserMedia({video:true})
+navigator.mediaDevices.getUserMedia({
+video:true
+})
 .then(stream=>{
-document.getElementById("video").srcObject = stream;
+video.srcObject = stream;
+})
+.catch(error=>{
+alert("Camera Error: " + error.message);
 });
 
 navigator.geolocation.getCurrentPosition(
 (position)=>{
-
-latitude = position.coords.latitude;
-longitude = position.coords.longitude;
-
-document.getElementById("gpsStatus").innerText =
-"Captured";
-
+document.getElementById("gps").innerHTML =
+"GPS Captured ✓";
 },
-()=>{
-
-document.getElementById("gpsStatus").innerText =
+(error)=>{
+document.getElementById("gps").innerHTML =
 "GPS Failed";
-
 }
 );
 
-document.getElementById("captureBtn").onclick = function(){
+function captureSelfie(){
 
-const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
-
-canvas.style.display = "block";
 
 canvas.width = video.videoWidth;
 canvas.height = video.videoHeight;
 
-canvas.getContext("2d").drawImage(video,0,0);
+canvas.getContext("2d")
+.drawImage(video,0,0);
 
 alert("Selfie Captured");
+}
 
-};
+function signIn(){
 
-document.getElementById("signinBtn").onclick = async function(){
+document.getElementById("status").innerHTML =
+"Attendance Ready For Firebase Save";
 
-const attendanceData = {
-
-date: new Date().toLocaleDateString(),
-
-time: new Date().toLocaleTimeString(),
-
-latitude: latitude,
-
-longitude: longitude,
-
-status: "Pending",
-
-createdAt: Date.now()
-
-};
-
-console.log(attendanceData);
-
-alert("Attendance Submitted");
-
-};
+alert("Attendance Ready For Firebase Save");
+}
 
 </script>
+
+</body>
+</html>
